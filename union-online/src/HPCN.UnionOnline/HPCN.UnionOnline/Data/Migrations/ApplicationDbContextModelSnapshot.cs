@@ -41,6 +41,32 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.ToTable("Activities");
                 });
 
+            modelBuilder.Entity("HPCN.UnionOnline.Models.ActivityProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ActivityId");
+
+                    b.Property<double>("BonusPointPrice");
+
+                    b.Property<DateTime>("CreatedTime");
+
+                    b.Property<double>("MoneyPrice");
+
+                    b.Property<Guid>("ProductId");
+
+                    b.Property<DateTime>("UpdatedTime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ActivityProduct");
+                });
+
             modelBuilder.Entity("HPCN.UnionOnline.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -96,13 +122,13 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<double>("BonusPointBalance");
+
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<DateTime>("CreatedTime");
-
-                    b.Property<double>("Credit");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -114,7 +140,8 @@ namespace HPCN.UnionOnline.Data.Migrations
 
                     b.Property<DateTime>("UpdatedTime");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -128,11 +155,15 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ActivityId");
+                    b.Property<Guid>("ActivityId");
+
+                    b.Property<double>("BonusPointAmount");
 
                     b.Property<DateTime>("CreatedTime");
 
-                    b.Property<Guid?>("EmployeeId");
+                    b.Property<Guid>("EmployeeId");
+
+                    b.Property<double>("MoneyAmount");
 
                     b.Property<DateTime>("UpdatedTime");
 
@@ -150,11 +181,15 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<double>("BonusPointPrice");
+
                     b.Property<DateTime>("CreatedTime");
 
-                    b.Property<Guid?>("OrderId");
+                    b.Property<double>("MoneyPrice");
 
-                    b.Property<Guid?>("ProductId");
+                    b.Property<Guid>("OrderId");
+
+                    b.Property<Guid>("ProductId");
 
                     b.Property<int>("Quantity");
 
@@ -174,13 +209,11 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ActivityId");
-
                     b.Property<DateTime>("CreatedTime");
 
-                    b.Property<double>("Credit");
+                    b.Property<double>("DefaultBonusPointPrice");
 
-                    b.Property<double>("Money");
+                    b.Property<double>("DefaultMoneyPrice");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -189,8 +222,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<DateTime>("UpdatedTime");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ActivityId");
 
                     b.ToTable("Products");
                 });
@@ -302,40 +333,51 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("HPCN.UnionOnline.Models.ActivityProduct", b =>
+                {
+                    b.HasOne("HPCN.UnionOnline.Models.Activity", "Activity")
+                        .WithMany("ActivityProducts")
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HPCN.UnionOnline.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("HPCN.UnionOnline.Models.Employee", b =>
                 {
                     b.HasOne("HPCN.UnionOnline.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.Order", b =>
                 {
                     b.HasOne("HPCN.UnionOnline.Models.Activity", "Activity")
                         .WithMany("Orders")
-                        .HasForeignKey("ActivityId");
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HPCN.UnionOnline.Models.Employee", "Employee")
                         .WithMany("Orders")
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.OrderDetail", b =>
                 {
                     b.HasOne("HPCN.UnionOnline.Models.Order", "Order")
                         .WithMany("Details")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HPCN.UnionOnline.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.Product", b =>
-                {
-                    b.HasOne("HPCN.UnionOnline.Models.Activity", "Activity")
-                        .WithMany()
-                        .HasForeignKey("ActivityId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

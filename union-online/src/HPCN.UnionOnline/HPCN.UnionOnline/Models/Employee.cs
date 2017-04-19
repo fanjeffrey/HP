@@ -23,9 +23,12 @@ namespace HPCN.UnionOnline.Models
         public string City { get; set; }
 
         [Required]
-        public double Credit { get; set; }
+        [Display(Name = "Bonus Point Balance")]
+        public double BonusPointBalance { get; set; }
 
+        [Required]
         public ApplicationUser User { get; set; }
+
         public ICollection<Order> Orders { get; set; }
     }
 }

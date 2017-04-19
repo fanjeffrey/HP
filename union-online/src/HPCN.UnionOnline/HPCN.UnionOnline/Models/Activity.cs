@@ -23,6 +23,7 @@ namespace HPCN.UnionOnline.Models
         [Required]
         public ActivityState Status { get; set; } = ActivityState.Pending;
 
+        public ICollection<ActivityProduct> ActivityProducts { get; set; }
         public ICollection<Order> Orders { get; set; }
     }
 

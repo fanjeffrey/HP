@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Models
 {
-    public class OrderDetail : Entity
+    public class ActivityProduct : Entity
     {
         [Required]
-        public Product Product { get; set; }
+        public Activity Activity { get; set; }
 
         [Required]
-        public int Quantity { get; set; }
+        public Product Product { get; set; }
 
         [Required]
         [Display(Name = "Bonus Point Price")]
@@ -21,8 +21,5 @@ namespace HPCN.UnionOnline.Models
         [Required]
         [Display(Name = "Money Price")]
         public double MoneyPrice { get; set; }
-
-        [Required]
-        public Order Order { get; set; }
     }
 }

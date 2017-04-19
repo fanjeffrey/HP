@@ -13,11 +13,11 @@ namespace HPCN.UnionOnline.Models
         public string Name { get; set; }
 
         [Required]
-        public double Credit { get; set; }
+        [Display(Name = "Default Bonus Point Price")]
+        public double DefaultBonusPointPrice { get; set; }
 
         [Required]
-        public double Money { get; set; } = 0d;
-
-        public Activity Activity { get; set; }
+        [Display(Name = "Default Money Price")]
+        public double DefaultMoneyPrice { get; set; }
     }
 }

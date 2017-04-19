@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HPCN.UnionOnline.Data;
 using HPCN.UnionOnline.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace HPCN.UnionOnline.Controllers
 {
-    [Authorize]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -56,7 +54,7 @@ namespace HPCN.UnionOnline.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Credit,Money")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,DefaultBonusPointPrice,DefaultMoneyPrice")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +87,7 @@ namespace HPCN.UnionOnline.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Credit,Money,CreatedTime,UpdatedTime")] Product product)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,DefaultBonusPointPrice,DefaultMoneyPrice,CreatedTime,UpdatedTime")] Product product)
         {
             if (id != product.Id)
             {
