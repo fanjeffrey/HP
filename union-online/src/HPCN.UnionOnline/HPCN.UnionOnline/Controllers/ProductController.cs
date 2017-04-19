@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HPCN.UnionOnline.Data;
 using HPCN.UnionOnline.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HPCN.UnionOnline.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
