@@ -48,3 +48,51 @@ textarea {
         display: none;
     }
 }
+
+/*--product--*/
+.container-search-summary {
+    margin: 10px 0px;
+}
+
+    .container-search-summary span {
+        background-color: yellow;
+    }
+
+textarea {
+    max-height: 150px;
+}
+
+img.product-picture-list {
+    width: 100px;
+    height: 100px;
+    border: 1px solid gray;
+}
+
+img.product-picture-details {
+    width: 200px;
+    height: 200px;
+    border: 1px solid gray;
+    margin-left: 60px;
+    margin-bottom: 30px;
+}
+
+img.product-picture-edit {
+    width: 150px;
+    height: 150px;
+    border: 1px solid gray;
+    margin-left: 195px;
+    margin-bottom: 30px;
+}
+
+/*-activity--*/
+.container-products {
+    margin-top: 50px;
+}
+
+    .container-products hr {
+        margin-top: 0px;
+    }
+
+    .container-products h4 {
+        margin-bottom: 1px;
+    }

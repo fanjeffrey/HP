@@ -1,22 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Models
 {
     public abstract class Entity
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
-        [Required]
-        [Display(Name = "When created")]
-        public DateTime CreatedTime { get; set; }
+        public DateTime? CreatedTime { get; set; }
 
-        [Required]
-        [Display(Name = "When updated")]
-        public DateTime UpdatedTime { get; set; }
+        [StringLength(200)]
+        public string CreatedBy { get; set; }
+
+        public DateTime? UpdatedTime { get; set; }
+
+        [StringLength(200)]
+        public string UpdatedBy { get; set; }
+
+        public DateTime? ConcurrencyTimestamp { get; set; } = DateTime.Now;
     }
 }

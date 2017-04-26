@@ -1,0 +1,22 @@
+@model HPCN.UnionOnline.Models.Activity
+
+@{
+    ViewData["Title"] = "Open activity";
+}
+
+<h2>Open activity</h2>
+
+<div>
+    <h4>Are you sure you want to open this activity?</h4>
+    <hr />
+
+    @Html.Partial("_activity", Model)
+
+    <form asp-action="Open">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-actions no-color">
+            <input type="submit" value="Open" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

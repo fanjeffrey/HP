@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using HPCN.UnionOnline.Data;
+using HPCN.UnionOnline.Services;
+using HPCN.UnionOnline.Site.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using HPCN.UnionOnline.Data;
-using HPCN.UnionOnline.Models;
-using HPCN.UnionOnline.Services;
+using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline
 {
@@ -36,25 +34,38 @@ namespace HPCN.UnionOnline
 
         public IConfigurationRoot Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<HPCNUnionOnlineDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddMvc()
+                .AddRazorOptions(options =>
+                {
+                    options.ViewLocationFormats.Clear();
+                    options.ViewLocationFormats.Add("/Site/Views/{0}.cshtml");
+                    options.ViewLocationFormats.Add("/Site/Views/Shared/{0}.cshtml");
+                    options.ViewLocationFormats.Add("/Site/Views/{1}/{0}.cshtml");
+                });
 
-            services.AddMvc();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireClaim("IsAdmin", true.ToString()));
+            });
+
+            services.Configure<ProductPictureOptions>(Configuration.GetSection("ProductPicture"));
 
             // Add application services.
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IActivityService, ActivityService>();
+            services.AddTransient<IEmailSender, SmtpEmailSender>();
+            services.AddTransient<IOperationService, OperationService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IProductPictureService, ProductPictureService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -73,9 +84,19 @@ namespace HPCN.UnionOnline
 
             app.UseStaticFiles();
 
-            app.UseIdentity();
-
-            // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationScheme = "HPCN.UnionOnline.CookieScheme",
+                LoginPath = new PathString("/Account/Login/"),
+                LogoutPath = new PathString("/Account/Logout"),
+                AccessDeniedPath = new PathString("/Account/AccessDenied/"),
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                Events = new CookieAuthenticationEvents
+                {
+                    OnValidatePrincipal = ValidatePrincipal
+                }
+            });
 
             app.UseMvc(routes =>
             {
@@ -83,6 +104,21 @@ namespace HPCN.UnionOnline
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        async Task ValidatePrincipal(CookieValidatePrincipalContext context)
+        {
+            var accountService = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
+            var username = context.Principal.GetUsername();
+            var updatedTime = context.Principal.GetUpdatedTime();
+
+            if (string.IsNullOrWhiteSpace(username) ||
+                string.IsNullOrWhiteSpace(updatedTime) ||
+                !await accountService.ValidatePrincipal(username, updatedTime))
+            {
+                context.RejectPrincipal();
+                await context.HttpContext.Authentication.SignOutAsync("HPCN.UnionOnline.CookieScheme");
+            }
         }
     }
 }

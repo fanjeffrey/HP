@@ -1,0 +1,13 @@
+@model HPCN.UnionOnline.Site.ViewModels.ActivitySearchViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Acitivity list</h2>
+
+<p>
+    <a asp-action="Create">Create new activity</a>
+</p>
+
+@Html.Partial("_activities", Model.Activities)

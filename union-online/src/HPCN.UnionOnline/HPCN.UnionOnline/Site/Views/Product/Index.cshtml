@@ -1,0 +1,46 @@
+@model HPCN.UnionOnline.Site.ViewModels.ProductSearchViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Product Catalog</h2>
+
+<div>
+    <form asp-action="Index">
+        Find by Name or Description: <input asp-for="Keyword" class="form-control" />
+        <input type="submit" value="Search" class="btn btn-default" /> |
+        <a asp-action="Index">Back to Full List</a> | <a asp-action="add">Add product</a>
+    </form>
+</div>
+
+<p class="container-search-summary">
+    <span>@Model.Count items in total. @Model.TotalPages pages in total.</span>
+</p>
+
+@Html.Partial("_products", Model.Products)
+
+@{
+    var prevDisabled = !Model.HasPrevPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+@if (Model.TotalPages > 1)
+{
+    <div>
+        <a asp-action="Index"
+           @*asp-route-sortOrder="@ViewData[" CurrentSort"]"*@
+           asp-route-pageIndex="@(Model.PageIndex - 1)"
+           asp-route-keyword="@Model.Keyword"
+           class="btn btn-default @prevDisabled btn">
+            Previous
+        </a>
+        <a asp-action="Index"
+           @*asp-route-sortOrder="@ViewData[" CurrentSort"]"*@
+           asp-route-pageIndex="@(Model.PageIndex + 1)"
+           asp-route-keyword="@Model.Keyword"
+           class="btn btn-default @nextDisabled btn">
+            Next
+        </a>
+    </div>
+}

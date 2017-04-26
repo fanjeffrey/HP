@@ -1,0 +1,22 @@
+@model HPCN.UnionOnline.Models.Activity
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Close activity</h2>
+
+<div>
+    <h4>Are you sure you want to close this activity?</h4>
+    <hr />
+
+    @Html.Partial("_activity", Model)
+
+    <form asp-action="Close">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-actions no-color">
+            <input type="submit" value="Close" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

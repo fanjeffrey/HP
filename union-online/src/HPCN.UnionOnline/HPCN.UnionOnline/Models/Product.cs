@@ -1,23 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Models
 {
     public class Product : Entity
     {
-        [Required(AllowEmptyStrings = false)]
+        [Required]
         [StringLength(200)]
         public string Name { get; set; }
 
         [Required]
-        [Display(Name = "Default Bonus Point Price")]
-        public double DefaultBonusPointPrice { get; set; }
+        public double PointsPayment { get; set; }
 
         [Required]
-        [Display(Name = "Default Money Price")]
-        public double DefaultMoneyPrice { get; set; }
+        public double SelfPayment { get; set; }
+
+        [StringLength(200)]
+        public string PictureFileName { get; set; }
+
+        [StringLength(1000)]
+        public string Description { get; set; }
+
+        public ICollection<ActivityProduct> InvolvedActivities { get; set; }
+        public ICollection<OrderDetail> InvolvedOrders { get; set; }
     }
 }

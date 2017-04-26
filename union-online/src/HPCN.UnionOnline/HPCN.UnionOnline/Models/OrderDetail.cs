@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HPCN.UnionOnline.Models
 {
@@ -15,12 +11,10 @@ namespace HPCN.UnionOnline.Models
         public int Quantity { get; set; }
 
         [Required]
-        [Display(Name = "Bonus Point Price")]
-        public double BonusPointPrice { get; set; }
+        public double PointsPaymentAmount { get; set; }
 
         [Required]
-        [Display(Name = "Money Price")]
-        public double MoneyPrice { get; set; }
+        public double SelfPaymentAmount { get; set; }
 
         [Required]
         public Order Order { get; set; }
