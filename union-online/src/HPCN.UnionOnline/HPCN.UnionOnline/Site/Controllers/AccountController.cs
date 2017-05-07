@@ -106,16 +106,19 @@ namespace HPCN.UnionOnline.Site.Controllers
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, $"Failed to find the user with this email: {model.Email}.");
+                return View(model);
             }
 
             if (user.Employee == null)
             {
                 ModelState.AddModelError(string.Empty, $"Failed to find the employee info with this email {model.Email}.");
+                return View(model);
             }
 
-            if (user.Employee.No.Equals(model.EmployeeNo, StringComparison.OrdinalIgnoreCase))
+            if (!user.Employee.No.Equals(model.EmployeeNo, StringComparison.OrdinalIgnoreCase))
             {
                 ModelState.AddModelError(string.Empty, $"The email {model.Email} and the employee no {model.EmployeeNo} do not match.");
+                return View(model);
             }
 
             if (ModelState.IsValid)
