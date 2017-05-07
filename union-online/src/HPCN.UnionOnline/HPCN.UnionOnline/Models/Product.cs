@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HPCN.UnionOnline.Models
 {
-    public class Product : Entity
+    public class Product : AbstractEntity
     {
         [Required]
         [StringLength(200)]
@@ -21,7 +21,15 @@ namespace HPCN.UnionOnline.Models
         [StringLength(1000)]
         public string Description { get; set; }
 
+        [Required]
+        public ProductState Status { get; set; } = ProductState.Active;
+
         public ICollection<ActivityProduct> InvolvedActivities { get; set; }
-        public ICollection<OrderDetail> InvolvedOrders { get; set; }
+    }
+
+    public enum ProductState
+    {
+        Inactive = 0,
+        Active = 1
     }
 }

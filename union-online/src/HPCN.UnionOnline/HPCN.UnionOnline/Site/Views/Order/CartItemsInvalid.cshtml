@@ -1,0 +1,22 @@
+﻿@model IEnumerable<HPCN.UnionOnline.Models.CartProduct>
+
+@{
+    ViewData["Title"] = $"Invalid Cart Item(s)";
+}
+
+<h2>Invalid Cart Item(s)</h2>
+
+<p>
+    As the activity ends or is closed, the following products can't be in an order.
+</p>
+<div>
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>@item.ActivityProduct.Product.Name</li>
+        }
+    </ul>
+</div>
+<div>
+    <a asp-controller="Cart" asp-action="Index">Back to My Cart</a>
+</div>

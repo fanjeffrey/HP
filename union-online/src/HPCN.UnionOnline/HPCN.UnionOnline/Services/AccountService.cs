@@ -20,31 +20,25 @@ namespace HPCN.UnionOnline.Services
             _logger = loggerFactory.CreateLogger<AccountService>();
         }
 
-        public async Task<LoginResult> LoginAsync(string email, string employeeNo, string password)
+        public async Task<User> LoginAsync(string email, string employeeNo, string password)
         {
             var user = await _db.Users
                 .Include(u => u.Employee)
                 .FirstOrDefaultAsync(u => u.Username.Equals(email, StringComparison.OrdinalIgnoreCase) &&
                                         u.Password.Equals(password, StringComparison.Ordinal));
-
-            var result = new LoginResult();
-
             if (user == null)
             {
-                return result;
-            }
-            if (user.Employee != null && user.Employee.No.Equals(employeeNo, StringComparison.OrdinalIgnoreCase))
-            {
-                result.Succeeded = true;
-            }
-            else if (user.IsAdmin)
-            {
-                result.Succeeded = true;
+                return null;
             }
 
-            result.User = user;
+            if (!user.IsAdmin
+                && user.Employee != null
+                && !user.Employee.No.Equals(employeeNo, StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
 
-            return result;
+            return user;
         }
 
         public async Task ResetSystemAdmin()

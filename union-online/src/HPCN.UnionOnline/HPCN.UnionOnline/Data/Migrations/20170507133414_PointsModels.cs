@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HPCN.UnionOnline.Data.Migrations
 {
-    public partial class PointsModel : Migration
+    public partial class PointsModels : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     BeginTime = table.Column<DateTime>(nullable: false),
-                    ConcurrencyTimestamp = table.Column<DateTime>(nullable: true),
                     CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     CreatedTime = table.Column<DateTime>(nullable: true),
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
@@ -30,40 +29,10 @@ namespace HPCN.UnionOnline.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Employees",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    BaseCity = table.Column<string>(maxLength: 50, nullable: false),
-                    ChineseName = table.Column<string>(maxLength: 50, nullable: false),
-                    ConcurrencyTimestamp = table.Column<DateTime>(nullable: true),
-                    CostCenter = table.Column<string>(maxLength: 50, nullable: false),
-                    CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
-                    CreatedTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 50, nullable: false),
-                    EmailAddress = table.Column<string>(maxLength: 200, nullable: false),
-                    EmployeeStatus = table.Column<int>(nullable: false),
-                    EmployeeType = table.Column<int>(nullable: false),
-                    Gender = table.Column<int>(nullable: false),
-                    IdCardNo = table.Column<string>(maxLength: 18, nullable: false),
-                    No = table.Column<string>(maxLength: 50, nullable: false),
-                    OnboardDate = table.Column<DateTime>(nullable: false),
-                    PhoneNumber = table.Column<string>(maxLength: 50, nullable: false),
-                    UpdatedBy = table.Column<string>(maxLength: 200, nullable: true),
-                    UpdatedTime = table.Column<DateTime>(nullable: true),
-                    WorkCity = table.Column<string>(maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ConcurrencyTimestamp = table.Column<DateTime>(nullable: true),
                     CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     CreatedTime = table.Column<DateTime>(nullable: true),
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
@@ -71,6 +40,7 @@ namespace HPCN.UnionOnline.Data.Migrations
                     PictureFileName = table.Column<string>(maxLength: 200, nullable: true),
                     PointsPayment = table.Column<double>(nullable: false),
                     SelfPayment = table.Column<double>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
                     UpdatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     UpdatedTime = table.Column<DateTime>(nullable: true)
                 },
@@ -80,47 +50,13 @@ namespace HPCN.UnionOnline.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    ActivityId = table.Column<Guid>(nullable: false),
-                    ConcurrencyTimestamp = table.Column<DateTime>(nullable: true),
-                    CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
-                    CreatedTime = table.Column<DateTime>(nullable: true),
-                    EmployeeId = table.Column<Guid>(nullable: false),
-                    MoneyAmount = table.Column<double>(nullable: false),
-                    PointsAmount = table.Column<double>(nullable: false),
-                    UpdatedBy = table.Column<string>(maxLength: 200, nullable: true),
-                    UpdatedTime = table.Column<DateTime>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_Activities_ActivityId",
-                        column: x => x.ActivityId,
-                        principalTable: "Activities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Orders_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ConcurrencyTimestamp = table.Column<DateTime>(nullable: true),
                     CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     CreatedTime = table.Column<DateTime>(nullable: true),
                     Disabled = table.Column<bool>(nullable: false),
-                    EmployeeId = table.Column<Guid>(nullable: true),
                     IsAdmin = table.Column<bool>(nullable: false),
                     Password = table.Column<string>(maxLength: 50, nullable: false),
                     UpdatedBy = table.Column<string>(maxLength: 200, nullable: true),
@@ -130,12 +66,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -144,12 +74,12 @@ namespace HPCN.UnionOnline.Data.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ActivityId = table.Column<Guid>(nullable: false),
-                    ConcurrencyTimestamp = table.Column<DateTime>(nullable: true),
                     CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     CreatedTime = table.Column<DateTime>(nullable: true),
                     PointsPayment = table.Column<double>(nullable: false),
                     ProductId = table.Column<Guid>(nullable: false),
                     SelfPayment = table.Column<double>(nullable: false),
+                    Stock = table.Column<double>(nullable: false),
                     UpdatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     UpdatedTime = table.Column<DateTime>(nullable: true)
                 },
@@ -171,34 +101,60 @@ namespace HPCN.UnionOnline.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderDetails",
+                name: "Employees",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    ConcurrencyTimestamp = table.Column<DateTime>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false),
+                    BaseCity = table.Column<string>(maxLength: 50, nullable: false),
+                    ChineseName = table.Column<string>(maxLength: 50, nullable: false),
+                    CostCenter = table.Column<string>(maxLength: 50, nullable: false),
                     CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     CreatedTime = table.Column<DateTime>(nullable: true),
-                    OrderId = table.Column<Guid>(nullable: false),
-                    PointsPaymentAmount = table.Column<double>(nullable: false),
-                    ProductId = table.Column<Guid>(nullable: false),
-                    Quantity = table.Column<int>(nullable: false),
-                    SelfPaymentAmount = table.Column<double>(nullable: false),
+                    DisplayName = table.Column<string>(maxLength: 50, nullable: false),
+                    EmailAddress = table.Column<string>(maxLength: 200, nullable: false),
+                    EmployeeStatus = table.Column<int>(nullable: false),
+                    EmployeeType = table.Column<int>(nullable: false),
+                    Gender = table.Column<int>(nullable: false),
+                    IdCardNo = table.Column<string>(maxLength: 18, nullable: false),
+                    No = table.Column<string>(maxLength: 50, nullable: false),
+                    OnboardDate = table.Column<DateTime>(nullable: false),
+                    PhoneNumber = table.Column<string>(maxLength: 50, nullable: false),
                     UpdatedBy = table.Column<string>(maxLength: 200, nullable: true),
-                    UpdatedTime = table.Column<DateTime>(nullable: true)
+                    UpdatedTime = table.Column<DateTime>(nullable: true),
+                    WorkCity = table.Column<string>(maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderDetails", x => x.Id);
+                    table.PrimaryKey("PK_Employees", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_OrderDetails_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
+                        name: "FK_Employees_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
+                    CreatedTime = table.Column<DateTime>(nullable: true),
+                    MoneyAmount = table.Column<double>(nullable: false),
+                    PointsAmount = table.Column<double>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    UpdatedBy = table.Column<string>(maxLength: 200, nullable: true),
+                    UpdatedTime = table.Column<DateTime>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderDetails_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
+                        name: "FK_Orders_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -208,10 +164,9 @@ namespace HPCN.UnionOnline.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ConcurrencyTimestamp = table.Column<DateTime>(nullable: true),
+                    ActivityProductId = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     CreatedTime = table.Column<DateTime>(nullable: true),
-                    ProductId = table.Column<Guid>(nullable: false),
                     Quantity = table.Column<int>(nullable: false),
                     UpdatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     UpdatedTime = table.Column<DateTime>(nullable: true),
@@ -221,15 +176,52 @@ namespace HPCN.UnionOnline.Data.Migrations
                 {
                     table.PrimaryKey("PK_CartProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CartProducts_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
+                        name: "FK_CartProducts_ActivityProducts_ActivityProductId",
+                        column: x => x.ActivityProductId,
+                        principalTable: "ActivityProducts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CartProducts_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderDetails",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    AcitivityName = table.Column<string>(nullable: true),
+                    ActivityId = table.Column<Guid>(nullable: false),
+                    ActivityProductId = table.Column<Guid>(nullable: false),
+                    CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
+                    CreatedTime = table.Column<DateTime>(nullable: true),
+                    OrderId = table.Column<Guid>(nullable: false),
+                    PointsPayment = table.Column<double>(nullable: false),
+                    PointsPaymentAmount = table.Column<double>(nullable: false),
+                    ProductName = table.Column<string>(nullable: true),
+                    Quantity = table.Column<int>(nullable: false),
+                    SelfPayment = table.Column<double>(nullable: false),
+                    SelfPaymentAmount = table.Column<double>(nullable: false),
+                    UpdatedBy = table.Column<string>(maxLength: 200, nullable: true),
+                    UpdatedTime = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderDetails_ActivityProducts_ActivityProductId",
+                        column: x => x.ActivityProductId,
+                        principalTable: "ActivityProducts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderDetails_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -245,9 +237,9 @@ namespace HPCN.UnionOnline.Data.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartProducts_ProductId",
+                name: "IX_CartProducts_ActivityProductId",
                 table: "CartProducts",
-                column: "ProductId");
+                column: "ActivityProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CartProducts_UserId",
@@ -255,56 +247,46 @@ namespace HPCN.UnionOnline.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_ActivityId",
+                name: "IX_Orders_UserId",
                 table: "Orders",
-                column: "ActivityId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_EmployeeId",
-                table: "Orders",
-                column: "EmployeeId");
+                name: "IX_OrderDetails_ActivityProductId",
+                table: "OrderDetails",
+                column: "ActivityProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_OrderId",
                 table: "OrderDetails",
                 column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_ProductId",
-                table: "OrderDetails",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_EmployeeId",
-                table: "Users",
-                column: "EmployeeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ActivityProducts");
+                name: "CartProducts");
 
             migrationBuilder.DropTable(
-                name: "CartProducts");
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "OrderDetails");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "ActivityProducts");
 
             migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Products");
-
-            migrationBuilder.DropTable(
                 name: "Activities");
 
             migrationBuilder.DropTable(
-                name: "Employees");
+                name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

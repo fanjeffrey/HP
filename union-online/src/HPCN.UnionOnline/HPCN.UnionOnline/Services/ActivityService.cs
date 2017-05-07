@@ -44,7 +44,7 @@ namespace HPCN.UnionOnline.Services
 
         public async Task UpdateAsync(Guid id, string name, DateTime beginTime, DateTime endTime, string description, string updatedBy)
         {
-            var activity = await _db.Activities.FirstOrDefaultAsync(a => a.Id == id);
+            var activity = await _db.Activities.SingleOrDefaultAsync(a => a.Id == id);
             if (activity != null)
             {
                 activity.Name = name.Trim();
@@ -60,7 +60,7 @@ namespace HPCN.UnionOnline.Services
 
         public async Task OpenAsync(Guid id)
         {
-            var activity = await _db.Activities.FirstOrDefaultAsync(a => a.Id == id);
+            var activity = await _db.Activities.SingleOrDefaultAsync(a => a.Id == id);
             if (activity != null)
             {
                 activity.Status = ActivityState.Active;
@@ -71,7 +71,7 @@ namespace HPCN.UnionOnline.Services
 
         public async Task CloseAsync(Guid id)
         {
-            var activity = await _db.Activities.FirstOrDefaultAsync(a => a.Id == id);
+            var activity = await _db.Activities.SingleOrDefaultAsync(a => a.Id == id);
             if (activity != null)
             {
                 activity.Status = ActivityState.Closed;
@@ -82,9 +82,12 @@ namespace HPCN.UnionOnline.Services
 
         public async Task DeleteAsync(Guid id)
         {
-            var activity = await _db.Activities.FirstOrDefaultAsync(a => a.Id == id);
-            _db.Activities.Remove(activity);
-            await _db.SaveChangesAsync();
+            var activity = await _db.Activities.SingleOrDefaultAsync(a => a.Id == id);
+            if (activity != null)
+            {
+                _db.Activities.Remove(activity);
+                await _db.SaveChangesAsync();
+            }
         }
 
         public async Task<bool> ExistsAsync(Guid id)
@@ -114,7 +117,26 @@ namespace HPCN.UnionOnline.Services
 
         public async Task<Activity> GetActivityByIdAsync(Guid id)
         {
-            return await _db.Activities.FirstOrDefaultAsync(a => a.Id == id);
+            return await _db.Activities.SingleOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<Activity> GetActiveActivityAsync()
+        {
+            var activity = await _db.Activities
+                .OrderBy(a => a.BeginTime)
+                .FirstOrDefaultAsync(a => a.Status == ActivityState.Active);
+
+            if (activity == null)
+            {
+                return null;
+            }
+
+            activity.ActivityProducts = await _db.ActivityProducts
+                .Include(ap => ap.Product)
+                .Where(ap => ap.Activity.Id == activity.Id)
+                .ToListAsync();
+
+            return activity;
         }
 
         public async Task<int> CountAsync(string keyword)
@@ -164,7 +186,7 @@ namespace HPCN.UnionOnline.Services
 
         public async Task AddProductsAsync(Guid activityId, IEnumerable<Guid> productIds, string creator)
         {
-            var activity = await _db.Activities.FirstOrDefaultAsync(a => a.Id == activityId);
+            var activity = await _db.Activities.SingleOrDefaultAsync(a => a.Id == activityId);
             var activityProducts = await _db.ActivityProducts.Include(ap => ap.Product).Where(ap => ap.Activity.Id == activityId).ToListAsync();
 
             if (activity != null)

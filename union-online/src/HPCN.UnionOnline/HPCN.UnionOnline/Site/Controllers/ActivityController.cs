@@ -32,7 +32,7 @@ namespace HPCN.UnionOnline.Site.Controllers
 
         public async Task<IActionResult> Index(string keyword, int pageIndex = 1)
         {
-            var pageSize = 1;
+            var pageSize = 20;
             var model = new ActivitySearchViewModel
             {
                 Keyword = keyword,

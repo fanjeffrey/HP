@@ -6,6 +6,16 @@ namespace HPCN.UnionOnline.Site.Extensions
 {
     public static class ClaimsExtension
     {
+        public static string GetUserId(this ClaimsPrincipal user)
+        {
+            return (user.Identity as ClaimsIdentity).GetUserId();
+        }
+
+        public static string GetUserId(this ClaimsIdentity identity)
+        {
+            return identity.Claims.FirstOrDefault(c => "userid".Equals(c.Type)).Value;
+        }
+
         public static string GetUsername(this ClaimsPrincipal user)
         {
             return (user.Identity as ClaimsIdentity).GetUsername();
@@ -13,7 +23,7 @@ namespace HPCN.UnionOnline.Site.Extensions
 
         public static string GetUsername(this ClaimsIdentity identity)
         {
-            return identity.Claims.First(c => "username".Equals(c.Type)).Value;
+            return identity.Claims.FirstOrDefault(c => "username".Equals(c.Type)).Value;
         }
 
         public static string GetUpdatedTime(this ClaimsPrincipal user)
@@ -23,7 +33,7 @@ namespace HPCN.UnionOnline.Site.Extensions
 
         public static string GetUpdatedTime(this ClaimsIdentity identity)
         {
-            return identity.Claims.First(c => "updatedtime".Equals(c.Type)).Value;
+            return identity.Claims.FirstOrDefault(c => "updatedtime".Equals(c.Type)).Value;
         }
 
         public static bool IsAdmin(this ClaimsPrincipal user)

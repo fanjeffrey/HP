@@ -50,32 +50,30 @@ namespace HPCN.UnionOnline.Site.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var result = await _accountService.LoginAsync(model.Email, model.EmployeeNo, model.Password);
-
-                if (result.Succeeded)
-                {
-                    var userClaims = new List<Claim>{
-                        new Claim("username", model.Email),
-                        new Claim("isadmin", result.User.IsAdmin.ToString()),
-                        new Claim("updatedtime", result.User.UpdatedTime.Value.Ticks.ToString())
-                    };
-                    var principal = new ClaimsPrincipal(new ClaimsIdentity(userClaims, "AuthenticationTypes.Password"));
-                    await HttpContext.Authentication.SignInAsync(_cookieScheme, principal);
-
-                    _logger.LogInformation(1, "User logged in.");
-                    return RedirectToLocal(returnUrl);
-                }
-
-                if (result.User != null && result.User.Disabled)
-                {
-                    _logger.LogWarning(2, "User account disabled.");
-                    return View("Disabled");
-                }
-                else
+                var user = await _accountService.LoginAsync(model.Email, model.EmployeeNo, model.Password);
+                if (user == null)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View(model);
                 }
+
+                if (user.Disabled)
+                {
+                    _logger.LogWarning(2, "User account disabled.");
+                    return View("Disabled");
+                }
+
+                var userClaims = new List<Claim>{
+                        new Claim("userid", user.Id.ToString()),
+                        new Claim("username", model.Email),
+                        new Claim("isadmin", user.IsAdmin.ToString()),
+                        new Claim("updatedtime", user.UpdatedTime.Value.Ticks.ToString())
+                    };
+                var principal = new ClaimsPrincipal(new ClaimsIdentity(userClaims, "AuthenticationTypes.Password"));
+                await HttpContext.Authentication.SignInAsync(_cookieScheme, principal);
+
+                _logger.LogInformation(1, "User logged in.");
+                return RedirectToLocal(returnUrl);
             }
 
             // If we got this far, something failed, redisplay form

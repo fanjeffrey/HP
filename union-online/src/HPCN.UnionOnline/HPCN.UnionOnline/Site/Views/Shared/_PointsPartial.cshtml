@@ -1,0 +1,3 @@
+﻿@inject IPointsService _pointsService
+Balance: @await _pointsService.CalculatePointsBalance(Guid.Parse(User.GetUserId())) /
+Total: @await _pointsService.CalculatePointsTotal(Guid.Parse(User.GetUserId()))

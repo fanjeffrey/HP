@@ -9,8 +9,8 @@ using HPCN.UnionOnline.Models;
 namespace HPCN.UnionOnline.Data.Migrations
 {
     [DbContext(typeof(HPCNUnionOnlineDbContext))]
-    [Migration("20170426164210_PointsModel")]
-    partial class PointsModel
+    [Migration("20170507133414_PointsModels")]
+    partial class PointsModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,8 +24,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("BeginTime");
-
-                    b.Property<DateTime?>("ConcurrencyTimestamp");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200);
@@ -60,8 +58,6 @@ namespace HPCN.UnionOnline.Data.Migrations
 
                     b.Property<Guid>("ActivityId");
 
-                    b.Property<DateTime?>("ConcurrencyTimestamp");
-
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200);
 
@@ -72,6 +68,8 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("ProductId");
 
                     b.Property<double>("SelfPayment");
+
+                    b.Property<double>("Stock");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(200);
@@ -92,14 +90,12 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("ConcurrencyTimestamp");
+                    b.Property<Guid>("ActivityProductId");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200);
 
                     b.Property<DateTime?>("CreatedTime");
-
-                    b.Property<Guid>("ProductId");
 
                     b.Property<int>("Quantity");
 
@@ -112,7 +108,7 @@ namespace HPCN.UnionOnline.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ActivityProductId");
 
                     b.HasIndex("UserId");
 
@@ -121,8 +117,7 @@ namespace HPCN.UnionOnline.Data.Migrations
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.Employee", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<Guid>("UserId");
 
                     b.Property<string>("BaseCity")
                         .IsRequired()
@@ -131,8 +126,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<string>("ChineseName")
                         .IsRequired()
                         .HasMaxLength(50);
-
-                    b.Property<DateTime?>("ConcurrencyTimestamp");
 
                     b.Property<string>("CostCenter")
                         .IsRequired()
@@ -180,7 +173,7 @@ namespace HPCN.UnionOnline.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Employees");
                 });
@@ -190,31 +183,27 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("ActivityId");
-
-                    b.Property<DateTime?>("ConcurrencyTimestamp");
-
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200);
 
                     b.Property<DateTime?>("CreatedTime");
 
-                    b.Property<Guid>("EmployeeId");
-
                     b.Property<double>("MoneyAmount");
 
                     b.Property<double>("PointsAmount");
+
+                    b.Property<int>("Status");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(200);
 
                     b.Property<DateTime?>("UpdatedTime");
 
+                    b.Property<Guid>("UserId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ActivityId");
-
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -224,7 +213,11 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("ConcurrencyTimestamp");
+                    b.Property<string>("AcitivityName");
+
+                    b.Property<Guid>("ActivityId");
+
+                    b.Property<Guid>("ActivityProductId");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200);
@@ -233,11 +226,15 @@ namespace HPCN.UnionOnline.Data.Migrations
 
                     b.Property<Guid>("OrderId");
 
+                    b.Property<double>("PointsPayment");
+
                     b.Property<double>("PointsPaymentAmount");
 
-                    b.Property<Guid>("ProductId");
+                    b.Property<string>("ProductName");
 
                     b.Property<int>("Quantity");
+
+                    b.Property<double>("SelfPayment");
 
                     b.Property<double>("SelfPaymentAmount");
 
@@ -248,9 +245,9 @@ namespace HPCN.UnionOnline.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("ActivityProductId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("OrderDetails");
                 });
@@ -259,8 +256,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime?>("ConcurrencyTimestamp");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200);
@@ -281,6 +276,8 @@ namespace HPCN.UnionOnline.Data.Migrations
 
                     b.Property<double>("SelfPayment");
 
+                    b.Property<int>("Status");
+
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(200);
 
@@ -296,16 +293,12 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("ConcurrencyTimestamp");
-
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200);
 
                     b.Property<DateTime?>("CreatedTime");
 
                     b.Property<bool>("Disabled");
-
-                    b.Property<Guid?>("EmployeeId");
 
                     b.Property<bool>("IsAdmin");
 
@@ -323,8 +316,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                         .HasMaxLength(200);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Users");
                 });
@@ -344,48 +335,44 @@ namespace HPCN.UnionOnline.Data.Migrations
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.CartProduct", b =>
                 {
-                    b.HasOne("HPCN.UnionOnline.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
+                    b.HasOne("HPCN.UnionOnline.Models.ActivityProduct", "ActivityProduct")
+                        .WithMany("CartProducts")
+                        .HasForeignKey("ActivityProductId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HPCN.UnionOnline.Models.User", "User")
-                        .WithMany()
+                        .WithMany("CartPoducts")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HPCN.UnionOnline.Models.Employee", b =>
+                {
+                    b.HasOne("HPCN.UnionOnline.Models.User", "User")
+                        .WithOne("Employee")
+                        .HasForeignKey("HPCN.UnionOnline.Models.Employee", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.Order", b =>
                 {
-                    b.HasOne("HPCN.UnionOnline.Models.Activity", "Activity")
+                    b.HasOne("HPCN.UnionOnline.Models.User", "User")
                         .WithMany("Orders")
-                        .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HPCN.UnionOnline.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.OrderDetail", b =>
                 {
+                    b.HasOne("HPCN.UnionOnline.Models.ActivityProduct", "ActivityProduct")
+                        .WithMany()
+                        .HasForeignKey("ActivityProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("HPCN.UnionOnline.Models.Order", "Order")
                         .WithMany("Details")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HPCN.UnionOnline.Models.Product", "Product")
-                        .WithMany("InvolvedOrders")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.User", b =>
-                {
-                    b.HasOne("HPCN.UnionOnline.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
                 });
         }
     }

@@ -1,10 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HPCN.UnionOnline.Models
 {
-    public class Employee : Entity
+    public class Employee : LoggableEntity
     {
+        [Key, ForeignKey("User")]
+        public Guid UserId { get; set; }
+
         [Required]
         [StringLength(50)]
         public string No { get; set; }
@@ -52,6 +56,9 @@ namespace HPCN.UnionOnline.Models
 
         [Required]
         public EmployeeState EmployeeStatus { get; set; }
+
+        [Required]
+        public User User { get; set; }
     }
 
     public enum Gender

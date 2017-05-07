@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace HPCN.UnionOnline.Models
 {
-    public class User : Entity
+    public class User : AbstractEntity
     {
         [Required]
         [StringLength(200)]
@@ -19,5 +20,8 @@ namespace HPCN.UnionOnline.Models
         public bool Disabled { get; set; }
 
         public Employee Employee { get; set; }
+
+        public ICollection<CartProduct> CartPoducts { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

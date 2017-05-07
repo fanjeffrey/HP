@@ -1,0 +1,94 @@
+@model IEnumerable<HPCN.UnionOnline.Models.CartProduct>
+
+@{
+    ViewData["Title"] = "My Cart";
+    var index1 = 0;
+}
+
+<h2>My Cart</h2>
+
+<p>
+    <a asp-controller="home" asp-action="exchange">Continue shopping ...</a>
+</p>
+<form asp-controller="Order" asp-action="create" method="post" onsubmit="return validate();">
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ActivityProduct.Product)
+                    </th>
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ActivityProduct.PointsPayment)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ActivityProduct.SelfPayment)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Quantity)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @if (item.ActivityProduct.Activity.Status == ActivityState.Active && DateTime.Now <= item.ActivityProduct.Activity.EndTime)
+                            {
+                                <input type="hidden" value="@(index1)" name="cartProducts.Index">
+                                <input type="checkbox" name="cartProducts[@(index1++)].Id" value="@item.Id" />
+                            }
+                            else
+                            {
+                                <input type="hidden" value="@(index1)" name="cartProducts.Index">
+                                <input type="checkbox" name="cartProducts[@(index1++)].Id" value="@item.Id" title="Activity Ends." disabled />
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ActivityProduct.Product.Name)
+                            [@Html.DisplayFor(modelItem => item.ActivityProduct.Activity.Name)]
+                        </td>
+                        <td>
+                            <img class="product-picture-list"
+                                 src="../pictures/product/@item.ActivityProduct.Product.PictureFileName"
+                                 alt="@item.ActivityProduct.Product.PictureFileName" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ActivityProduct.PointsPayment)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ActivityProduct.SelfPayment)
+                        </td>
+                        <td>
+                            @if (item.ActivityProduct.Activity.Status == ActivityState.Active && DateTime.Now <= item.ActivityProduct.Activity.EndTime)
+                            {
+                                <input type="button" class="btn btn-default" value="-" onclick="updateQuantity(this, subtract, '@item.Id');" />
+                                <input type="number" name="Quantity" class="quantity" value="@item.Quantity" />
+                                <input type="button" class="btn btn-default" value="+" onclick="updateQuantity(this, add, '@item.Id');" />
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                                <span>[Activity ended.]</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <input type="submit" value="Create order" class="btn btn-default" />
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_CartScriptsPartial");}
+}

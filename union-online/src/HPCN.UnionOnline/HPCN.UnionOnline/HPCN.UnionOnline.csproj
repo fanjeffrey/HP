@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\js\cart.js" />
     <Content Include="wwwroot\pictures\product\no_image.png" />
   </ItemGroup>
   <ItemGroup>

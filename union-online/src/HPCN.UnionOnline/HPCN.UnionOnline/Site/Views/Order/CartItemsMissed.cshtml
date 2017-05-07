@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = $"Cart Item(s) Not Found";
+}
+
+<h2>Cart Item(s) Not Found</h2>
+
+<p>
+    Faild to find @ViewBag.CountOfMissedCartItems cart item(s). Maybe the activity ends or is closed.
+</p>
+<div>
+    <a asp-controller="Cart" asp-action="Index">Back to My Cart</a>
+</div>

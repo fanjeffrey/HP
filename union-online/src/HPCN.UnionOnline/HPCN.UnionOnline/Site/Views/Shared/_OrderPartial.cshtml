@@ -1,0 +1,2 @@
+﻿@inject IOrderService _orderService
+@await _orderService.Count(Guid.Parse(User.GetUserId()))

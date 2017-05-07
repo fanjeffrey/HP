@@ -96,3 +96,12 @@ img.product-picture-edit {
     .container-products h4 {
         margin-bottom: 1px;
     }
+
+/*--home--*/
+.activity-status span {
+    background-color: yellow;
+}
+
+.quantity {
+    width: 30px;
+}

@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace HPCN.UnionOnline.Models
 {
-    public class ActivityProduct : Entity
+    public class ActivityProduct : AbstractEntity
     {
-        [Required]
-        public Activity Activity { get; set; }
-
         [Required]
         public Product Product { get; set; }
 
@@ -15,5 +13,13 @@ namespace HPCN.UnionOnline.Models
 
         [Required]
         public double SelfPayment { get; set; }
+
+        [Required]
+        public double Stock { get; set; } = -1; // -1 means infinite
+
+        [Required]
+        public Activity Activity { get; set; }
+
+        public ICollection<CartProduct> CartProducts { get; set; }
     }
 }

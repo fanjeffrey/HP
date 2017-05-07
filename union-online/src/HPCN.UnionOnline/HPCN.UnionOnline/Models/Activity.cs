@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HPCN.UnionOnline.Models
 {
-    public class Activity : Entity
+    public class Activity : AbstractEntity
     {
         [Required]
         [StringLength(200)]
@@ -18,12 +18,11 @@ namespace HPCN.UnionOnline.Models
 
         [Required]
         public ActivityState Status { get; set; } = ActivityState.Pending;
-        
+
         [StringLength(1000)]
         public string Description { get; set; }
 
         public ICollection<ActivityProduct> ActivityProducts { get; set; }
-        public ICollection<Order> Orders { get; set; }
     }
 
     public enum ActivityState

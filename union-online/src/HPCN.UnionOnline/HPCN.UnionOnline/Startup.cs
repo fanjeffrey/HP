@@ -59,8 +59,13 @@ namespace HPCN.UnionOnline
             // Add application services.
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IActivityService, ActivityService>();
+            services.AddTransient<ICartService, CartService>();
             services.AddTransient<IEmailSender, SmtpEmailSender>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IOperationService, OperationService>();
+            services.AddTransient<IOptionsService, OptionsService>();
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IPointsService, PointsService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IProductPictureService, ProductPictureService>();
             services.AddTransient<IUserService, UserService>();

@@ -16,6 +16,7 @@ namespace HPCN.UnionOnline.Services
         Task<bool> ExistsAsync(string name);
         Task<bool> ExistsAsync(Guid id, string name);
         Task<Activity> GetActivityByIdAsync(Guid id);
+        Task<Activity> GetActiveActivityAsync();
         Task<int> CountAsync(string keyword);
         Task<IList<Activity>> SearchAsync(string keyword, int pageIndex, int pageSize);
         Task<ICollection<ActivityProduct>> GetProductsAsync(Guid activityId);

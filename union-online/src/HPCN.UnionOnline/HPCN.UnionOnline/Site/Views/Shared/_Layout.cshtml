@@ -37,11 +37,13 @@
                     {
                         <li><a asp-area="" asp-controller="Activity" asp-action="Index">Activities</a></li>
                         <li><a asp-area="" asp-controller="Product" asp-action="Index">Products</a></li>
+                        <li><a asp-area="" asp-controller="Employee" asp-action="Index">Employees</a></li>
                     }
-                    else
+                    else if (User.Identity.IsAuthenticated)
                     {
-                        <li></li>
-                        <li></li>
+                        <li><a asp-area="" asp-controller="Cart" asp-action="Index">My Cart (@await Html.PartialAsync("_CartPartial"))</a></li>
+                        <li><a asp-area="" asp-controller="Order" asp-action="Index">My Orders (@await Html.PartialAsync("_OrderPartial"))</a></li>
+                        <li><a>My Points (@await Html.PartialAsync("_PointsPartial"))</a></li>
                     }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
