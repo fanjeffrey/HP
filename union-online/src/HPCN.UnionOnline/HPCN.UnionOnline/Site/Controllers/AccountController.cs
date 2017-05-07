@@ -102,17 +102,25 @@ namespace HPCN.UnionOnline.Site.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
+            var user = await _userService.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, $"Failed to find the user with this email: {model.Email}.");
+            }
+
+            if (user.Employee == null)
+            {
+                ModelState.AddModelError(string.Empty, $"Failed to find the employee info with this email {model.Email}.");
+            }
+
+            if (user.Employee.No.Equals(model.EmployeeNo, StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError(string.Empty, $"The email {model.Email} and the employee no {model.EmployeeNo} do not match.");
+            }
+
             if (ModelState.IsValid)
             {
-                var user = await _userService.FindByEmailAsync(model.Email);
-                if (user == null)
-                {
-                    // Don't reveal that the user does not exist.
-                    return View("ForgotPasswordConfirmation");
-                }
-
-                await _emailSender.SendEmailAsync(model.Email, "SHP UNION PASSWORD RESET (DO NOT REPLY)",
-                   $"Your password: {user.Password}");
+                await _emailSender.SendEmailAsync(model.Email, "SHP UNION PASSWORD RESET (DO NOT REPLY)", $"Your password: {user.Password}");
 
                 return View("ForgotPasswordConfirmation");
             }

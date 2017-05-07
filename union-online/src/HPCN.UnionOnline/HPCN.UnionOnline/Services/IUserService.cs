@@ -9,6 +9,5 @@ namespace HPCN.UnionOnline.Services
     {
         Task<User> FindByEmailAsync(string email);
         Task<User> GetUserWithEmployeeInfoAsync(Guid guid);
-        Task<IEnumerable<Order>> GetOrdersAsync(Guid guid);
     }
 }
