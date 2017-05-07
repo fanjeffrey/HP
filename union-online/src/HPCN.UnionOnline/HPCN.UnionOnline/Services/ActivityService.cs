@@ -76,6 +76,10 @@ namespace HPCN.UnionOnline.Services
             {
                 activity.Status = ActivityState.Closed;
 
+                // remove all cart items related to this activity
+                var cartItems = _db.CartProducts.Where(cp => cp.ActivityProduct.Activity.Id == id);
+                _db.CartProducts.RemoveRange(cartItems);
+
                 await _db.SaveChangesAsync();
             }
         }
