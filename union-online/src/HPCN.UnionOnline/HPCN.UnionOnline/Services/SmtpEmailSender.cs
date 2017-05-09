@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.Extensions.Logging;
+using MimeKit;
 using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Services
@@ -12,10 +15,23 @@ namespace HPCN.UnionOnline.Services
             _logger = loggerFactory.CreateLogger<SmtpEmailSender>();
         }
 
-        public Task SendEmailAsync(string to, string subject, string message)
+        public async Task SendEmailAsync(string to, string subject, string message)
         {
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(new MailboxAddress("HP BF Union", "hpiunionbf@hp.com"));
+            emailMessage.To.Add(new MailboxAddress("", to));
+            emailMessage.Subject = subject;
+            emailMessage.Body = new TextPart("html") { Text = message };
+
+            using (var client = new SmtpClient())
+            {
+                client.LocalDomain = "hp.com";
+                await client.ConnectAsync("smtp2.hp.com", 25, SecureSocketOptions.None).ConfigureAwait(false);
+                await client.SendAsync(emailMessage).ConfigureAwait(false);
+                await client.DisconnectAsync(true).ConfigureAwait(false);
+            }
+
             _logger.LogInformation(1, $"EMAIL: {subject} sent to {to}");
-            return Task.FromResult(0);
         }
     }
 }

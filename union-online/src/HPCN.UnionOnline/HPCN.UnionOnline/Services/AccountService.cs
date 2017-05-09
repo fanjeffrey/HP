@@ -20,6 +20,21 @@ namespace HPCN.UnionOnline.Services
             _logger = loggerFactory.CreateLogger<AccountService>();
         }
 
+        public async Task<string> GenerateNewPasswordAsync(Guid userId)
+        {
+            var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new Exception($"Failed to find the user with the guid: {userId}.");
+            }
+
+            var ticket = DateTime.Now.Ticks.ToString();
+            user.Password = ticket.Substring(ticket.Length - 6);
+            await _db.SaveChangesAsync();
+
+            return user.Password;
+        }
+
         public async Task<User> LoginAsync(string email, string employeeNo, string password)
         {
             var user = await _db.Users

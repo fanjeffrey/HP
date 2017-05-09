@@ -123,9 +123,10 @@ namespace HPCN.UnionOnline.Site.Controllers
 
             if (ModelState.IsValid)
             {
-                await _emailSender.SendEmailAsync(model.Email, "SHP UNION PASSWORD RESET (DO NOT REPLY)", $"Your password: {user.Password}");
+                var password = await _accountService.GenerateNewPasswordAsync(user.Id);
+                await _emailSender.SendEmailAsync(model.Email, "SHP UNION PASSWORD RESET (DO NOT REPLY)", $"Your password: {password}");
 
-                return View("ForgotPasswordConfirmation");
+                return RedirectToAction("ForgotPasswordConfirmation");
             }
 
             // If we got this far, something failed, redisplay form
