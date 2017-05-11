@@ -1,12 +1,12 @@
 ﻿@{
-    ViewData["Title"] = $"No Enough Points";
+    ViewData["Title"] = $"积分余额不足";
 }
 
-<h2>No Enough Points</h2>
+<h2>@ViewData["Title"]</h2>
 
 <p>
-    You have no enough points to exchange these products.
+    你的积分余额不足，无法进行兑换。
 </p>
 <div>
-    <a asp-controller="Cart" asp-action="Index">Back to My Cart</a>
+    <a asp-controller="Cart" asp-action="Index">返回到购物车</a>
 </div>

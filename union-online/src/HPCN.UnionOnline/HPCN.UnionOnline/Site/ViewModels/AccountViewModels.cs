@@ -13,6 +13,7 @@ namespace HPCN.UnionOnline.Site.ViewModels
         public string EmployeeNo { get; set; }
 
         [Required]
+        [Display(Name = "密码")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
     }

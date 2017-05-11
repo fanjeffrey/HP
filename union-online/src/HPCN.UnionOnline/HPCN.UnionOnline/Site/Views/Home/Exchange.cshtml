@@ -1,77 +1,75 @@
-@model HPCN.UnionOnline.Models.Activity
+﻿@model HPCN.UnionOnline.Models.Activity
 
 @{
     ViewData["Title"] = $"{Model.Name}";
 }
 
-<h2>Current activity: @Model.Name</h2>
+<h2>当前活动: @Model.Name</h2>
 
 <p>
-    Begins from <strong>@Model.BeginTime</strong> to <strong>@Model.EndTime</strong>.
+    从 <strong>@Model.BeginTime</strong> 开始至 <strong> @Model.EndTime </strong>.
 </p>
 
 @if (DateTime.Now < Model.BeginTime)
 {
-    <h4 class="activity-status"><span>This activity has NOT started yet.</span></h4>
+    <h4 class="activity-status"><span>此活动尚未开始.</span></h4>
 }
 
 @if (Model.EndTime < DateTime.Now)
 {
-    <h4 class="activity-status"><span>This activity has ended.</span></h4>
+    <h4 class="activity-status"><span>此活动已结束.</span></h4>
 }
 
-<hr />
-<div class="container-products">
-    <div>
-        <table class="table">
-            <thead>
+<div class="products-section">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    商品
+                </th>
+                <th></th>
+                <th>
+                    积分
+                </th>
+                <th>
+                    自费
+                </th>
+                <th>
+                    数量
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ActivityProducts)
+            {
                 <tr>
-                    <th>
-                        Product Name
-                    </th>
-                    <th></th>
-                    <th>
-                        Points Payment
-                    </th>
-                    <th>
-                        Self Payment
-                    </th>
-                    <th>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.ActivityProducts)
-                {
-                    <tr>
-                        <td>
-                            <a asp-controller="product" asp-action="details" asp-route-id="@item.Product.Id">@item.Product.Name</a>
-                        </td>
-                        <td>
-                            <img class="product-picture-list" src="../pictures/product/@item.Product.PictureFileName" alt="@item.Product.PictureFileName" />
-                        </td>
-                        <td>
-                            @item.PointsPayment
-                        </td>
-                        <td>
-                            @item.SelfPayment
-                        </td>
-                        <td>
+                    <td>
+                        @item.Product.Name
+                    </td>
+                    <td>
+                        <img class="product-picture-list" src="../pictures/product/@item.Product.PictureFileName" alt="@item.Product.PictureFileName" />
+                    </td>
+                    <td>
+                        @item.PointsPayment
+                    </td>
+                    <td>
+                        @item.SelfPayment
+                    </td>
+                    <td>
+                        @if (Model.BeginTime <= DateTime.Now && DateTime.Now <= Model.EndTime)
+                        {
                             <form asp-action="Add" asp-controller="Cart" method="post">
-                                Quantity:
                                 <input type="button" class="btn btn-default" value="-" onclick="subtract(this)" />
-                                <input type="number" name="Quantity" class="quantity" value="1" />
+                                <input type="number" name="Quantity" class="quantity" value="1" readonly />
                                 <input type="button" class="btn btn-default" value="+" onclick="add(this)" />
-                                @if (Model.BeginTime <= DateTime.Now && DateTime.Now <= Model.EndTime)
-                                {
-                                    <button class="btn btn-default">Add to cart</button>
-                                }
+
+                                <button class="btn btn-default">加入购物车</button>
                                 <input type="hidden" name="ActivityProductId" value="@item.Id" />
                             </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

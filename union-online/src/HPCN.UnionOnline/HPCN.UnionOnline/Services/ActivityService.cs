@@ -80,6 +80,16 @@ namespace HPCN.UnionOnline.Services
                 var cartItems = _db.CartProducts.Where(cp => cp.ActivityProduct.Activity.Id == id);
                 _db.CartProducts.RemoveRange(cartItems);
 
+                var orders = from o in _db.OrderDetails
+                             where o.ActivityId == id
+                                && o.Order.Status == OrderState.Created
+                             select o.Order;
+
+                foreach (var order in orders)
+                {
+                    order.Status = OrderState.Completed;
+                }
+
                 await _db.SaveChangesAsync();
             }
         }

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<HPCN.UnionOnline.Models.Order>
+
+@foreach (var item in Model)
+{
+    <table class="table order-table">
+        <tbody>
+            <tr>
+                <td>
+                    @(item.CreatedTime?.ToString("MM/dd/yyyy HH:mm:ss"))
+                </td>
+                <td width="50%">
+                    @Html.DisplayNameFor(model => model.Id) :
+                    @item.Id.ToString().ToUpper()
+                </td>
+                <td>
+                    积分 :
+                    @Html.DisplayFor(modelItem => item.PointsAmount)，
+                    自费 :
+                    @Html.DisplayFor(modelItem => item.MoneyAmount)
+                </td>
+                <td>
+                    <strong>@Html.DisplayFor(modelItem => item.Status)</strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <ul>
+                        @foreach (var d in item.Details)
+                        {
+                            <li>@d.ProductName (积分: @d.PointsPayment, 自费: @d.SelfPayment) -- [@d.AcitivityName] X @d.Quantity</li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    @if (item.Status == OrderState.Created)
+                    {
+                        <form asp-action="Cancel" method="post" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn btn-default">Cancel</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

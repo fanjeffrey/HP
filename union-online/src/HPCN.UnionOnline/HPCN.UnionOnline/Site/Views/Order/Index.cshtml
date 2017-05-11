@@ -1,74 +1,28 @@
-@model IEnumerable<HPCN.UnionOnline.Models.Order>
+﻿@model IEnumerable<HPCN.UnionOnline.Models.Order>
 
 @{
     ViewData["Title"] = "My Orders";
+    var createdOrders = Model.Where(o => o.Status == OrderState.Created);
+    var completedOrders = Model.Where(o => o.Status == OrderState.Completed);
+    var cancelledOrders = Model.Where(o => o.Status == OrderState.Cancelled);
 }
 
-<h2>My Orders</h2>
+<h2>我的订单</h2>
 
-<p>
-    <a asp-controller="Home" asp-action="Exchange">Continue shopping ...</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PointsAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MoneyAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedTime)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PointsAmount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MoneyAmount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdatedTime)
-                </td>
-                <td>
-                    @if (item.Status == OrderState.Created)
-                    {
-                        <form asp-action="Cancel" method="post" onsubmit="return confirm('Are you sure you want to cancel this order?');">
-                            <input type="hidden" name="id" value="@item.Id" />
-                            <button class="btn btn-default">Cancel</button>
-                        </form>
-                    }
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6">
-                    <ul>
-                        @foreach (var d in item.Details)
-                        {
-                            <li>@d.ProductName (@d.PointsPayment * @d.Quantity + @d.SelfPayment * @d.Quantity) -- @d.AcitivityName</li>
-                        }
-                    </ul>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="orders-section">
+    <h4><span class="created">已创建的订单</span> (@createdOrders.Count())</h4>
+    <hr />
+    @await Html.PartialAsync("_Orders", createdOrders.OrderBy(o => o.CreatedBy))
+</div>
+
+<div class="orders-section">
+    <h4><span class="completed">已完成的订单</span> (@completedOrders.Count())</h4>
+    <hr />
+    @await Html.PartialAsync("_Orders", completedOrders.OrderBy(o => o.CreatedBy))
+</div>
+
+<div class="orders-section">
+    <h4><span class="cancelled">已取消的订单</span> (@cancelledOrders.Count())</h4>
+    <hr />
+    @await Html.PartialAsync("_Orders", cancelledOrders.OrderBy(o => o.CreatedBy))
+</div>

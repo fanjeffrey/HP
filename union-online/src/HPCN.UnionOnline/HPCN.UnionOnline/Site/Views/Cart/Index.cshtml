@@ -1,93 +1,106 @@
-@model IEnumerable<HPCN.UnionOnline.Models.CartProduct>
+﻿@model IEnumerable<HPCN.UnionOnline.Models.CartProduct>
 
 @{
-    ViewData["Title"] = "My Cart";
+    ViewData["Title"] = "我的购物车";
     var index1 = 0;
 }
 
-<h2>My Cart</h2>
+<h2>@ViewData["Title"]</h2>
 
-<p>
-    <a asp-controller="home" asp-action="exchange">Continue shopping ...</a>
-</p>
-<form asp-controller="Order" asp-action="create" method="post" onsubmit="return validate();">
-    <div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ActivityProduct.Product)
-                    </th>
-                    <th></th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ActivityProduct.PointsPayment)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ActivityProduct.SelfPayment)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Quantity)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-            {
-                    <tr>
-                        <td>
-                            @if (item.ActivityProduct.Activity.Status == ActivityState.Active && DateTime.Now <= item.ActivityProduct.Activity.EndTime)
-                            {
-                                <input type="hidden" value="@(index1)" name="cartProducts.Index">
-                                <input type="checkbox" name="cartProducts[@(index1++)].Id" value="@item.Id" />
-                            }
-                            else
-                            {
-                                <input type="hidden" value="@(index1)" name="cartProducts.Index">
-                                <input type="checkbox" name="cartProducts[@(index1++)].Id" value="@item.Id" title="Activity Ends." disabled />
-                            }
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ActivityProduct.Product.Name)
-                            [@Html.DisplayFor(modelItem => item.ActivityProduct.Activity.Name)]
-                        </td>
-                        <td>
-                            <img class="product-picture-list"
-                                 src="../pictures/product/@item.ActivityProduct.Product.PictureFileName"
-                                 alt="@item.ActivityProduct.Product.PictureFileName" />
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ActivityProduct.PointsPayment)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ActivityProduct.SelfPayment)
-                        </td>
-                        <td>
-                            @if (item.ActivityProduct.Activity.Status == ActivityState.Active && DateTime.Now <= item.ActivityProduct.Activity.EndTime)
-                            {
-                                <input type="button" class="btn btn-default" value="-" onclick="updateQuantity(this, subtract, '@item.Id');" />
-                                <input type="number" name="Quantity" class="quantity" value="@item.Quantity" />
-                                <input type="button" class="btn btn-default" value="+" onclick="updateQuantity(this, add, '@item.Id');" />
-                            }
-                            else
-                            {
-                                @Html.DisplayFor(modelItem => item.Quantity)
-                                <span>[Activity ended.]</span>
-                            }
-                        </td>
-                        <td>
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+@if (Model.Count() == 0)
+{
+    <p>
+        你的购物车空空如也。现在就去参加<a asp-controller="home" asp-action="exchange">积分活动</a>。
+    </p>
+}
+else
+{
+    <div class="cart-section">
+        <form asp-controller="Order" asp-action="create" method="post" onsubmit="return validate();">
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>
+                                商品
+                            </th>
+                            <th></th>
+                            <th>
+                                积分
+                            </th>
+                            <th>
+                                自费
+                            </th>
+                            <th>
+                                数量
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (item.ActivityProduct.Activity.Status == ActivityState.Active && DateTime.Now <= item.ActivityProduct.Activity.EndTime)
+                                    {
+                                        <input type="hidden" value="@(index1)" name="cartProducts.Index">
+                                        <input type="checkbox" name="cartProducts[@(index1++)].Id" value="@item.Id" />
+                                    }
+                                    else
+                                    {
+                                        <input type="hidden" value="@(index1)" name="cartProducts.Index">
+                                        <input type="checkbox" name="cartProducts[@(index1++)].Id" value="@item.Id" title="Activity Ends." disabled />
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ActivityProduct.Product.Name)
+                                    [@Html.DisplayFor(modelItem => item.ActivityProduct.Activity.Name)]
+                                </td>
+                                <td>
+                                    <img class="product-picture-list"
+                                         src="../pictures/product/@item.ActivityProduct.Product.PictureFileName"
+                                         alt="@item.ActivityProduct.Product.PictureFileName" />
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ActivityProduct.PointsPayment)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ActivityProduct.SelfPayment)
+                                </td>
+                                <td>
+                                    @if (item.ActivityProduct.Activity.Status == ActivityState.Active && DateTime.Now <= item.ActivityProduct.Activity.EndTime)
+                                    {
+                                        <input type="button" class="btn btn-default" value="-" onclick="updateQuantity(this, subtract, '@item.Id');" />
+                                        <input type="number" name="Quantity" class="quantity" value="@item.Quantity" />
+                                        <input type="button" class="btn btn-default" value="+" onclick="updateQuantity(this, add, '@item.Id');" />
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(modelItem => item.Quantity)
+                                        <span>[Activity ended.]</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <input type="submit" value="创建订单" class="btn btn-default" />
+                <span>
+                    购物车中的商品共需要 <strong>@Model.Sum(m => m.Quantity * m.ActivityProduct.PointsPayment)</strong> 积分,
+                    自费金额为 <strong>@Model.Sum(m => m.Quantity * m.ActivityProduct.SelfPayment)</strong> 。
+                </span>
+                <a asp-controller="home" asp-action="exchange">继续兑换</a>
+            </div>
+        </form>
     </div>
-    <div>
-        <input type="submit" value="Create order" class="btn btn-default" />
-    </div>
-</form>
+}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_CartScriptsPartial");}

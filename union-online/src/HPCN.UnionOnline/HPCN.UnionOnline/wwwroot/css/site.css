@@ -85,16 +85,26 @@ img.product-picture-edit {
 }
 
 /*-activity--*/
-.container-products {
+.products-section {
     margin-top: 50px;
+    margin-bottom: 50px;
 }
 
-    .container-products hr {
+    .products-section hr {
         margin-top: 0px;
     }
 
-    .container-products h4 {
+    .products-section h4 {
         margin-bottom: 1px;
+    }
+
+    .products-section table {
+        border-top: 1px solid #c0c0c0;
+        border-bottom: 1px solid #c0c0c0;
+    }
+
+    .products-section button {
+        margin-left: 30px;
     }
 
 /*--home--*/
@@ -104,4 +114,56 @@ img.product-picture-edit {
 
 .quantity {
     width: 30px;
+    height: 33px;
+    text-align: center;
+    vertical-align: middle;
 }
+
+/*--cart--*/
+.cart-section {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+    .cart-section table {
+        border-top: 1px solid #c0c0c0;
+        border-bottom: 1px solid #c0c0c0;
+    }
+
+/*--order--*/
+.orders-section {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+    .orders-section h4 {
+        margin-bottom: 5px;
+    }
+
+        .orders-section h4 span {
+            padding: 3px;
+        }
+
+            .orders-section h4 span.created {
+                background-color: orange;
+            }
+
+            .orders-section h4 span.completed {
+                background-color: green;
+            }
+
+            .orders-section h4 span.cancelled {
+                background-color: gray;
+            }
+
+    .orders-section hr {
+        margin-top: 0px;
+    }
+
+.order-table {
+    border: 1px solid #c0c0c0;
+}
+
+    .order-table tr:first-child {
+        background-color: #c0c0c0;
+    }

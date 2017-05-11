@@ -32,7 +32,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Exchange">积分活动</a></li>
                     @if (User.IsAdmin())
                     {
                         <li><a asp-area="" asp-controller="Activity" asp-action="Index">Activities</a></li>
@@ -41,9 +41,9 @@
                     }
                     else if (User.Identity.IsAuthenticated)
                     {
-                        <li><a asp-area="" asp-controller="Cart" asp-action="Index">My Cart (@await Html.PartialAsync("_CartPartial"))</a></li>
-                        <li><a asp-area="" asp-controller="Order" asp-action="Index">My Orders (@await Html.PartialAsync("_OrderPartial"))</a></li>
-                        <li><a>My Points (@await Html.PartialAsync("_PointsPartial"))</a></li>
+                        <li><a asp-area="" asp-controller="Cart" asp-action="Index">我的购物车 (@await Html.PartialAsync("_CartPartial"))</a></li>
+                        <li><a asp-area="" asp-controller="Order" asp-action="Index">我的订单</a></li>
+                        <li><a>我的积分 (@await Html.PartialAsync("_PointsPartial"))</a></li>
                     }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
@@ -78,7 +78,7 @@
                 crossorigin="anonymous"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
 
     @RenderSection("Scripts", required: false)
