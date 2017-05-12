@@ -1,12 +1,10 @@
 ﻿using HPCN.UnionOnline.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Site.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         private readonly IActivityService _activityService;
