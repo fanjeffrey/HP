@@ -130,10 +130,14 @@ namespace HPCN.UnionOnline.Services
 
         public async Task RemoveAsync(Guid userId)
         {
-            var employee = await _db.Employees.SingleOrDefaultAsync(e => e.UserId == userId);
+            var employee = await _db.Employees
+                .Include(e => e.User)
+                .SingleOrDefaultAsync(e => e.UserId == userId);
 
             // just set Employee Status to Inactive instead of a true deletion
             employee.EmployeeStatus = EmployeeState.Inactive;
+            // disable his/her user so that he/she can't login
+            employee.User.Disabled = true;
 
             await _db.SaveChangesAsync();
         }
@@ -212,7 +216,7 @@ namespace HPCN.UnionOnline.Services
             {
                 return await _db.Employees
                     .Include(e => e.User)
-                    .OrderBy(e => e.UpdatedTime)
+                    .OrderBy(e => e.No)
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -220,7 +224,7 @@ namespace HPCN.UnionOnline.Services
 
             return await SearchQuery(keyword)
                 .Include(e => e.User)
-                .OrderBy(e => e.UpdatedTime)
+                .OrderBy(e => e.No)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

@@ -4,10 +4,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.EmailAddress)
+                @Html.DisplayNameFor(model => model.No)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.No)
+                @Html.DisplayNameFor(model => model.EmailAddress) (Username)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ChineseName)
@@ -22,10 +22,10 @@
                 @Html.DisplayNameFor(model => model.OnboardDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EmployeeType)
+                RE/ETW
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EmployeeStatus)
+                Status
             </th>
             <th></th>
         </tr>
@@ -35,10 +35,13 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EmailAddress)
+                    <a asp-action="Details" asp-route-id="@item.UserId">
+                        @Html.DisplayFor(modelItem => item.No)
+                    </a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.No)
+                    @Html.DisplayFor(modelItem => item.EmailAddress)
+                    <span>@($"[{(item.User.IsAdmin ? "A" : "NA")},{(item.User.Disabled ? "D" : "E")}]")</span>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ChineseName)
@@ -50,7 +53,7 @@
                     @Html.DisplayFor(modelItem => item.Gender)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OnboardDate)
+                    @item.OnboardDate.ToString("MM-dd-yyyy")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EmployeeType)
@@ -60,7 +63,6 @@
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
                 </td>
             </tr>
