@@ -26,30 +26,31 @@ namespace HPCN.UnionOnline.Models
         public string DisplayName { get; set; }
 
         [Required]
-        public Gender Gender { get; set; }
-
-        [Required]
         public DateTime OnboardDate { get; set; }
 
-        [Required]
-        [StringLength(18)]
-        public string IdCardNo { get; set; }
-
-        [Required]
         [StringLength(50)]
         public string PhoneNumber { get; set; }
 
-        [Required]
+        [StringLength(200)]
+        public string ManagerEmail { get; set; }
+
+        [StringLength(200)]
+        public string TeamAdminAssistant { get; set; }
+
+        [StringLength(18)]
+        public string IdCardNo { get; set; }
+
         [StringLength(50)]
         public string BaseCity { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string WorkCity { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string CostCenter { get; set; }
+
+        [Required]
+        public Gender Gender { get; set; }
 
         [Required]
         public EmployeeType EmployeeType { get; set; }
@@ -63,8 +64,8 @@ namespace HPCN.UnionOnline.Models
 
     public enum Gender
     {
-        Female = 0,
-        Male = 1
+        F = 0,
+        M = 1
     }
 
     public enum EmployeeType

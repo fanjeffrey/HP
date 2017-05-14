@@ -105,9 +105,9 @@ namespace HPCN.UnionOnline.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(nullable: false),
-                    BaseCity = table.Column<string>(maxLength: 50, nullable: false),
+                    BaseCity = table.Column<string>(maxLength: 50, nullable: true),
                     ChineseName = table.Column<string>(maxLength: 50, nullable: false),
-                    CostCenter = table.Column<string>(maxLength: 50, nullable: false),
+                    CostCenter = table.Column<string>(maxLength: 50, nullable: true),
                     CreatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     CreatedTime = table.Column<DateTime>(nullable: true),
                     DisplayName = table.Column<string>(maxLength: 50, nullable: false),
@@ -115,13 +115,15 @@ namespace HPCN.UnionOnline.Data.Migrations
                     EmployeeStatus = table.Column<int>(nullable: false),
                     EmployeeType = table.Column<int>(nullable: false),
                     Gender = table.Column<int>(nullable: false),
-                    IdCardNo = table.Column<string>(maxLength: 18, nullable: false),
+                    IdCardNo = table.Column<string>(maxLength: 18, nullable: true),
+                    ManagerEmail = table.Column<string>(maxLength: 200, nullable: true),
                     No = table.Column<string>(maxLength: 50, nullable: false),
                     OnboardDate = table.Column<DateTime>(nullable: false),
-                    PhoneNumber = table.Column<string>(maxLength: 50, nullable: false),
+                    PhoneNumber = table.Column<string>(maxLength: 50, nullable: true),
+                    TeamAdminAssistant = table.Column<string>(maxLength: 200, nullable: true),
                     UpdatedBy = table.Column<string>(maxLength: 200, nullable: true),
                     UpdatedTime = table.Column<DateTime>(nullable: true),
-                    WorkCity = table.Column<string>(maxLength: 50, nullable: false)
+                    WorkCity = table.Column<string>(maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {

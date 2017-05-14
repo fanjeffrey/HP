@@ -46,28 +46,29 @@ namespace HPCN.UnionOnline.Site.ViewModels
         [DataType(DataType.Date)]
         public DateTime OnboardDate { get; set; }
 
-        [Required]
+        [StringLength(50)]
+        public string PhoneNumber { get; set; }
+
+        [StringLength(200)]
+        [DataType(DataType.EmailAddress)]
+        public string ManagerEmail { get; set; }
+
+        [StringLength(200)]
+        public string TeamAdminAssistant { get; set; }
+
         [StringLength(18)]
         [MinLength(15)]
         public string IdCardNo { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string PhoneNumber { get; set; }
-
-        [Required]
         [StringLength(50)]
         public string BaseCity { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string WorkCity { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string CostCenter { get; set; }
 
-        [Required]
         public EmployeeType EmployeeType { get; set; }
     }
 

@@ -1,8 +1,5 @@
-﻿using System;
+﻿using HPCN.UnionOnline.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HPCN.UnionOnline.Models;
 
 namespace HPCN.UnionOnline.Services
 {
@@ -10,12 +7,12 @@ namespace HPCN.UnionOnline.Services
     {
         public IList<EmployeeType> ListEmployeeTypes()
         {
-            return new List<EmployeeType> { EmployeeType.ETW, EmployeeType.RE };
+            return new List<EmployeeType> { EmployeeType.RE, EmployeeType.ETW };
         }
 
         public IList<Gender> ListGender()
         {
-            return new List<Gender> { Gender.Female, Gender.Male };
+            return new List<Gender> { Gender.F, Gender.M };
         }
     }
 }

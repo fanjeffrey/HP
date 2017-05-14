@@ -119,7 +119,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("UserId");
 
                     b.Property<string>("BaseCity")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("ChineseName")
@@ -127,7 +126,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("CostCenter")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("CreatedBy")
@@ -150,8 +148,10 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<int>("Gender");
 
                     b.Property<string>("IdCardNo")
-                        .IsRequired()
                         .HasMaxLength(18);
+
+                    b.Property<string>("ManagerEmail")
+                        .HasMaxLength(200);
 
                     b.Property<string>("No")
                         .IsRequired()
@@ -160,8 +160,10 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<DateTime>("OnboardDate");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasMaxLength(50);
+
+                    b.Property<string>("TeamAdminAssistant")
+                        .HasMaxLength(200);
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(200);
@@ -169,7 +171,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<DateTime?>("UpdatedTime");
 
                     b.Property<string>("WorkCity")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.HasKey("UserId");

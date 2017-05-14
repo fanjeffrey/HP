@@ -86,8 +86,15 @@ namespace HPCN.UnionOnline.Site.Controllers
             if (ModelState.IsValid)
             {
                 // save to database
-                await _employeeService.CreateAsync(model.No, model.EmailAddress, model.ChineseName, model.DisplayName, model.Gender, model.OnboardDate,
-                        model.IdCardNo, model.PhoneNumber, model.BaseCity, model.WorkCity, model.CostCenter, model.EmployeeType, User.GetUsername());
+                await _employeeService.CreateAsync(
+                    model.No, model.EmailAddress,
+                    model.ChineseName, model.DisplayName,
+                    model.OnboardDate, model.PhoneNumber,
+                    model.ManagerEmail, model.TeamAdminAssistant,
+                    model.IdCardNo, model.CostCenter,
+                    model.BaseCity, model.WorkCity,
+                    model.Gender, model.EmployeeType,
+                    User.GetUsername());
 
                 return RedirectToAction("Index");
             }
@@ -115,13 +122,15 @@ namespace HPCN.UnionOnline.Site.Controllers
                 EmailAddress = employee.EmailAddress,
                 ChineseName = employee.ChineseName,
                 DisplayName = employee.DisplayName,
-                Gender = employee.Gender,
                 OnboardDate = employee.OnboardDate,
-                IdCardNo = employee.IdCardNo,
                 PhoneNumber = employee.PhoneNumber,
+                ManagerEmail = employee.ManagerEmail,
+                TeamAdminAssistant = employee.TeamAdminAssistant,
+                IdCardNo = employee.IdCardNo,
+                CostCenter = employee.CostCenter,
                 BaseCity = employee.BaseCity,
                 WorkCity = employee.WorkCity,
-                CostCenter = employee.CostCenter,
+                Gender = employee.Gender,
                 EmployeeType = employee.EmployeeType
             });
         }
@@ -158,8 +167,15 @@ namespace HPCN.UnionOnline.Site.Controllers
                 try
                 {
                     // save to database
-                    await _employeeService.UpdateAsync(model.UserId, model.No, model.EmailAddress, model.ChineseName, model.DisplayName, model.Gender, model.OnboardDate,
-                        model.IdCardNo, model.PhoneNumber, model.BaseCity, model.WorkCity, model.CostCenter, model.EmployeeType, User.GetUsername());
+                    await _employeeService.UpdateAsync(model.UserId,
+                        model.No, model.EmailAddress,
+                        model.ChineseName, model.DisplayName,
+                        model.OnboardDate, model.PhoneNumber,
+                        model.ManagerEmail, model.TeamAdminAssistant,
+                        model.IdCardNo, model.CostCenter,
+                        model.BaseCity, model.WorkCity,
+                        model.Gender, model.EmployeeType,
+                        User.GetUsername());
                 }
                 catch (DbUpdateConcurrencyException)
                 {

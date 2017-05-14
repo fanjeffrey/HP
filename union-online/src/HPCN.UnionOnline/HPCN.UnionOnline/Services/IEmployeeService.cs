@@ -7,10 +7,24 @@ namespace HPCN.UnionOnline.Services
 {
     public interface IEmployeeService
     {
-        Task<Employee> CreateAsync(string no, string emailAddress, string chineseName, string displayName, Gender gender, DateTime onboardDate,
-            string idCardNo, string phoneNumber, string baseCity, string workCity, string costCenter, EmployeeType employeeType, string creator);
-        Task UpdateAsync(Guid id, string no, string emailAddress, string chineseName, string displayName, Gender gender, DateTime onboardDate,
-            string idCardNo, string phoneNumber, string baseCity, string workCity, string costCenter, EmployeeType employeeType, string updatedBy);
+        Task<Employee> CreateAsync(
+            string no, string emailAddress,
+            string chineseName, string displayName,
+            DateTime onboardDate, string phoneNumber,
+            string managerEmail, string teamAdminAssistant,
+            string idCardNo, string costCenter,
+            string baseCity, string workCity,
+            Gender gender, EmployeeType employeeType,
+            string creator);
+        Task UpdateAsync(Guid userId,
+            string no, string emailAddress,
+            string chineseName, string displayName,
+            DateTime onboardDate, string phoneNumber,
+            string managerEmail, string teamAdminAssistant,
+            string idCardNo, string costCenter,
+            string baseCity, string workCity,
+            Gender gender, EmployeeType employeeType,
+            string updatedBy);
         Task RemoveAsync(Guid id);
         Task<bool> ExistsAsync(Guid id);
         Task<bool> ExistsByNoAsync(string no);

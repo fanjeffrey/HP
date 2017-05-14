@@ -22,10 +22,15 @@ namespace HPCN.UnionOnline.Services
             _logger = loggerFactory.CreateLogger<EmployeeService>();
         }
 
-        public async Task<Employee> CreateAsync(string no, string emailAddress,
-            string chineseName, string displayName, Gender gender, DateTime onboardDate,
-            string idCardNo, string phoneNumber, string baseCity, string workCity,
-            string costCenter, EmployeeType employeeType, string creator)
+        public async Task<Employee> CreateAsync(
+            string no, string emailAddress,
+            string chineseName, string displayName,
+            DateTime onboardDate, string phoneNumber,
+            string managerEmail, string teamAdminAssistant,
+            string idCardNo, string costCenter,
+            string baseCity, string workCity,
+            Gender gender, EmployeeType employeeType,
+            string creator)
         {
             emailAddress = emailAddress?.Trim();
 
@@ -44,13 +49,15 @@ namespace HPCN.UnionOnline.Services
                 EmailAddress = emailAddress?.Trim(),
                 ChineseName = chineseName?.Trim(),
                 DisplayName = displayName?.Trim(),
-                Gender = gender,
                 OnboardDate = onboardDate.Date,
-                IdCardNo = idCardNo?.Trim(),
                 PhoneNumber = phoneNumber?.Trim(),
+                ManagerEmail = managerEmail?.Trim(),
+                TeamAdminAssistant = teamAdminAssistant?.Trim(),
+                IdCardNo = idCardNo?.Trim(),
+                CostCenter = costCenter?.Trim(),
                 BaseCity = baseCity?.Trim(),
                 WorkCity = workCity?.Trim(),
-                CostCenter = costCenter?.Trim(),
+                Gender = gender,
                 EmployeeType = employeeType,
                 EmployeeStatus = EmployeeState.Active
             };
@@ -76,10 +83,15 @@ namespace HPCN.UnionOnline.Services
             return employee;
         }
 
-        public async Task UpdateAsync(Guid userId, string no, string emailAddress,
-            string chineseName, string displayName, Gender gender, DateTime onboardDate,
-            string idCardNo, string phoneNumber, string baseCity, string workCity,
-            string costCenter, EmployeeType employeeType, string updatedBy)
+        public async Task UpdateAsync(Guid userId,
+            string no, string emailAddress,
+            string chineseName, string displayName,
+            DateTime onboardDate, string phoneNumber,
+            string managerEmail, string teamAdminAssistant,
+            string idCardNo, string costCenter,
+            string baseCity, string workCity,
+            Gender gender, EmployeeType employeeType,
+            string updatedBy)
         {
             var user = await _db.Users
                 .Include(u => u.Employee)
@@ -95,13 +107,15 @@ namespace HPCN.UnionOnline.Services
             user.Employee.EmailAddress = emailAddress?.Trim();
             user.Employee.ChineseName = chineseName?.Trim();
             user.Employee.DisplayName = displayName?.Trim();
-            user.Employee.Gender = gender;
             user.Employee.OnboardDate = onboardDate;
-            user.Employee.IdCardNo = idCardNo?.Trim();
             user.Employee.PhoneNumber = phoneNumber?.Trim();
+            user.Employee.ManagerEmail = managerEmail?.Trim();
+            user.Employee.TeamAdminAssistant = teamAdminAssistant?.Trim();
+            user.Employee.IdCardNo = idCardNo?.Trim();
+            user.Employee.CostCenter = costCenter?.Trim();
             user.Employee.BaseCity = baseCity?.Trim();
             user.Employee.WorkCity = workCity?.Trim();
-            user.Employee.CostCenter = costCenter?.Trim();
+            user.Employee.Gender = gender;
             user.Employee.EmployeeType = employeeType;
 
             // update the username for the employee
@@ -114,9 +128,14 @@ namespace HPCN.UnionOnline.Services
             await _db.SaveChangesAsync();
         }
 
-        public Task RemoveAsync(Guid id)
+        public async Task RemoveAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            var employee = await _db.Employees.SingleOrDefaultAsync(e => e.UserId == userId);
+
+            // just set Employee Status to Inactive instead of a true deletion
+            employee.EmployeeStatus = EmployeeState.Inactive;
+
+            await _db.SaveChangesAsync();
         }
 
         public async Task<bool> ExistsAsync(Guid userId)
