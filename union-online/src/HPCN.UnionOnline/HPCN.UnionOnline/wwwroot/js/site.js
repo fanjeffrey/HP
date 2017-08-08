@@ -2,7 +2,7 @@
 
 function subtract(sender) {
     var quantity = parseInt($(sender).next().val());
-    if (Number.isNaN(quantity)) quantity = 1;
+    if (isNaN(quantity)) quantity = 1;
     quantity--;
     if (quantity <= 0) quantity = 1;
 
@@ -11,7 +11,7 @@ function subtract(sender) {
 
 function add(sender) {
     var quantity = parseInt($(sender).prev().val());
-    if (Number.isNaN(quantity)) quantity = 1;
+    if (isNaN(quantity)) quantity = 1;
     quantity++;
 
     $(sender).prev().val(quantity);

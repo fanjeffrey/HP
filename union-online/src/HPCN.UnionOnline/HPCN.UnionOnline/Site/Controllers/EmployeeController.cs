@@ -78,10 +78,10 @@ namespace HPCN.UnionOnline.Site.Controllers
             }
 
             // check id card no
-            if (await _employeeService.ExistsByIdCardNoAsync(model.IdCardNo))
-            {
-                ModelState.AddModelError(string.Empty, $"Id Card No: '{model.IdCardNo}' already exists.");
-            }
+            //if (await _employeeService.ExistsByIdCardNoAsync(model.IdCardNo))
+            //{
+            //    ModelState.AddModelError(string.Empty, $"Id Card No: '{model.IdCardNo}' already exists.");
+            //}
 
             if (ModelState.IsValid)
             {
@@ -157,10 +157,10 @@ namespace HPCN.UnionOnline.Site.Controllers
             }
 
             // check id card no
-            if (await _employeeService.ExistsByIdCardNoAsync(id, model.IdCardNo))
-            {
-                ModelState.AddModelError(string.Empty, $"Id Card No: '{model.IdCardNo}' already exists.");
-            }
+            //if (await _employeeService.ExistsByIdCardNoAsync(id, model.IdCardNo))
+            //{
+            //    ModelState.AddModelError(string.Empty, $"Id Card No: '{model.IdCardNo}' already exists.");
+            //}
 
             if (ModelState.IsValid)
             {

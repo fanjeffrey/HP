@@ -25,6 +25,7 @@ namespace HPCN.UnionOnline.Services
 
             using (var client = new SmtpClient())
             {
+                //client.LocalDomain = "hp.com";
                 await client.ConnectAsync("smtp2.hp.com", 25, SecureSocketOptions.None).ConfigureAwait(false);
                 await client.SendAsync(emailMessage).ConfigureAwait(false);
                 await client.DisconnectAsync(true).ConfigureAwait(false);
