@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HPCN.UnionOnline.Models
 {
+    /// <summary>
+    /// This class is for points exchange activity.
+    /// </summary>
     public class Activity : AbstractEntity
     {
         [Required]
