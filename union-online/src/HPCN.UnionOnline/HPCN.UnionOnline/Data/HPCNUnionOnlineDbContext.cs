@@ -23,5 +23,16 @@ namespace HPCN.UnionOnline.Data
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
+
+        // entity properties 
+        public DbSet<PropertyEntry> PropertyEntries { get; set; }
+        public DbSet<PropertyValueChoice> PropertyValueChoices { get; set; }
+
+        // enrollment
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Enrollee> Enrollees { get; set; }
+        public DbSet<EnrollmentInput> EnrollmentInputs { get; set; }
+        public DbSet<EnrollmentActivity> EnrollmentActivities { get; set; }
+        public DbSet<EnrollmentActivityProperty> EnrollmentActivityProperties { get; set; }
     }
 }

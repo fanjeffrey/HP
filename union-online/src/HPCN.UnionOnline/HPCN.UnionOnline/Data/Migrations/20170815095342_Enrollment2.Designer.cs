@@ -9,9 +9,10 @@ using HPCN.UnionOnline.Models;
 namespace HPCN.UnionOnline.Data.Migrations
 {
     [DbContext(typeof(HPCNUnionOnlineDbContext))]
-    partial class HPCNUnionOnlineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170815095342_Enrollment2")]
+    partial class Enrollment2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -178,69 +179,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("HPCN.UnionOnline.Models.Enrollee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("CreatedTime");
-
-                    b.Property<string>("EmailAddress")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.Property<Guid?>("EnrollmentId");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("PhoneNumber")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("UpdatedTime");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnrollmentId");
-
-                    b.ToTable("Enrollees");
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.Enrollment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("CreatedTime");
-
-                    b.Property<Guid>("EnrollmentActivityId");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("UpdatedTime");
-
-                    b.Property<Guid>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnrollmentActivityId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Enrollments");
-                });
-
             modelBuilder.Entity("HPCN.UnionOnline.Models.EnrollmentActivity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -272,62 +210,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EnrollmentActivities");
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.EnrollmentActivityProperty", b =>
-                {
-                    b.Property<Guid>("PropertyEntryId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("CreatedTime");
-
-                    b.Property<Guid>("EnrollmentActivityId");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("UpdatedTime");
-
-                    b.HasKey("PropertyEntryId");
-
-                    b.HasIndex("EnrollmentActivityId");
-
-                    b.ToTable("EnrollmentActivityProperties");
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.EnrollmentInput", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("CreatedTime");
-
-                    b.Property<Guid>("EnrollmentId");
-
-                    b.Property<string>("Input")
-                        .IsRequired()
-                        .HasMaxLength(4000);
-
-                    b.Property<Guid>("PropertyId");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("UpdatedTime");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnrollmentId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("EnrollmentInputs");
                 });
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.Order", b =>
@@ -445,44 +327,30 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("ChoiceMode");
-
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200);
 
                     b.Property<DateTime?>("CreatedTime");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(200);
+                    b.Property<Guid?>("EnrollmentActivityId");
 
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<int>("DisplayOrder");
-
-                    b.Property<bool>("IsRequired");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("RequiredMessage")
-                        .HasMaxLength(200);
-
-                    b.Property<int>("TypeOfValue");
+                    b.Property<string>("Name");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(200);
 
                     b.Property<DateTime?>("UpdatedTime");
 
+                    b.Property<int>("ValueType");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("EnrollmentActivityId");
 
                     b.ToTable("PropertyEntries");
                 });
 
-            modelBuilder.Entity("HPCN.UnionOnline.Models.PropertyValueChoice", b =>
+            modelBuilder.Entity("HPCN.UnionOnline.Models.PropertyValue", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -492,31 +360,20 @@ namespace HPCN.UnionOnline.Data.Migrations
 
                     b.Property<DateTime?>("CreatedTime");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(200);
-
-                    b.Property<int>("DisplayOrder");
-
-                    b.Property<string>("DisplayText")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.Property<Guid>("PropertyId");
+                    b.Property<Guid?>("PropertyId");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(200);
 
                     b.Property<DateTime?>("UpdatedTime");
 
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(4000);
+                    b.Property<string>("Value");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("PropertyValueChoices");
+                    b.ToTable("PropertyValues");
                 });
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.User", b =>
@@ -585,47 +442,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("HPCN.UnionOnline.Models.Enrollee", b =>
-                {
-                    b.HasOne("HPCN.UnionOnline.Models.Enrollment")
-                        .WithMany("Enrollee")
-                        .HasForeignKey("EnrollmentId");
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.Enrollment", b =>
-                {
-                    b.HasOne("HPCN.UnionOnline.Models.EnrollmentActivity", "EnrollmentActivity")
-                        .WithMany()
-                        .HasForeignKey("EnrollmentActivityId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HPCN.UnionOnline.Models.User", "User")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.EnrollmentActivityProperty", b =>
-                {
-                    b.HasOne("HPCN.UnionOnline.Models.EnrollmentActivity", "EnrollmentActivity")
-                        .WithMany()
-                        .HasForeignKey("EnrollmentActivityId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.EnrollmentInput", b =>
-                {
-                    b.HasOne("HPCN.UnionOnline.Models.Enrollment", "Enrollment")
-                        .WithMany("PropertyInputs")
-                        .HasForeignKey("EnrollmentId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HPCN.UnionOnline.Models.PropertyEntry", "Property")
-                        .WithMany()
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("HPCN.UnionOnline.Models.Order", b =>
                 {
                     b.HasOne("HPCN.UnionOnline.Models.User", "User")
@@ -647,12 +463,18 @@ namespace HPCN.UnionOnline.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("HPCN.UnionOnline.Models.PropertyValueChoice", b =>
+            modelBuilder.Entity("HPCN.UnionOnline.Models.PropertyEntry", b =>
+                {
+                    b.HasOne("HPCN.UnionOnline.Models.EnrollmentActivity")
+                        .WithMany("ExtendedProperties")
+                        .HasForeignKey("EnrollmentActivityId");
+                });
+
+            modelBuilder.Entity("HPCN.UnionOnline.Models.PropertyValue", b =>
                 {
                     b.HasOne("HPCN.UnionOnline.Models.PropertyEntry", "Property")
-                        .WithMany("ValueChoices")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("PropertyId");
                 });
         }
     }

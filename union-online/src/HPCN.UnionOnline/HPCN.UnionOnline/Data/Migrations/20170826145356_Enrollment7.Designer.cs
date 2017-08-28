@@ -9,9 +9,10 @@ using HPCN.UnionOnline.Models;
 namespace HPCN.UnionOnline.Data.Migrations
 {
     [DbContext(typeof(HPCNUnionOnlineDbContext))]
-    partial class HPCNUnionOnlineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170826145356_Enrollment7")]
+    partial class Enrollment7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -178,41 +179,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("HPCN.UnionOnline.Models.Enrollee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("CreatedTime");
-
-                    b.Property<string>("EmailAddress")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.Property<Guid?>("EnrollmentId");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("PhoneNumber")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("UpdatedTime");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnrollmentId");
-
-                    b.ToTable("Enrollees");
-                });
-
             modelBuilder.Entity("HPCN.UnionOnline.Models.Enrollment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -222,6 +188,17 @@ namespace HPCN.UnionOnline.Data.Migrations
                         .HasMaxLength(200);
 
                     b.Property<DateTime?>("CreatedTime");
+
+                    b.Property<string>("EnrolleeEmailAddress")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.Property<string>("EnrolleeName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("EnrolleePhoneNumber")
+                        .HasMaxLength(50);
 
                     b.Property<Guid>("EnrollmentActivityId");
 
@@ -327,7 +304,7 @@ namespace HPCN.UnionOnline.Data.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("EnrollmentInputs");
+                    b.ToTable("EnrollmentActivityPropertyInputs");
                 });
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.Order", b =>
@@ -583,13 +560,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                         .WithOne("Employee")
                         .HasForeignKey("HPCN.UnionOnline.Models.Employee", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.Enrollee", b =>
-                {
-                    b.HasOne("HPCN.UnionOnline.Models.Enrollment")
-                        .WithMany("Enrollee")
-                        .HasForeignKey("EnrollmentId");
                 });
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.Enrollment", b =>
