@@ -69,6 +69,9 @@ namespace HPCN.UnionOnline
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IProductPictureService, ProductPictureService>();
             services.AddTransient<IUserService, UserService>();
+
+            // enrollment
+            services.AddTransient<IEnrollmentActivityService, EnrollmentActivityService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

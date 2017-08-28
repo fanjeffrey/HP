@@ -12,8 +12,7 @@
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input,
-select,
-textarea {
+select {
     max-width: 280px;
 }
 
@@ -57,10 +56,6 @@ textarea {
     .container-search-summary span {
         background-color: yellow;
     }
-
-textarea {
-    max-height: 150px;
-}
 
 img.product-picture-list {
     width: 100px;
@@ -167,3 +162,9 @@ img.product-picture-edit {
     .order-table tr:first-child {
         background-color: #c0c0c0;
     }
+
+/* enrollment */
+textarea.description {
+    width: 400px;
+    height: 200px;
+}
