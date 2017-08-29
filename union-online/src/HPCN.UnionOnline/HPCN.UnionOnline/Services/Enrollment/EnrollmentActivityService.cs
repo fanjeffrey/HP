@@ -143,5 +143,13 @@ namespace HPCN.UnionOnline.Services
 
             return property;
         }
+
+        public async Task<List<EnrollmentActivity>> GetActiveActivitiesAsync()
+        {
+            return await (from a in _db.EnrollmentActivities
+                    where a.Status == ActivityState.Active
+                    orderby a.EndTime
+                    select a).ToListAsync();
+        }
     }
 }

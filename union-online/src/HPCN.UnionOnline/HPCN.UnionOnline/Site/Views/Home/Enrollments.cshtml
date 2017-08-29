@@ -1,0 +1,87 @@
+﻿@model List<HPCN.UnionOnline.Models.EnrollmentActivity>
+
+@{
+    ViewData["Title"] = $"报名活动";
+    var ongoingActivities = Model.Where(a => a.BeginTime <= DateTime.Now && DateTime.Now <= a.EndTime);
+    var notStartedActivities = Model.Where(a => DateTime.Now < a.BeginTime);
+}
+
+<h2>报名活动</h2>
+
+@if (ongoingActivities.Any())
+{
+    <div>
+        <table class="table">
+            <caption><h4>正在报名中的活动：</h4></caption>
+            <thead>
+                <tr>
+                    <th>
+                        活动名称
+                    </th>
+                    <th>报名开始</th>
+                    <th>报名截止</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ongoingActivities)
+                {
+                    <tr>
+                        <td title="@item.Description">
+                            <span>@item.Name</span>
+                        </td>
+                        <td>
+                            @item.BeginTime
+                        </td>
+                        <td>
+                            @item.EndTime
+                        </td>
+                        <td>
+                            <a href="#">马上报名</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+}
+else
+{
+    <p>当前没有正在报名的活动。</p>
+}
+
+@if (notStartedActivities.Any())
+{
+    <hr />
+    <div>
+        <table class="table">
+            <caption><h4>即将开始报名的活动：</h4></caption>
+            <thead>
+                <tr>
+                    <th>
+                        活动名称
+                    </th>
+                    <th>报名开始</th>
+                    <th>报名截止</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in notStartedActivities)
+                {
+                    <tr>
+                        <td title="@item.Description">
+                            <span>@item.Name</span>
+                        </td>
+                        <td>
+                            @item.BeginTime
+                        </td>
+                        <td>
+                            @item.EndTime
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

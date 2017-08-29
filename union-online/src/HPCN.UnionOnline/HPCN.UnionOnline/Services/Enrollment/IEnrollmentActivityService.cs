@@ -15,5 +15,6 @@ namespace HPCN.UnionOnline.Services
         Task<EnrollmentActivity> GetEnrollmentActivityByIdAsync(Guid value);
         Task<List<EntityProperty>> GetPropertiesAsync(Guid id);
         Task<PropertyEntry> AddPropertyAsync(Guid enrollmentActivityId, PropertyEntry property, string creator);
+        Task<List<EnrollmentActivity>> GetActiveActivitiesAsync();
     }
 }
