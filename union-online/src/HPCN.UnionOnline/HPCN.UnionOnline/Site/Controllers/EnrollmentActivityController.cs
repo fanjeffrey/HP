@@ -1,9 +1,12 @@
+using HPCN.UnionOnline.Models;
 using HPCN.UnionOnline.Services;
 using HPCN.UnionOnline.Site.Extensions;
 using HPCN.UnionOnline.Site.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Site.Controllers
@@ -65,6 +68,62 @@ namespace HPCN.UnionOnline.Site.Controllers
             }
 
             return View(model);
+        }
+
+        public async Task<IActionResult> Properties(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var activity = await _activityService.GetEnrollmentActivityByIdAsync(id.Value);
+            if (activity == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EnrollmentActivityPropertiesViewModel
+            {
+                Activity = activity,
+                Properties = await _activityService.GetPropertiesAsync(activity.Id)
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> AddProperty(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var activity = await _activityService.GetEnrollmentActivityByIdAsync(id.Value);
+            if (activity == null)
+            {
+                return NotFound();
+            }
+
+            return View(new EnrollmentActivityAddPropertyViewModel
+            {
+                Activity = activity,
+                Property = new PropertyEntry()
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddProperty(EnrollmentActivity activity, PropertyEntry property)
+        {
+            if (!await _activityService.ExistsAsync(activity.Id))
+            {
+                return NotFound();
+            }
+
+            await _activityService.AddPropertyAsync(activity.Id, property, User.GetUsername());
+
+            return RedirectToAction(nameof(EnrollmentActivityController.Properties), new { Id = activity.Id });
         }
     }
 }

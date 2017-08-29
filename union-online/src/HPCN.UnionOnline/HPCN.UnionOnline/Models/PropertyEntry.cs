@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HPCN.UnionOnline.Models
 {
@@ -27,10 +29,25 @@ namespace HPCN.UnionOnline.Models
 
         [Required]
         public PropertyValueType TypeOfValue { get; set; }
-        
-        public PropertyValueChoiceMode? ChoiceMode { get; set; }
+
+        [Required]
+        public PropertyValueChoiceMode ChoiceMode { get; set; }
 
         public ICollection<PropertyValueChoice> ValueChoices { get; set; }
+
+        public EntityProperty Entity { get; set; }
+    }
+
+    public class EntityProperty : LoggableEntity
+    {
+        [Key, ForeignKey("PropertyEntry")]
+        public Guid PropertyEntryId { get; set; }
+
+        [Required]
+        public Guid EntityId { get; set; }
+
+        [Required]
+        public PropertyEntry PropertyEntry { get; set; }
     }
 
     public class PropertyValueChoice : AbstractEntity
@@ -62,7 +79,7 @@ namespace HPCN.UnionOnline.Models
         DateTime = 4,
 
         Int = 10,
-        Long = 11,
+        LongInt = 11,
 
         Float = 20,
         Double = 21,
@@ -72,6 +89,7 @@ namespace HPCN.UnionOnline.Models
 
     public enum PropertyValueChoiceMode
     {
+        None = 0,
         Single = 1,
         Multi = 2
     }

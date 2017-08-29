@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HPCN.UnionOnline.Models
 {
@@ -63,14 +62,5 @@ namespace HPCN.UnionOnline.Models
 
         [StringLength(2000)]
         public string Description { get; set; }
-    }
-
-    public class EnrollmentActivityProperty : LoggableEntity
-    {
-        [Key, ForeignKey("PropertyEntry")]
-        public Guid PropertyEntryId { get; set; }
-
-        [Required]
-        public EnrollmentActivity EnrollmentActivity { get; set; }
     }
 }

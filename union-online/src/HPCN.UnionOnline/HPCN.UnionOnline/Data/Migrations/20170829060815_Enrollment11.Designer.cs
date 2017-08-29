@@ -9,9 +9,10 @@ using HPCN.UnionOnline.Models;
 namespace HPCN.UnionOnline.Data.Migrations
 {
     [DbContext(typeof(HPCNUnionOnlineDbContext))]
-    partial class HPCNUnionOnlineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170829060815_Enrollment11")]
+    partial class Enrollment11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -315,6 +316,8 @@ namespace HPCN.UnionOnline.Data.Migrations
 
                     b.Property<DateTime?>("CreatedTime");
 
+                    b.Property<Guid?>("EnrollmentActivityId");
+
                     b.Property<Guid>("EntityId");
 
                     b.Property<string>("UpdatedBy")
@@ -323,6 +326,8 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<DateTime?>("UpdatedTime");
 
                     b.HasKey("PropertyEntryId");
+
+                    b.HasIndex("EnrollmentActivityId");
 
                     b.ToTable("EntityProperties");
                 });
@@ -617,6 +622,10 @@ namespace HPCN.UnionOnline.Data.Migrations
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.EntityProperty", b =>
                 {
+                    b.HasOne("HPCN.UnionOnline.Models.EnrollmentActivity")
+                        .WithMany("Properties")
+                        .HasForeignKey("EnrollmentActivityId");
+
                     b.HasOne("HPCN.UnionOnline.Models.PropertyEntry", "PropertyEntry")
                         .WithOne("Entity")
                         .HasForeignKey("HPCN.UnionOnline.Models.EntityProperty", "PropertyEntryId")

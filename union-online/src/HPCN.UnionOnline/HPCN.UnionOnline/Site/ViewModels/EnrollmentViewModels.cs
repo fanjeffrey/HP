@@ -37,4 +37,16 @@ namespace HPCN.UnionOnline.Site.ViewModels
         public bool HasNextPage { get { return PageIndex < TotalPages; } }
         public int TotalPages { get { return (int)Math.Ceiling(Count / (double)PageSize); } }
     }
+
+    public class EnrollmentActivityPropertiesViewModel
+    {
+        public EnrollmentActivity Activity { get; set; }
+        public List<EntityProperty> Properties { get; set; }
+    }
+
+    public class EnrollmentActivityAddPropertyViewModel
+    {
+        public EnrollmentActivity Activity { get; set; }
+        public PropertyEntry Property { get; set; }
+    }
 }

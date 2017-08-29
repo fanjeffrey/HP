@@ -9,9 +9,10 @@ using HPCN.UnionOnline.Models;
 namespace HPCN.UnionOnline.Data.Migrations
 {
     [DbContext(typeof(HPCNUnionOnlineDbContext))]
-    partial class HPCNUnionOnlineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170829041017_Enrollment10")]
+    partial class Enrollment10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -274,6 +275,34 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.ToTable("EnrollmentActivities");
                 });
 
+            modelBuilder.Entity("HPCN.UnionOnline.Models.EnrollmentActivityProperty", b =>
+                {
+                    b.Property<Guid>("PropertyEntryId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200);
+
+                    b.Property<DateTime?>("CreatedTime");
+
+                    b.Property<Guid>("EnrollmentActivityId");
+
+                    b.Property<Guid>("PropertyId");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200);
+
+                    b.Property<DateTime?>("UpdatedTime");
+
+                    b.HasKey("PropertyEntryId");
+
+                    b.HasIndex("EnrollmentActivityId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.ToTable("EnrollmentActivityProperties");
+                });
+
             modelBuilder.Entity("HPCN.UnionOnline.Models.EnrollmentInput", b =>
                 {
                     b.Property<Guid>("Id")
@@ -304,27 +333,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.HasIndex("PropertyId");
 
                     b.ToTable("EnrollmentInputs");
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.EntityProperty", b =>
-                {
-                    b.Property<Guid>("PropertyEntryId");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("CreatedTime");
-
-                    b.Property<Guid>("EntityId");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("UpdatedTime");
-
-                    b.HasKey("PropertyEntryId");
-
-                    b.ToTable("EntityProperties");
                 });
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.Order", b =>
@@ -602,6 +610,19 @@ namespace HPCN.UnionOnline.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("HPCN.UnionOnline.Models.EnrollmentActivityProperty", b =>
+                {
+                    b.HasOne("HPCN.UnionOnline.Models.EnrollmentActivity", "EnrollmentActivity")
+                        .WithMany("Properties")
+                        .HasForeignKey("EnrollmentActivityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HPCN.UnionOnline.Models.PropertyEntry", "Property")
+                        .WithMany()
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("HPCN.UnionOnline.Models.EnrollmentInput", b =>
                 {
                     b.HasOne("HPCN.UnionOnline.Models.Enrollment", "Enrollment")
@@ -612,14 +633,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.HasOne("HPCN.UnionOnline.Models.PropertyEntry", "Property")
                         .WithMany()
                         .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HPCN.UnionOnline.Models.EntityProperty", b =>
-                {
-                    b.HasOne("HPCN.UnionOnline.Models.PropertyEntry", "PropertyEntry")
-                        .WithOne("Entity")
-                        .HasForeignKey("HPCN.UnionOnline.Models.EntityProperty", "PropertyEntryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

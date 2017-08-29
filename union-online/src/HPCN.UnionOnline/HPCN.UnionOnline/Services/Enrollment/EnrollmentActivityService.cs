@@ -53,6 +53,11 @@ namespace HPCN.UnionOnline.Services
             return await _db.EnrollmentActivities.AnyAsync(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
 
+        public async Task<bool> ExistsAsync(Guid activityId)
+        {
+            return await _db.EnrollmentActivities.AnyAsync(a => a.Id == activityId);
+        }
+
         public async Task<int> CountAsync(string keyword)
         {
             keyword = keyword?.Trim() ?? string.Empty;
@@ -88,6 +93,55 @@ namespace HPCN.UnionOnline.Services
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+        }
+
+        public async Task<EnrollmentActivity> GetEnrollmentActivityByIdAsync(Guid id)
+        {
+            return await _db.EnrollmentActivities.SingleOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<List<EntityProperty>> GetPropertiesAsync(Guid enrollmentActivityId)
+        {
+            return await _db.EntityProperties
+                .Include(ep => ep.PropertyEntry)
+                .Where(ep => ep.EntityId == enrollmentActivityId)
+                .ToListAsync();
+        }
+
+        public async Task<PropertyEntry> AddPropertyAsync(Guid enrollmentActivityId, PropertyEntry property, string creator)
+        {
+            var activity = await _db.EnrollmentActivities.SingleOrDefaultAsync(a => a.Id == enrollmentActivityId);
+            if (activity == null)
+            {
+                throw new Exception($"Failed to find enrollment activity: {enrollmentActivityId}");
+            }
+
+            var now = DateTime.Now;
+
+            property.Id = Guid.NewGuid();
+            property.UpdatedBy = property.CreatedBy = creator;
+            property.UpdatedTime = property.CreatedTime = now;
+
+            foreach (var valueChoice in property.ValueChoices)
+            {
+                valueChoice.Id = Guid.NewGuid();
+                valueChoice.UpdatedBy = valueChoice.CreatedBy = creator;
+                valueChoice.UpdatedTime = valueChoice.CreatedTime = now;
+            }
+
+            var entityProperty = new EntityProperty
+            {
+                PropertyEntryId = property.Id,
+                EntityId = enrollmentActivityId,
+                PropertyEntry = property
+            };
+            entityProperty.UpdatedBy = entityProperty.CreatedBy = creator;
+            entityProperty.CreatedTime = entityProperty.UpdatedTime = now;
+
+            _db.EntityProperties.Add(entityProperty);
+            await _db.SaveChangesAsync();
+
+            return property;
         }
     }
 }

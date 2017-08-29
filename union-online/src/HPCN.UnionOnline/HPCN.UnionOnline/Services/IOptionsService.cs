@@ -1,8 +1,5 @@
 ﻿using HPCN.UnionOnline.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Services
 {
@@ -10,5 +7,7 @@ namespace HPCN.UnionOnline.Services
     {
         IList<Gender> ListGender();
         IList<EmployeeType> ListEmployeeTypes();
+        List<PropertyValueType> ListPropertyValueTypes();
+        List<PropertyValueChoiceMode> ListPropertyValueChoiceModes();
     }
 }
