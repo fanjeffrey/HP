@@ -1,0 +1,79 @@
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollViewModel
+
+@{
+    ViewData["Title"] = Model.Enrollment.Name;
+}
+
+<h2>@Model.Enrollment.Name</h2>
+
+@await Html.PartialAsync("_enrollment", Model.Enrollment)
+
+<div>
+    <form asp-action="Create">
+        <div class="form-horizontal">
+            <h4>参加者信息：</h4>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Enrollee.EmployeeNo" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Enrollee.EmployeeNo" class="form-control" />
+                    <span asp-validation-for="Enrollee.EmployeeNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Enrollee.EmailAddress" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Enrollee.EmailAddress" class="form-control" />
+                    <span asp-validation-for="Enrollee.EmailAddress" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Enrollee.Name" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Enrollee.Name" class="form-control" />
+                    <span asp-validation-for="Enrollee.Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Enrollee.PhoneNumber" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Enrollee.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="Enrollee.PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+            <h4>其他信息：</h4>
+            <hr />
+            @foreach (var p in Model.Enrollment.ExtraFormFields.OrderBy(p => p.DisplayOrder))
+            {
+                <div class="form-group">
+                    <label class="col-md-2 control-label">@p.DisplayName</label>
+                    <div class="col-md-10">
+                        @if (p.ChoiceMode == FieldValueChoiceMode.None)
+                        {
+                            <input name="@p.Name" class="form-control" />
+                        }
+                        else
+                        {
+                            <select class="form-control" @(p.ChoiceMode == FieldValueChoiceMode.Single ? string.Empty : "multiple")>
+                                @foreach (var choice in p.ValueChoices.OrderBy(c => c.DisplayOrder))
+                                {
+                                    <option value="@choice.Value">@choice.DisplayText</option>
+                                }
+                            </select>
+                        }
+                        <span data-valmsg-for="@p.Name" class="text-danger"></span>
+                        <span asp-validation-for="@p.Name" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="报名" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

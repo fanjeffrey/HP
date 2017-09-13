@@ -1,0 +1,77 @@
+﻿@model HPCN.UnionOnline.Models.FieldEntry
+
+@{
+    ViewData["Title"] = $"字段详情 - {Model.Enrollment.Name}";
+}
+
+<h2>字段 - @Model.Name</h2>
+<p>所属表单：@Model.Enrollment.Name</p>
+<hr />
+
+<h4>基本信息</h4>
+<hr />
+<dl class="dl-horizontal">
+    <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+    <dd>@Html.DisplayFor(model => model.Name)</dd>
+
+    <dt>@Html.DisplayNameFor(model => model.DisplayName)</dt>
+    <dd>@Html.DisplayFor(model => model.DisplayName)</dd>
+
+    <dt>@Html.DisplayNameFor(model => model.IsRequired)</dt>
+    <dd>@Html.DisplayFor(model => model.IsRequired)</dd>
+
+    <dt>@Html.DisplayNameFor(model => model.RequiredMessage)</dt>
+    <dd>@Html.DisplayFor(model => model.RequiredMessage)</dd>
+
+    <dt>@Html.DisplayNameFor(model => model.DisplayOrder)</dt>
+    <dd>@Html.DisplayFor(model => model.DisplayOrder)</dd>
+
+    <dt>@Html.DisplayNameFor(model => model.TypeOfValue)</dt>
+    <dd>@Html.DisplayFor(model => model.TypeOfValue)</dd>
+
+    <dt>@Html.DisplayNameFor(model => model.ChoiceMode)</dt>
+    <dd>@Html.DisplayFor(model => model.ChoiceMode)</dd>
+
+    <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+    <dd>@Html.DisplayFor(model => model.Description)</dd>
+</dl>
+
+@if (Model.ChoiceMode != FieldValueChoiceMode.None)
+{
+    <div class="form-horizontal field-choice-panel">
+        <h4>字段值选项</h4>
+        <hr />
+        <div>
+            <table id="choices-table" cellpadding="0" cellspacing="0" border="1">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Value</th>
+                        <th>Display Text</th>
+                        <th>Display Order</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var index = 1; }
+                    @foreach (var item in Model.ValueChoices)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.Value</td>
+                            <td>@item.DisplayText</td>
+                            <td>@item.DisplayOrder</td>
+                            <td>@item.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+                        }
+
+<hr />
+<div class="form-horizontal">
+    <a asp-action="EditField" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Fields" asp-route-id="@Model.Enrollment.Id">Back to List</a>
+</div>

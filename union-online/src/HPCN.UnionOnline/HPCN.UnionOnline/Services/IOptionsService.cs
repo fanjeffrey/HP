@@ -7,7 +7,7 @@ namespace HPCN.UnionOnline.Services
     {
         IList<Gender> ListGender();
         IList<EmployeeType> ListEmployeeTypes();
-        List<PropertyValueType> ListPropertyValueTypes();
-        List<PropertyValueChoiceMode> ListPropertyValueChoiceModes();
+        List<FieldValueType> ListFieldValueTypes();
+        List<FieldValueChoiceMode> ListFieldValueChoiceModes();
     }
 }

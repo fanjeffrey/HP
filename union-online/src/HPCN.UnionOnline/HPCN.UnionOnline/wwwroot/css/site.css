@@ -175,27 +175,32 @@ img.product-picture-edit {
     }
 
 /* enrollment */
-.property-choice-panel table {
+.field-choice-panel table {
 }
 
-    .property-choice-panel table tr {
+    .field-choice-panel table td,
+    .field-choice-panel table th {
+        padding: 3px;
+    }
+
+    .field-choice-panel table tr {
         height: 35px;
     }
 
-    .property-choice-panel table button,
-    .property-choice-panel table input {
+    .field-choice-panel table button,
+    .field-choice-panel table input {
         height: 28px;
     }
 
-        .property-choice-panel table input.choice-display-text {
+        .field-choice-panel table input.choice-display-text {
             width: 200px;
         }
 
-        .property-choice-panel table input.choice-display-order {
+        .field-choice-panel table input.choice-display-order {
             width: 120px;
         }
 
-        .property-choice-panel table input.choice-description {
+        .field-choice-panel table input.choice-description {
             max-width: 350px !important;
             width: 350px;
         }

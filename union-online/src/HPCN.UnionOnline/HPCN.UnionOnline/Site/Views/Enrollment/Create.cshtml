@@ -1,10 +1,10 @@
-@model HPCN.UnionOnline.Site.ViewModels.EnrollmentActivityCreateViewModel
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollmentCreateViewModel
 
 @{
-    ViewData["Title"] = "Create Enrollment Activity";
+    ViewData["Title"] = "新建活动报名";
 }
 
-<h2>Create enrollment activity</h2>
+<h2>新建活动报名</h2>
 
 <form asp-action="Create">
     <div class="form-horizontal">
@@ -36,6 +36,21 @@
             <div class="col-md-10">
                 <textarea asp-for="Description" class="form-control description"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MaxCountOfEnrollees" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MaxCountOfEnrollees" class="form-control" />
+                <span asp-validation-for="MaxCountOfEnrollees" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="SelfEnrollmentOnly" />
+                    <label asp-for="SelfEnrollmentOnly"></label>
+                </div>
             </div>
         </div>
         <div class="form-group">

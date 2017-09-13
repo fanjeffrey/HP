@@ -15,28 +15,28 @@ namespace HPCN.UnionOnline.Services
             return new List<Gender> { Gender.F, Gender.M };
         }
 
-        public List<PropertyValueType> ListPropertyValueTypes()
+        public List<FieldValueType> ListFieldValueTypes()
         {
-            return new List<PropertyValueType> {
-                PropertyValueType.String,
-                PropertyValueType.Boolean,
-                PropertyValueType.Char,
-                PropertyValueType.Guid,
-                PropertyValueType.DateTime,
-                PropertyValueType.Int,
-                PropertyValueType.LongInt,
-                PropertyValueType.Float,
-                PropertyValueType.Double,
-                PropertyValueType.Decimal,
+            return new List<FieldValueType> {
+                FieldValueType.String,
+                FieldValueType.Boolean,
+                FieldValueType.Char,
+                FieldValueType.Guid,
+                FieldValueType.DateTime,
+                FieldValueType.Int,
+                FieldValueType.LongInt,
+                FieldValueType.Float,
+                FieldValueType.Double,
+                FieldValueType.Decimal,
             };
         }
 
-        public List<PropertyValueChoiceMode> ListPropertyValueChoiceModes()
+        public List<FieldValueChoiceMode> ListFieldValueChoiceModes()
         {
-            return new List<PropertyValueChoiceMode> {
-                PropertyValueChoiceMode.None,
-                PropertyValueChoiceMode.Single,
-                PropertyValueChoiceMode.Multi
+            return new List<FieldValueChoiceMode> {
+                FieldValueChoiceMode.None,
+                FieldValueChoiceMode.Single,
+                FieldValueChoiceMode.Multi
             };
         }
     }
