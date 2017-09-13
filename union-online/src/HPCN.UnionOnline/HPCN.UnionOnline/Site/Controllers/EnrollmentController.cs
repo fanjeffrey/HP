@@ -74,6 +74,8 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(model);
         }
 
+        #region actions about Fields
+
         public async Task<IActionResult> Fields(Guid? id)
         {
             if (id == null)
@@ -193,5 +195,7 @@ namespace HPCN.UnionOnline.Site.Controllers
 
             return RedirectToAction(nameof(EnrollmentController.Fields), new { Id = id });
         }
+
+        #endregion
     }
 }
