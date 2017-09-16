@@ -117,6 +117,32 @@ namespace HPCN.UnionOnline.Services
             return e;
         }
 
+        public async Task OpenEnrollment(Guid enrollmentId, string openedBy)
+        {
+            var enrollment = _db.Enrollments.SingleOrDefault(e => e.Id == enrollmentId);
+            if (enrollment != null)
+            {
+                enrollment.Status = ActivityState.Active;
+                enrollment.UpdatedBy = openedBy;
+                enrollment.UpdatedTime = DateTime.Now;
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        public async Task CloseEnrollment(Guid enrollmentId, string closedBy)
+        {
+            var enrollment = _db.Enrollments.SingleOrDefault(e => e.Id == enrollmentId);
+            if (enrollment != null)
+            {
+                enrollment.Status = ActivityState.Closed;
+                enrollment.UpdatedBy = closedBy;
+                enrollment.UpdatedTime = DateTime.Now;
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
         #endregion
 
         #region field operations

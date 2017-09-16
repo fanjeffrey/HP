@@ -49,8 +49,14 @@
                 <td>
                     <a asp-action="Fields" asp-route-id="@item.Id">Manage Fields</a> |
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Open" asp-route-id="@item.Id">Open</a> |
-                    <a asp-action="Close" asp-route-id="@item.Id">Close</a> |
+                    @if (item.Status != ActivityState.Active)
+                    {
+                        <a asp-action="Open" asp-route-id="@item.Id">Open</a> @("|")
+                    }
+                    @if (item.Status != ActivityState.Closed)
+                    {
+                        <a asp-action="Close" asp-route-id="@item.Id">Close</a> @("|")
+                    }
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
                     <a asp-action="Clone" asp-route-id="@item.Id">Clone</a>
                 </td>

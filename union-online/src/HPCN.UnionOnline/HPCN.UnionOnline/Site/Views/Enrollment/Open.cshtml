@@ -1,0 +1,22 @@
+﻿@model HPCN.UnionOnline.Models.Enrollment
+
+@{
+    ViewData["Title"] = $"开放活动报名 - {Model.Name}";
+}
+
+<h2>开放活动报名</h2>
+
+<div>
+    <h4>你确定要开放此活动报名吗？</h4>
+    <hr />
+    @Html.Partial("_enrollment", Model)
+</div>
+<div>
+    <form asp-action="Open">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-actions no-color">
+            <input type="submit" value="开放" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

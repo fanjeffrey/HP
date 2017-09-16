@@ -74,6 +74,68 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Open(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAsync(id.Value);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            return View(enrollment);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Open(Guid id)
+        {
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAsync(id);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            await _enrollmentService.OpenEnrollment(id, User.GetUsername());
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Close(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAsync(id.Value);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            return View(enrollment);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Close(Guid id)
+        {
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAsync(id);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            await _enrollmentService.CloseEnrollment(id, User.GetUsername());
+
+            return RedirectToAction("Index");
+        }
+
         #region actions about Fields
 
         public async Task<IActionResult> Fields(Guid? id)
