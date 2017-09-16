@@ -74,6 +74,72 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Edit(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enrollment = await _enrollmentService.GetEnrollmentAsync(id.Value);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            return View(new EnrollmentEditViewModel
+            {
+                Id = enrollment.Id,
+                Name = enrollment.Name,
+                Description = enrollment.Description,
+                BeginTime = enrollment.BeginTime,
+                EndTime = enrollment.EndTime,
+                MaxCountOfEnrollees = enrollment.MaxCountOfEnrolles,
+                SelfEnrollmentOnly = enrollment.SelfEnrollmentOnly
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EnrollmentEditViewModel model)
+        {
+            if (model.EndTime <= model.BeginTime)
+            {
+                ModelState.AddModelError(string.Empty, "End Time can't be earlier than Begin Time!");
+            }
+
+            if (model.MaxCountOfEnrollees <= 0)
+            {
+                ModelState.AddModelError(string.Empty, "Max count of enrollees must be larger than Zero!");
+            }
+
+            if (await _enrollmentService.ExistsEnrollmentAsync(model.Id, model.Name))
+            {
+                ModelState.AddModelError(string.Empty, "Name alreay exists!");
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (!await _enrollmentService.ExistsEnrollmentAsync(model.Id))
+                {
+                    return NotFound();
+                }
+
+                await _enrollmentService.UpdateEnrollmentAsync(model.Id,
+                    model.Name,
+                    model.BeginTime,
+                    model.EndTime,
+                    model.MaxCountOfEnrollees,
+                    model.SelfEnrollmentOnly,
+                    model.Description,
+                    User.GetUsername());
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -116,7 +182,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            await _enrollmentService.OpenEnrollment(id, User.GetUsername());
+            await _enrollmentService.OpenEnrollmentAsync(id, User.GetUsername());
 
             return RedirectToAction("Index");
         }
@@ -147,7 +213,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            await _enrollmentService.CloseEnrollment(id, User.GetUsername());
+            await _enrollmentService.CloseEnrollmentAsync(id, User.GetUsername());
 
             return RedirectToAction("Index");
         }

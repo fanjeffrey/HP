@@ -31,12 +31,22 @@ namespace HPCN.UnionOnline.Services
 
         public async Task<bool> ExistsEnrollmentAsync(string name)
         {
-            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(name.Trim()))
+            if (string.IsNullOrWhiteSpace(name?.Trim()))
             {
-                return false;
+                throw new ArgumentException(nameof(name));
             }
 
             return await _db.Enrollments.AnyAsync(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public async Task<bool> ExistsEnrollmentAsync(Guid enrollmentId, string name)
+        {
+            if (string.IsNullOrWhiteSpace(name?.Trim()))
+            {
+                throw new ArgumentException(nameof(name));
+            }
+
+            return await _db.Enrollments.AnyAsync(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase) && a.Id != enrollmentId);
         }
 
         public async Task<int> CountEnrollmentsAsync(string keyword)
@@ -117,7 +127,29 @@ namespace HPCN.UnionOnline.Services
             return e;
         }
 
-        public async Task OpenEnrollment(Guid enrollmentId, string openedBy)
+        public async Task<Enrollment> UpdateEnrollmentAsync(Guid id, string name, DateTime beginTime, DateTime endTime, int maxCountOfEnrollees, bool selfEnrollmentOnly, string description, string updatedBy)
+        {
+            var enrollment = _db.Enrollments.SingleOrDefault(e => e.Id == id);
+            if (enrollment == null)
+            {
+                throw new Exception($"Failed to find the enrollment: {id}.");
+            }
+
+            enrollment.Name = name.Trim();
+            enrollment.BeginTime = beginTime;
+            enrollment.EndTime = endTime;
+            enrollment.MaxCountOfEnrolles = maxCountOfEnrollees;
+            enrollment.SelfEnrollmentOnly = selfEnrollmentOnly;
+            enrollment.Description = description;
+            enrollment.UpdatedBy = updatedBy;
+            enrollment.UpdatedTime = DateTime.Now;
+
+            await _db.SaveChangesAsync();
+
+            return enrollment;
+        }
+
+        public async Task OpenEnrollmentAsync(Guid enrollmentId, string openedBy)
         {
             var enrollment = _db.Enrollments.SingleOrDefault(e => e.Id == enrollmentId);
             if (enrollment != null)
@@ -130,7 +162,7 @@ namespace HPCN.UnionOnline.Services
             }
         }
 
-        public async Task CloseEnrollment(Guid enrollmentId, string closedBy)
+        public async Task CloseEnrollmentAsync(Guid enrollmentId, string closedBy)
         {
             var enrollment = _db.Enrollments.SingleOrDefault(e => e.Id == enrollmentId);
             if (enrollment != null)

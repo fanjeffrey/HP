@@ -7,7 +7,40 @@ namespace HPCN.UnionOnline.Site.ViewModels
 {
     public class EnrollmentCreateViewModel
     {
+        [Required]
+        [StringLength(200)]
+        [Display(Name = "活动名称", Prompt = "12月份旅游报名")]
+        public string Name { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        [Display(Name = "报名开始时间")]
+        public DateTime BeginTime { get; set; } = DateTime.Now;
+
+        [Required]
+        [DataType(DataType.Date)]
+        [Display(Name = "报名结束时间")]
+        public DateTime EndTime { get; set; } = DateTime.Now.AddDays(14);
+
+        [StringLength(2000)]
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "详情")]
+        public string Description { get; set; }
+
+        [Required]
+        [Display(Name = "最大可参与人数")]
+        public int MaxCountOfEnrollees { get; set; } = 50;
+
+        [Required]
+        [Display(Name = "不允许代报名？")]
+        public bool SelfEnrollmentOnly { get; set; } = true;
+    }
+
+    public class EnrollmentEditViewModel
+    {
         [Key]
+        public Guid Id { get; set; }
+
         [Required]
         [StringLength(200)]
         [Display(Name = "活动名称", Prompt = "12月份旅游报名")]

@@ -9,14 +9,16 @@ namespace HPCN.UnionOnline.Services
     {
         Task<bool> ExistsEnrollmentAsync(Guid id);
         Task<bool> ExistsEnrollmentAsync(string name);
+        Task<bool> ExistsEnrollmentAsync(Guid id, string name);
         Task<int> CountEnrollmentsAsync(string keyword);
         Task<Enrollment> GetEnrollmentAsync(Guid enrollmentId);
         Task<Enrollment> GetEnrollmentIncludingFieldsAsync(Guid enrollmentId);
         Task<List<Enrollment>> GetActiveEnrollmentsAsync();
         Task<List<Enrollment>> SearchEnrollmentsAsync(string keyword, int pageIndex, int pageSize);
         Task<Enrollment> CreateEnrollmentAsync(string name, DateTime beginTime, DateTime endTime, string description, int maxCountOfEnrollees, bool selfEnrollmentOnly, string creator);
-        Task OpenEnrollment(Guid enrollmentId, string openedBy);
-        Task CloseEnrollment(Guid enrollmentId, string closedBy);
+        Task<Enrollment> UpdateEnrollmentAsync(Guid id, string name, DateTime beginTime, DateTime endTime, int maxCountOfEnrollees, bool selfEnrollmentOnly, string description, string creator);
+        Task OpenEnrollmentAsync(Guid enrollmentId, string openedBy);
+        Task CloseEnrollmentAsync(Guid enrollmentId, string closedBy);
 
         Task<bool> ExistsFieldAsync(Guid fieldId);
         Task<FieldEntry> GetFieldIncludingEnrollmentAndValueChoicesAsync(Guid fieldId);
