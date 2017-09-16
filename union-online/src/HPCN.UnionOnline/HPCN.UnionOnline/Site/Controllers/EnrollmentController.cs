@@ -218,6 +218,37 @@ namespace HPCN.UnionOnline.Site.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> Delete(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAsync(id.Value);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            return View(enrollment);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAsync(id);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            await _enrollmentService.DeleteEnrollmentAsync(id);
+
+            return RedirectToAction("Index");
+        }
+
         #region actions about Fields
 
         public async Task<IActionResult> Fields(Guid? id)

@@ -175,6 +175,17 @@ namespace HPCN.UnionOnline.Services
             }
         }
 
+        public async Task DeleteEnrollmentAsync(Guid enrollmentId)
+        {
+            var enrollment = _db.Enrollments.SingleOrDefault(e => e.Id == enrollmentId);
+            if (enrollment != null)
+            {
+                _db.Enrollments.Remove(enrollment);
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
         #endregion
 
         #region field operations
