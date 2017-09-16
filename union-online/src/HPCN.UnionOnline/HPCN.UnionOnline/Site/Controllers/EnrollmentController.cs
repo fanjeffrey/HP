@@ -74,6 +74,22 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Details(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAsync(id.Value);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            return View(enrollment);
+        }
+
         public async Task<IActionResult> Open(Guid? id)
         {
             if (id == null)

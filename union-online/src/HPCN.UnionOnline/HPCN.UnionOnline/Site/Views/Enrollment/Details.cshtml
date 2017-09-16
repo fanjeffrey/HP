@@ -1,0 +1,25 @@
+﻿@model HPCN.UnionOnline.Models.Enrollment
+
+@{
+    ViewData["Title"] = $"活动报名详细 - {Model.Name}";
+}
+
+<h2>活动报名详细</h2>
+
+<div>
+    @Html.Partial("_enrollment", Model)
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    @if (Model.Status != ActivityState.Active)
+    {
+        <a asp-action="Open" asp-route-id="@Model.Id">Open</a> @("|")
+    }
+    @if (Model.Status != ActivityState.Closed)
+    {
+        <a asp-action="Close" asp-route-id="@Model.Id">Close</a> @("|")
+    }
+    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+    <a asp-action="Clone" asp-route-id="@Model.Id">Clone</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
