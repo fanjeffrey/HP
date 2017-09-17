@@ -249,6 +249,54 @@ namespace HPCN.UnionOnline.Site.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> Clone(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAsync(id.Value);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            return View(new EnrollmentCloneViewModel
+            {
+                NewName = string.Empty,
+                Enrollment = enrollment
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Clone(Guid id, string newName)
+        {
+            if (await _enrollmentService.ExistsEnrollmentAsync(newName))
+            {
+                ModelState.AddModelError(nameof(newName), $"The name ({newName}) already exists.");
+            }
+
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAsync(id);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _enrollmentService.CloneEnrollmentAsync(id, newName, User.GetUsername());
+                return RedirectToAction("Index");
+            }
+
+            return View(new EnrollmentCloneViewModel
+            {
+                NewName = newName,
+                Enrollment = enrollment
+            });
+        }
+
         #region actions about Fields
 
         public async Task<IActionResult> Fields(Guid? id)

@@ -186,6 +186,97 @@ namespace HPCN.UnionOnline.Services
             }
         }
 
+        public async Task<Enrollment> CloneEnrollmentAsync(Guid enrollmentId, string newName, string clonedBy)
+        {
+            newName = newName?.Trim();
+
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                throw new ArgumentNullException(nameof(newName));
+            }
+
+            var enrollment = await _db.Enrollments.
+                Include(e => e.ExtraFormFields)
+                .ThenInclude(f => f.ValueChoices)
+                .SingleOrDefaultAsync(e => e.Id == enrollmentId);
+            if (enrollment == null)
+            {
+                throw new Exception($"Failed to find the enrollment to clone. Guid: {enrollmentId}");
+            }
+
+            if (await ExistsEnrollmentAsync(newName))
+            {
+                throw new Exception($"The name ({newName}) already exists. ");
+            }
+
+            var newEnrollment = new Enrollment
+            {
+                Id = Guid.NewGuid(),
+                Name = newName,
+                BeginTime = enrollment.BeginTime,
+                EndTime = enrollment.EndTime,
+                Description = enrollment.Description,
+                MaxCountOfEnrolles = enrollment.MaxCountOfEnrolles,
+                SelfEnrollmentOnly = enrollment.SelfEnrollmentOnly,
+                Status = ActivityState.Pending
+            };
+            newEnrollment.UpdatedBy = newEnrollment.CreatedBy = clonedBy;
+            newEnrollment.UpdatedTime = newEnrollment.CreatedTime = DateTime.Now;
+
+            newEnrollment.ExtraFormFields = new List<FieldEntry>();
+            foreach (var field in enrollment.ExtraFormFields)
+            {
+                newEnrollment.ExtraFormFields.Add(CloneFieldFrom(field, clonedBy, newEnrollment.CreatedTime.Value));
+            }
+
+            _db.Enrollments.Add(newEnrollment);
+            await _db.SaveChangesAsync();
+
+            return newEnrollment;
+        }
+
+        private FieldEntry CloneFieldFrom(FieldEntry field, string clonedBy, DateTime clonedTime)
+        {
+            var newField = new FieldEntry
+            {
+                Id = Guid.NewGuid(),
+                Name = field.Name,
+                DisplayName = field.DisplayName,
+                Description = field.Description,
+                DisplayOrder = field.DisplayOrder,
+                IsRequired = field.IsRequired,
+                RequiredMessage = field.RequiredMessage,
+                TypeOfValue = field.TypeOfValue,
+                ChoiceMode = field.ChoiceMode
+            };
+            newField.UpdatedBy = newField.CreatedBy = clonedBy;
+            newField.UpdatedTime = newField.CreatedTime = clonedTime;
+
+            newField.ValueChoices = new List<FieldValueChoice>();
+            foreach (var choice in field.ValueChoices)
+            {
+                newField.ValueChoices.Add(CloneValueChoiceFrom(choice, clonedBy, clonedTime));
+            }
+
+            return newField;
+        }
+
+        private FieldValueChoice CloneValueChoiceFrom(FieldValueChoice choice, string clonedBy, DateTime clonedTime)
+        {
+            var newChoice = new FieldValueChoice
+            {
+                Id = Guid.NewGuid(),
+                Value = choice.Value,
+                DisplayText = choice.DisplayText,
+                DisplayOrder = choice.DisplayOrder,
+                Description = choice.Description
+            };
+            newChoice.UpdatedBy = newChoice.CreatedBy = clonedBy;
+            newChoice.UpdatedTime = newChoice.CreatedTime = clonedTime;
+
+            return newChoice;
+        }
+
         #endregion
 
         #region field operations

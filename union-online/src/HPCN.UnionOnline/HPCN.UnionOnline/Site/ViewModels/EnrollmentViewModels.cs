@@ -9,7 +9,7 @@ namespace HPCN.UnionOnline.Site.ViewModels
     {
         [Required]
         [StringLength(200)]
-        [Display(Name = "活动名称", Prompt = "12月份旅游报名")]
+        [Display(Name = "名称", Prompt = "12月份旅游报名")]
         public string Name { get; set; }
 
         [Required]
@@ -43,7 +43,7 @@ namespace HPCN.UnionOnline.Site.ViewModels
 
         [Required]
         [StringLength(200)]
-        [Display(Name = "活动名称", Prompt = "12月份旅游报名")]
+        [Display(Name = "名称", Prompt = "12月份旅游报名")]
         public string Name { get; set; }
 
         [Required]
@@ -83,6 +83,16 @@ namespace HPCN.UnionOnline.Site.ViewModels
         public bool HasPrevPage { get { return PageIndex > 1; } }
         public bool HasNextPage { get { return PageIndex < TotalPages; } }
         public int TotalPages { get { return (int)Math.Ceiling(Count / (double)PageSize); } }
+    }
+
+    public class EnrollmentCloneViewModel
+    {
+        [Required]
+        [StringLength(200)]
+        [Display(Name = "新名称")]
+        public string NewName { get; set; }
+
+        public Enrollment Enrollment { get; set; }
     }
 
     public class EnrollmentAddFieldViewModel
