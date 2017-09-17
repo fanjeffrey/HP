@@ -91,14 +91,14 @@ namespace HPCN.UnionOnline.Services
 
             if (string.IsNullOrWhiteSpace(keyword))
             {
-                return await _db.Enrollments.OrderBy(p => p.Name)
+                return await _db.Enrollments.OrderBy(p => p.BeginTime).ThenBy(e => e.EndTime).ThenBy(e => e.Name)
                                             .Skip((pageIndex - 1) * pageSize)
                                             .Take(pageSize)
                                             .ToListAsync();
             }
 
             return await _db.Enrollments.Where(p => p.Name.Contains(keyword) || p.Description.Contains(keyword))
-                                        .OrderBy(p => p.Name)
+                                        .OrderBy(p => p.BeginTime).ThenBy(e => e.EndTime).ThenBy(e => e.Name)
                                         .Skip((pageIndex - 1) * pageSize)
                                         .Take(pageSize)
                                         .ToListAsync();

@@ -20,6 +20,8 @@
                     </th>
                     <th>报名开始</th>
                     <th>报名截止</th>
+                    <th>报名人数限制</th>
+                    <th>允许代报名</th>
                     <th></th>
                 </tr>
             </thead>
@@ -35,6 +37,12 @@
                         </td>
                         <td>
                             @item.EndTime
+                        </td>
+                        <td>
+                            @item.MaxCountOfEnrolles
+                        </td>
+                        <td>
+                            @(item.SelfEnrollmentOnly ? "No" : "Yes")
                         </td>
                         <td>
                             <a href="/home/enroll/@item.Id">马上报名</a>
@@ -64,6 +72,8 @@ else
                     </th>
                     <th>报名开始</th>
                     <th>报名截止</th>
+                    <th>报名人数限制</th>
+                    <th>允许代报名</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,6 +88,12 @@ else
                         </td>
                         <td>
                             @item.EndTime
+                        </td>
+                        <td>
+                            @item.MaxCountOfEnrolles
+                        </td>
+                        <td>
+                            @(item.SelfEnrollmentOnly ? "No" : "Yes")
                         </td>
                     </tr>
                 }
