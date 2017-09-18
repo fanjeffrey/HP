@@ -52,6 +52,7 @@ namespace HPCN.UnionOnline
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminOnly", policy => policy.RequireClaim("IsAdmin", true.ToString()));
+                options.AddPolicy("EmployeeOnly", policy => policy.RequireClaim("IsAdmin", false.ToString()));
             });
 
             services.Configure<ProductPictureOptions>(Configuration.GetSection("ProductPicture"));

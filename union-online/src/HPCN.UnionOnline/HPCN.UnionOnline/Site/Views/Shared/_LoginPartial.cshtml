@@ -3,7 +3,14 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a>@User.GetUsername()</a>
+                @if (User.IsAdmin())
+                {
+                    <a>@User.GetUsername()</a>
+                }
+                else
+                {
+                    <a asp-controller="portal" asp-action="index">@User.GetUsername()</a>
+                }
             </li>
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">退出</button>

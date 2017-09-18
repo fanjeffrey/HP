@@ -49,6 +49,22 @@ select {
 }
 
 /*--common--*/
+fieldset {
+    border: 1px solid rgb(0, 150, 214);
+    padding: 15px;
+}
+
+legend {
+    color: rgb(0, 150, 214);
+    width: auto;
+    border: 0;
+}
+
+div.section {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
 textarea.description {
     width: 400px;
     height: 200px;

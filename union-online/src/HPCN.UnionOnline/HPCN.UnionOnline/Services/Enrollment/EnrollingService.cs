@@ -64,6 +64,31 @@ namespace HPCN.UnionOnline.Services
                           select 1).AnyAsync();
         }
 
+        public async Task<List<Enrolling>> GetEnrollingsAsync(Guid userId)
+        {
+            var employee = await _db.Employees.SingleOrDefaultAsync(e => e.UserId == userId);
+            if (employee == null) return new List<Enrolling>();
+
+            return await (from e in _db.Enrollings
+                          where e.Enrollee.EmployeeNo.ToLower() == employee.No
+                          orderby e.CreatedTime descending
+                          select e)
+                          .Include(e => e.Enrollment)
+                          .Include(e => e.Enrollee)
+                          .Include(e => e.User).ThenInclude(u => u.Employee)
+                          .ToListAsync();
+        }
+
+        public async Task<Dictionary<Guid, int>> GetEnrolleesInEnrollments(IEnumerable<Guid> enrollmentIds)
+        {
+            var enrollings = await (from e in _db.Enrollings
+                                    where enrollmentIds.Contains(e.Enrollment.Id)
+                                    group e by e.Enrollment.Id into g
+                                    select new { Id = g.Key, CountOfEnrollees = g.Count() }).ToDictionaryAsync(g => g.Id, g => g.CountOfEnrollees);
+
+            return enrollings;
+        }
+
         public async Task<Enrolling> CreateAsync(Guid enrollmentId,
             string employeeNo, string emailAddress, string name, string phoneNumber,
             IDictionary<string, string> fieldInputs,
