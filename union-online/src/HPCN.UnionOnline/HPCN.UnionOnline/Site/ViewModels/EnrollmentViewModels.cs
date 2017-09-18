@@ -135,10 +135,4 @@ namespace HPCN.UnionOnline.Site.ViewModels
 
         public List<FieldValueChoice> ValueChoices { get; set; }
     }
-
-    public class EnrollViewModel
-    {
-        public Enrollment Enrollment { get; set; }
-        public Enrollee Enrollee { get; set; }
-    }
 }

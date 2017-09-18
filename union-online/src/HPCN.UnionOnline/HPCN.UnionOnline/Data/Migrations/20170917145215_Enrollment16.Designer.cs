@@ -9,9 +9,10 @@ using HPCN.UnionOnline.Models;
 namespace HPCN.UnionOnline.Data.Migrations
 {
     [DbContext(typeof(HPCNUnionOnlineDbContext))]
-    partial class HPCNUnionOnlineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170917145215_Enrollment16")]
+    partial class Enrollment16
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")

@@ -1,0 +1,30 @@
+﻿@model HPCN.UnionOnline.Models.Enrollment
+
+@{
+    ViewData["Title"] = $"无效的活动报名 - {Model.Name}";
+
+    var message = string.Empty;
+    if (DateTime.Now < Model.BeginTime)
+    {
+        message = "此报名尚未开始。";
+    }
+    else if (Model.EndTime < DateTime.Now)
+    {
+        message = "此报名已结束。";
+    }
+    else if (Model.Status == ActivityState.Closed)
+    {
+        message = "此报名已关闭。";
+    }
+    else if (Model.Status == ActivityState.Pending)
+    {
+        message = "此报名尚未开放。";
+    }
+}
+
+<header>
+    <h2 class="text-danger">无效的活动报名 - @Model.Name</h2>
+    <p class="text-danger">
+        @message
+    </p>
+</header>

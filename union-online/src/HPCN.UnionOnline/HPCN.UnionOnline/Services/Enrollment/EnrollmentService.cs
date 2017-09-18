@@ -75,6 +75,14 @@ namespace HPCN.UnionOnline.Services
                                         .SingleOrDefaultAsync();
         }
 
+        public async Task<Enrollment> GetEnrollmentIncludingFieldsAndChoicesAsync(Guid enrollmentId)
+        {
+            return await _db.Enrollments.Where(e => e.Id == enrollmentId)
+                                        .Include(e => e.ExtraFormFields)
+                                        .ThenInclude(f => f.ValueChoices)
+                                        .SingleOrDefaultAsync();
+        }
+
         public async Task<List<Enrollment>> GetActiveEnrollmentsAsync()
         {
             return await (from a in _db.Enrollments

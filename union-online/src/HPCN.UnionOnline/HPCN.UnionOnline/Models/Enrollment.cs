@@ -37,10 +37,10 @@ namespace HPCN.UnionOnline.Models
         public Enrollment Enrollment { get; set; }
 
         [Required]
-        public User User { get; set; }
+        public Enrollee Enrollee { get; set; }
 
         [Required]
-        public List<Enrollee> Enrollee { get; set; }
+        public User User { get; set; }
 
         public List<FieldInput> FieldInputs { get; set; }
     }

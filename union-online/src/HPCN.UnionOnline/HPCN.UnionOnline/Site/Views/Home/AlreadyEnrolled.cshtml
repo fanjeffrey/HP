@@ -1,0 +1,12 @@
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollingViewModel
+
+@{
+    ViewData["Title"] = $"已报名 - {Model.Enrollment.Name}";
+}
+
+<header>
+    <h2 class="text-danger">已报名 - @Model.Enrollment.Name</h2>
+    <p class="text-danger">
+        @Model.Name (@Model.EmployeeNo) 已经报过名。请勿重复报名。
+    </p>
+</header>
