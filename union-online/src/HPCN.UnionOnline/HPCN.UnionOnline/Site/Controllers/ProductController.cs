@@ -1,4 +1,3 @@
-using HPCN.UnionOnline.Data;
 using HPCN.UnionOnline.Services;
 using HPCN.UnionOnline.Site.Extensions;
 using HPCN.UnionOnline.Site.ViewModels;
@@ -8,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Site.Controllers

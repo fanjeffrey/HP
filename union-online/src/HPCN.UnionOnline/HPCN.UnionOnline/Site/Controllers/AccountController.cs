@@ -1,7 +1,6 @@
 ﻿using HPCN.UnionOnline.Services;
 using HPCN.UnionOnline.Site.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;

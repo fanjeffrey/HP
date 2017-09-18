@@ -1,5 +1,4 @@
-﻿using HPCN.UnionOnline.Models;
-using HPCN.UnionOnline.Services;
+﻿using HPCN.UnionOnline.Services;
 using HPCN.UnionOnline.Site.Extensions;
 using HPCN.UnionOnline.Site.ViewModels;
 using Microsoft.AspNetCore.Authorization;
