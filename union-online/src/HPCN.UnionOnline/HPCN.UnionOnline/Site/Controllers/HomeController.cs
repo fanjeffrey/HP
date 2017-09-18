@@ -34,9 +34,21 @@ namespace HPCN.UnionOnline.Site.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("Exchange");
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction(nameof(AccountController.Login), "Account");
+            }
+            else if (User.IsAdmin())
+            {
+                return RedirectToAction(nameof(ActivityController.Index), "Activity");
+            }
+            else
+            {
+                return RedirectToAction(nameof(PortalController.Index), "portal");
+            }
         }
 
+        [Authorize(Policy = "EmployeeOnly")]
         public async Task<IActionResult> Exchange()
         {
             var activity = await _activityService.GetActiveActivityAsync();
@@ -48,6 +60,7 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(activity);
         }
 
+        [Authorize(Policy = "EmployeeOnly")]
         public async Task<IActionResult> Enrollments()
         {
             var activeEnrollments = await _enrollmentService.GetActiveEnrollmentsAsync();
@@ -56,7 +69,7 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(activeEnrollments);
         }
 
-        [Authorize]
+        [Authorize(Policy = "EmployeeOnly")]
         public async Task<IActionResult> Enroll(Guid? id)
         {
             if (id == null)
@@ -106,7 +119,7 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [Authorize(Policy = "EmployeeOnly")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Enroll(EnrollingViewModel model)
