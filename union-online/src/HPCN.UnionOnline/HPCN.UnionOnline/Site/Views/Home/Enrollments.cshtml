@@ -4,6 +4,7 @@
     ViewData["Title"] = $"活动报名";
     var ongoingActivities = Model.Where(a => a.BeginTime <= DateTime.Now && DateTime.Now <= a.EndTime);
     var notStartedActivities = Model.Where(a => DateTime.Now < a.BeginTime);
+    var enrolleesInEnrollments = ViewBag.EnrolleesInEnrollments as Dictionary<Guid, int>;
 }
 
 <h2>活动报名</h2>
@@ -39,7 +40,7 @@
                             @item.EndTime
                         </td>
                         <td>
-                            @item.MaxCountOfEnrolles
+                            @item.MaxCountOfEnrolles (已报人数：@enrolleesInEnrollments[item.Id])
                         </td>
                         <td>
                             @(item.SelfEnrollmentOnly ? "No" : "Yes")

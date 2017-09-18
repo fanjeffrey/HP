@@ -51,10 +51,7 @@ namespace HPCN.UnionOnline.Site.Controllers
         public async Task<IActionResult> Enrollments()
         {
             var activeEnrollments = await _enrollmentService.GetActiveEnrollmentsAsync();
-            if (activeEnrollments == null)
-            {
-                return View("NoActiveActivities");
-            }
+            ViewBag.EnrolleesInEnrollments = await _enrollingService.GetEnrolleesInEnrollments(activeEnrollments.Select(e => e.Id));
 
             return View(activeEnrollments);
         }

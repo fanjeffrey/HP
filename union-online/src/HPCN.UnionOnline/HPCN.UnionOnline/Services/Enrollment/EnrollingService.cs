@@ -81,10 +81,11 @@ namespace HPCN.UnionOnline.Services
 
         public async Task<Dictionary<Guid, int>> GetEnrolleesInEnrollments(IEnumerable<Guid> enrollmentIds)
         {
-            var enrollings = await (from e in _db.Enrollings
-                                    where enrollmentIds.Contains(e.Enrollment.Id)
-                                    group e by e.Enrollment.Id into g
-                                    select new { Id = g.Key, CountOfEnrollees = g.Count() }).ToDictionaryAsync(g => g.Id, g => g.CountOfEnrollees);
+            var enrollings = await (from e in _db.Enrollments
+                                    where enrollmentIds.Contains(e.Id)
+                                    let count = _db.Enrollings.Count(el => el.Enrollment.Id == e.Id)
+                                    select new { Id = e.Id, CountOfEnrollees = count })
+                                    .ToDictionaryAsync(g => g.Id, g => g.CountOfEnrollees);
 
             return enrollings;
         }
