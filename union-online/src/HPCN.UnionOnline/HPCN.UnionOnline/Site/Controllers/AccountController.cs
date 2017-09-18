@@ -159,15 +159,7 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View();
         }
 
-        #region Helpers
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
+        #region helper methods
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
