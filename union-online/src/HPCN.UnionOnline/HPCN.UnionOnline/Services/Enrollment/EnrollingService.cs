@@ -64,6 +64,16 @@ namespace HPCN.UnionOnline.Services
                           select 1).AnyAsync();
         }
 
+        public async Task<Enrolling> GetEnrollingIncludingEnrollmentAndFieldInputsAsync(Guid enrollingId)
+        {
+            return await (from e in _db.Enrollings
+                          where e.Id == enrollingId
+                          select e)
+                          .Include(e => e.Enrollment)
+                          .Include(e => e.FieldInputs)
+                          .SingleOrDefaultAsync();
+        }
+
         public async Task<List<Enrolling>> GetEnrollingsAsync(Guid userId)
         {
             var employee = await _db.Employees.SingleOrDefaultAsync(e => e.UserId == userId);
@@ -77,6 +87,13 @@ namespace HPCN.UnionOnline.Services
                           .Include(e => e.Enrollee)
                           .Include(e => e.User).ThenInclude(u => u.Employee)
                           .ToListAsync();
+        }
+
+        public async Task<List<Enrollee>> GetEnrolleesAsync(Guid enrollmentId)
+        {
+            return await (from e in _db.Enrollings
+                          where e.Enrollment.Id == enrollmentId
+                          select e.Enrollee).ToListAsync();
         }
 
         public async Task<Dictionary<Guid, int>> GetEnrolleesInEnrollments(IEnumerable<Guid> enrollmentIds)

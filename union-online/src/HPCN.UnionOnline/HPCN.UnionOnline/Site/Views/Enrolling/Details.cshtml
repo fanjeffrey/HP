@@ -1,0 +1,76 @@
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollingDetailsViewModel
+
+@{
+    ViewData["Title"] = $"活动报名信息 - {Model.Enrolling.Enrollment.Name}";
+}
+
+<h2>@($"活动报名信息 - {Model.Enrolling.Enrollment.Name}")</h2>
+
+<div class="section">
+    <fieldset>
+        <legend>活动</legend>
+        <dl>
+            <dt>详情</dt>
+            <dd>
+                @Html.DisplayFor(model => model.Enrolling.Enrollment.Description)
+            </dd>
+            <dt>报名状态</dt>
+            <dd>
+                @Html.DisplayFor(model => model.Enrolling.Enrollment.Status)
+            </dd>
+            <dt>报名起止</dt>
+            <dd>
+                @Html.DisplayFor(model => model.Enrolling.Enrollment.BeginTime)
+                ~
+                @Html.DisplayFor(model => model.Enrolling.Enrollment.EndTime)
+            </dd>
+        </dl>
+    </fieldset>
+</div>
+
+<div class="section">
+    <fieldset>
+        <legend>我的输入</legend>
+        @foreach (var f in Model.Enrollment.ExtraFormFields.OrderBy(p => p.DisplayOrder))
+        {
+            var fieldInput = Model.Enrolling.FieldInputs.SingleOrDefault(fi => fi.FieldEntryId == f.Id);
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">@f.DisplayName</label>
+                <div class="col-md-10">
+                    @if (f.ChoiceMode == FieldValueChoiceMode.None)
+                    {
+                        <input name="FieldInputs.@(f.Id)" title="@f.Name" class="form-control" value="@fieldInput.Input" />
+                    }
+                    else
+                    {
+                        <select name="FieldInputs.@(f.Id)" title="@f.Name" class="form-control" @(f.ChoiceMode == FieldValueChoiceMode.Single ? string.Empty : "multiple")>
+                            @foreach (var choice in f.ValueChoices.OrderBy(c => c.DisplayOrder))
+                            {
+                                <option value="@choice.Value" @(fieldInput?.Input == choice.Value ? "selected" : string.Empty)>@choice.DisplayText</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </div>
+        }
+    </fieldset>
+</div>
+
+<div class="section">
+    <fieldset>
+        <legend>人员名单</legend>
+        <div>
+            <ul class="enrollees">
+                @foreach (var e in Model.Enrollees.OrderBy(e => e.Name))
+                {
+                    <li>@e.Name</li>
+                }
+            </ul>
+        </div>
+    </fieldset>
+</div>
+
+<div class="section">
+    <a asp-controller="Portal">Back to My Portal</a>
+</div>

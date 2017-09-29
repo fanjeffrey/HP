@@ -29,6 +29,8 @@ namespace HPCN.UnionOnline.Models
         public bool SelfEnrollmentOnly { get; set; }
 
         public List<FieldEntry> ExtraFormFields { get; set; }
+
+        public List<Enrolling> Enrollings { get; set; }
     }
 
     public class Enrolling : AbstractEntity
@@ -61,6 +63,8 @@ namespace HPCN.UnionOnline.Models
 
         [StringLength(50)]
         public string PhoneNumber { get; set; }
+
+        public List<Enrolling> Enrollings { get; set; }
     }
 
     public class FieldInput : AbstractEntity

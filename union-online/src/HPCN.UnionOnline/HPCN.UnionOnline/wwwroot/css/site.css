@@ -220,3 +220,14 @@ img.product-picture-edit {
             max-width: 350px !important;
             width: 350px;
         }
+
+ul.enrollees {
+    padding: 0px;
+}
+
+    ul.enrollees li {
+        width: 20%;
+        margin-left: 1%;
+        display: inline-block;
+        list-style-type: decimal;
+    }

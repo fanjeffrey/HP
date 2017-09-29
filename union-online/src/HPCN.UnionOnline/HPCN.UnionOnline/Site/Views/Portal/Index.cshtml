@@ -23,6 +23,7 @@
                             <th>报名截止</th>
                             <th>报名人数</th>
                             <th>代报名</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,6 +45,7 @@
                                 <td>
                                     @(item.Enrollee.EmployeeNo == item.User.Employee.No ? " - " : $"<a href='mailto:{item.User.Employee.EmailAddress}'>{item.User.Employee.ChineseName} (#{item.User.Employee.No})</a>")
                                 </td>
+                                <td><a asp-controller="Enrolling" asp-action="Details" asp-route-id="@item.Id">查看</a></td>
                             </tr>
                         }
                     </tbody>
