@@ -143,6 +143,13 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return View("AlreadyEnrolled", model);
             }
 
+            // check if self-enroll
+            var user = await _userSerivce.GetUserWithEmployeeInfoAsync(Guid.Parse(User.GetUserId()));
+            if (enrollment.SelfEnrollmentOnly && user.Employee.No != model.EmployeeNo)
+            {
+                return View("SelfEnrollmentOnly", model);
+            }
+
             if (ModelState.IsValid)
             {
                 var fieldInputs = (from item in Request.Form

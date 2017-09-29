@@ -118,6 +118,15 @@ namespace HPCN.UnionOnline.Services
                 throw new Exception($"Failed to find the enrollment with Id: {enrollmentId}.");
             }
 
+            if (enrollment.SelfEnrollmentOnly)
+            {
+                var employee = await _db.Employees.SingleOrDefaultAsync(e => e.UserId == userId);
+                if (employee != null && employee.No != employeeNo)
+                {
+                    throw new Exception($"不允许代报名。");
+                }
+            }
+
             var now = DateTime.Now;
             var enrollee = await _db.Enrollees.SingleOrDefaultAsync(e => e.EmployeeNo.ToLower() == employeeNo.ToLower());
             if (enrollee == null)
