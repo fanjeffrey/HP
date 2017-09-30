@@ -1,10 +1,10 @@
-﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollingEnrollViewModel
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollingUpdateViewModel
 
 @{
-    ViewData["Title"] = Model.Enrollment.Name;
+    ViewData["Title"] = $"更新报名信息 - {Model.Enrollment.Name}";
 }
 
-<h2>@Model.Enrollment.Name</h2>
+<h2>@($"更新报名信息 - {Model.Enrollment.Name}")</h2>
 
 <hr />
 <div>
@@ -33,7 +33,7 @@
 </div>
 
 <div>
-    <form asp-action="Enroll">
+    <form asp-action="Update">
         <div class="form-horizontal">
             <h4>参加者信息：</h4>
             <hr />
@@ -41,8 +41,7 @@
             <div class="form-group">
                 <label asp-for="EmployeeNo" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
-                    <input asp-for="EmployeeNo" class="form-control" style="float:left;" />
-                    <button class="btn btn-default" onclick="queryEmployee(this); return false;">查询</button>
+                    <input asp-for="EmployeeNo" class="form-control" readonly />
                     <span asp-validation-for="EmployeeNo" class="text-danger"></span>
                 </div>
             </div>
@@ -63,7 +62,7 @@
             <div class="form-group">
                 <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
-                    <input asp-for="PhoneNumber" class="form-control" readonly  />
+                    <input asp-for="PhoneNumber" class="form-control" readonly />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
             </div>
@@ -72,6 +71,8 @@
             <hr />
             @foreach (var f in Model.Enrollment.ExtraFormFields.OrderBy(p => p.DisplayOrder))
             {
+                var fieldInput = Model.Enrolling.FieldInputs.SingleOrDefault(fi => fi.FieldEntryId == f.Id);
+
                 <div class="form-group">
                     <label class="col-md-2 control-label">
                         @f.DisplayName
@@ -84,14 +85,24 @@
                     <div class="col-md-10">
                         @if (f.ChoiceMode == FieldValueChoiceMode.None)
                         {
-                            <input name="FieldInputs.@(f.Id)" title="@f.Name" class="form-control" />
+                            <input name="FieldInputs.@(f.Id)" title="@f.Name" class="form-control" value="@fieldInput?.Input" />
                         }
                         else
                         {
-                            <select name="FieldInputs.@(f.Id)" title="@f.Name" class="form-control" @(f.ChoiceMode == FieldValueChoiceMode.Single ? string.Empty : "multiple")>
+                            var selectedChoiceValues = (fieldInput?.Input ?? string.Empty).Split(',');
+                            var multipleString = f.ChoiceMode == FieldValueChoiceMode.Single ? string.Empty : "multiple";
+
+                            <select name="FieldInputs.@(f.Id)" title="@f.Name" class="form-control" @(multipleString)>
                                 @foreach (var choice in f.ValueChoices.OrderBy(c => c.DisplayOrder))
                                 {
-                                    <option value="@choice.Value">@choice.DisplayText</option>
+                                    if (selectedChoiceValues.Contains(choice.Value))
+                                    {
+                                        <option selected value="@choice.Value">@choice.DisplayText</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@choice.Value">@choice.DisplayText</option>
+                                    }
                                 }
                             </select>
                         }
@@ -104,7 +115,7 @@
                 <div class="col-md-offset-2 col-md-10">
                     <input type="hidden" asp-for="Enrollment.Id" />
                     <input type="hidden" asp-for="Enrollment.Name" />
-                    <input type="submit" value="报名" class="btn btn-default" />
+                    <input type="submit" value="更新" class="btn btn-default" />
                 </div>
             </div>
         </div>
@@ -114,19 +125,3 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-
-<script type="text/javascript">
-    function queryEmployee(sender) {
-        var employeeNo = $(sender).prev().val().trim();
-        if (employeeNo) {
-            $.ajax({
-                url: "/Enrolling/QueryEmployee",
-                data: { no: employeeNo }
-            }).done(function (employee) {
-                $(sender).parent().parent().next().find("input:text").val(employee.emailAddress);
-                $(sender).parent().parent().next().next().find("input:text").val(employee.name);
-                $(sender).parent().parent().next().next().next().find("input:text").val(employee.phoneNumber);
-            });
-        }
-    }
-</script>

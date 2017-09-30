@@ -56,7 +56,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            var model = new EnrollingViewModel
+            var model = new EnrollingEnrollViewModel
             {
                 Enrollment = enrollment,
             };
@@ -91,7 +91,7 @@ namespace HPCN.UnionOnline.Site.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Enroll(EnrollingViewModel model)
+        public async Task<IActionResult> Enroll(EnrollingEnrollViewModel model)
         {
             var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(model.Enrollment.Id);
             if (enrollment == null)
@@ -142,6 +142,67 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Update(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(id.Value);
+            if (enrolling == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EnrollingUpdateViewModel
+            {
+                Enrolling = enrolling,
+                Enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(enrolling.Enrollment.Id),
+                EmployeeNo = enrolling.Enrollee.EmployeeNo,
+                EmailAddress = enrolling.Enrollee.EmailAddress,
+                Name = enrolling.Enrollee.Name,
+                PhoneNumber = enrolling.Enrollee.PhoneNumber,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(Guid id, EnrollingUpdateViewModel model)
+        {
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(id);
+            if (enrolling == null)
+            {
+                return NotFound();
+            }
+
+            model.Enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(enrolling.Enrollment.Id);
+
+            // check if self-enroll only
+            var user = await _userSerivce.GetUserWithEmployeeInfoAsync(Guid.Parse(User.GetUserId()));
+            if (model.Enrollment.SelfEnrollmentOnly && user.Employee.No != model.EmployeeNo)
+            {
+                return View("SelfEnrollmentOnly", model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                var fieldInputs = (from item in Request.Form
+                                   where item.Key.StartsWith("FieldInputs.")
+                                   select item).ToDictionary(item => item.Key, item => item.Value.ToString());
+
+                await _enrollingService.UpdateAsync(enrolling.Id,
+                    model.EmployeeNo, model.EmailAddress, model.Name, model.PhoneNumber, fieldInputs,
+                    Guid.Parse(User.GetUserId()), User.GetUsername());
+
+                return RedirectToAction("Details", new { Id = enrolling.Id });
+            }
+
+            return View(model);
+        }
+
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -149,7 +210,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndFieldInputsAsync(id.Value);
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(id.Value);
             if (enrolling == null)
             {
                 return NotFound();
@@ -203,7 +264,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndFieldInputsAsync(id.Value);
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(id.Value);
             if (enrolling == null)
             {
                 return NotFound();
@@ -228,7 +289,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndFieldInputsAsync(id);
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(id);
             if (enrolling == null)
             {
                 return NotFound();

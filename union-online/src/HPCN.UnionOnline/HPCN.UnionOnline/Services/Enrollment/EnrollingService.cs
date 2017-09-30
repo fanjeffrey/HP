@@ -64,12 +64,13 @@ namespace HPCN.UnionOnline.Services
                           select 1).AnyAsync();
         }
 
-        public async Task<Enrolling> GetEnrollingIncludingEnrollmentAndFieldInputsAsync(Guid enrollingId)
+        public async Task<Enrolling> GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(Guid enrollingId)
         {
             return await (from e in _db.Enrollings
                           where e.Id == enrollingId
                           select e)
                           .Include(e => e.Enrollment)
+                          .Include(e => e.Enrollee)
                           .Include(e => e.FieldInputs)
                           .SingleOrDefaultAsync();
         }
@@ -182,6 +183,63 @@ namespace HPCN.UnionOnline.Services
             }
 
             _db.Enrollings.Add(enrolling);
+            await _db.SaveChangesAsync();
+
+            return enrolling;
+        }
+
+        public async Task<Enrolling> UpdateAsync(Guid enrollingId,
+            string employeeNo, string emailAddress, string name, string phoneNumber,
+            Dictionary<string, string> fieldInputs,
+            Guid userId, string updatedBy)
+        {
+            var enrolling = await _db.Enrollings
+                .Include(e => e.Enrollment)
+                .Include(e => e.Enrollee)
+                .Include(e => e.FieldInputs)
+                .SingleOrDefaultAsync(e => e.Id == enrollingId);
+
+            if (enrolling == null)
+            {
+                throw new Exception($"Failed to find the enrolling with Id: {enrollingId}.");
+            }
+
+            if (enrolling.Enrollment.SelfEnrollmentOnly)
+            {
+                var employee = await _db.Employees.SingleOrDefaultAsync(e => e.UserId == userId);
+                if (employee != null && employee.No != employeeNo)
+                {
+                    throw new Exception($"不允许代报名。");
+                }
+            }
+
+            // update field inputs by removing and adding
+            var now = DateTime.Now;
+            enrolling.FieldInputs?.Clear();
+            if (fieldInputs != null)
+            {
+                foreach (var item in fieldInputs)
+                {
+                    var fieldId = Guid.Parse(item.Key.Replace("FieldInputs.", string.Empty));
+                    var fieldValue = item.Value ?? string.Empty; // not null
+
+                    enrolling.FieldInputs.Add(new FieldInput
+                    {
+                        Id = Guid.NewGuid(),
+                        FieldEntryId = fieldId,
+                        Input = fieldValue,
+                        CreatedBy = updatedBy,
+                        UpdatedBy = updatedBy,
+                        CreatedTime = now,
+                        UpdatedTime = now
+                    });
+                }
+            }
+            
+            // update the enrolling
+            enrolling.UpdatedBy = updatedBy;
+            enrolling.UpdatedTime = now;
+
             await _db.SaveChangesAsync();
 
             return enrolling;
