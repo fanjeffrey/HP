@@ -131,10 +131,10 @@ namespace HPCN.UnionOnline.Site.Controllers
                                    where item.Key.StartsWith("FieldInputs.")
                                    select item).ToDictionary(item => item.Key, item => item.Value.ToString());
 
-                await _enrollingService.CreateAsync(enrollment.Id,
+                var enrolling = await _enrollingService.CreateAsync(enrollment.Id,
                     model.EmployeeNo, fieldInputs, Guid.Parse(User.GetUserId()), User.GetUsername());
 
-                return RedirectToAction("Enrollments");
+                return RedirectToAction("Details", new { Id = enrolling.Id });
             }
 
             return View(model);

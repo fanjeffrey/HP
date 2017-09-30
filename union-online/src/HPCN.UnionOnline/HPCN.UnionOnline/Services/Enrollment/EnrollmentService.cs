@@ -335,7 +335,7 @@ namespace HPCN.UnionOnline.Services
             field.Name = field.Name.Trim();
             field.DisplayName = field.DisplayName.Trim();
             field.Description = field.Description.Trim();
-            field.RequiredMessage = field.RequiredMessage.Trim();
+            field.RequiredMessage = field.RequiredMessage?.Trim();
             field.UpdatedBy = field.CreatedBy = creator;
             field.UpdatedTime = field.CreatedTime = now;
 
