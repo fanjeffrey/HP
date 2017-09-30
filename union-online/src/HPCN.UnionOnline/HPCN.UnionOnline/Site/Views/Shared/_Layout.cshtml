@@ -43,7 +43,7 @@
                     {
                         <li><a asp-area="" asp-controller="Portal" asp-action="Index">My Portal</a></li>
                         <li><a asp-area="" asp-controller="Home" asp-action="Exchange">我要兑换</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Enrollments">我要报名</a></li>
+                        <li><a asp-area="" asp-controller="Enrolling" asp-action="Enrollments">我要报名</a></li>
                         if (User.Identity.IsAuthenticated)
                         {
                             <li><a asp-area="" asp-controller="Cart" asp-action="Index">我的购物车 (@await Html.PartialAsync("_CartPartial"))</a></li>

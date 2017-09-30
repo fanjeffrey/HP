@@ -55,15 +55,6 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(activity);
         }
 
-        [Authorize(Policy = "EmployeeOnly")]
-        public async Task<IActionResult> Enrollments()
-        {
-            var activeEnrollments = await _enrollmentService.GetActiveEnrollmentsAsync();
-            ViewBag.EnrolleesInEnrollments = await _enrollingService.GetEnrolleesInEnrollments(activeEnrollments.Select(e => e.Id));
-
-            return View(activeEnrollments);
-        }
-
         public IActionResult Error()
         {
             return View();

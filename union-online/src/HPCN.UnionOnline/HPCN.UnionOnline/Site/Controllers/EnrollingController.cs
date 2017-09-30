@@ -33,6 +33,14 @@ namespace HPCN.UnionOnline.Site.Controllers
             _logger = loggerFactory.CreateLogger<EnrollingController>();
         }
 
+        public async Task<IActionResult> Enrollments()
+        {
+            var activeEnrollments = await _enrollmentService.GetActiveEnrollmentsAsync();
+            ViewBag.EnrolleesInEnrollments = await _enrollingService.GetEnrolleesInEnrollments(activeEnrollments.Select(e => e.Id));
+
+            return View(activeEnrollments);
+        }
+
         public async Task<IActionResult> Enroll(Guid? id)
         {
             if (id == null)
@@ -186,6 +194,29 @@ namespace HPCN.UnionOnline.Site.Controllers
                 name = employee.ChineseName,
                 phoneNumber = employee.PhoneNumber
             });
+        }
+
+        public async Task<IActionResult> Cancel(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndFieldInputsAsync(id.Value);
+            if (enrolling == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EnrollingDetailsViewModel
+            {
+                Enrolling = enrolling,
+                Enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(enrolling.Enrollment.Id),
+                Enrollees = await _enrollingService.GetEnrolleesAsync(enrolling.Enrollment.Id)
+            };
+
+            return View(model);
         }
     }
 }

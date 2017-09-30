@@ -1,0 +1,61 @@
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollingDetailsViewModel
+
+<div class="section">
+    <fieldset>
+        <legend>活动</legend>
+        <dl>
+            <dt>详情</dt>
+            <dd>
+                @Html.DisplayFor(model => model.Enrolling.Enrollment.Description)
+            </dd>
+            <dt>报名状态</dt>
+            <dd>
+                @Html.DisplayFor(model => model.Enrolling.Enrollment.Status)
+            </dd>
+            <dt>报名起止</dt>
+            <dd>
+                @Html.DisplayFor(model => model.Enrolling.Enrollment.BeginTime)
+                ~
+                @Html.DisplayFor(model => model.Enrolling.Enrollment.EndTime)
+            </dd>
+        </dl>
+    </fieldset>
+</div>
+
+<div class="section">
+    <fieldset>
+        <legend>我的输入</legend>
+        <ul>
+            @foreach (var f in Model.Enrollment.ExtraFormFields.OrderBy(p => p.DisplayOrder))
+            {
+                var fieldInput = Model.Enrolling.FieldInputs.SingleOrDefault(fi => fi.FieldEntryId == f.Id);
+                var inputString = string.Empty;
+                @if (f.ChoiceMode == FieldValueChoiceMode.None)
+                {
+                    inputString = fieldInput.Input;
+                }
+                else
+                {
+                    var selectedChoices = f.ValueChoices.Where(c => fieldInput.Input.Split(',').Contains(c.Value)).OrderBy(c => c.DisplayOrder);
+                    inputString = string.Join(";", selectedChoices.Select(c => c.DisplayText));
+                }
+
+                <li><strong>@f.DisplayName : </strong>@inputString</li>
+            }
+        </ul>
+    </fieldset>
+</div>
+
+<div class="section">
+    <fieldset>
+        <legend>人员名单</legend>
+        <div>
+            <ul class="enrollees">
+                @foreach (var e in Model.Enrollees.OrderBy(e => e.Name))
+                {
+                    <li>@e.Name</li>
+                }
+            </ul>
+        </div>
+    </fieldset>
+</div>
