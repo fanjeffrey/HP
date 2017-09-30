@@ -186,5 +186,16 @@ namespace HPCN.UnionOnline.Services
 
             return enrolling;
         }
+
+        public async Task CancelAsync(Guid enrollingId)
+        {
+            var enrolling = await (from e in _db.Enrollings where e.Id == enrollingId select e).SingleOrDefaultAsync();
+
+            if (enrolling != null)
+            {
+                _db.Enrollings.Remove(enrolling);
+                await _db.SaveChangesAsync();
+            }
+        }
     }
 }

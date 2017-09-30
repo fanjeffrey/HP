@@ -15,5 +15,6 @@ namespace HPCN.UnionOnline.Services
         Task<List<Enrollee>> GetEnrolleesAsync(Guid enrollmentId);
         Task<Dictionary<Guid, int>> GetEnrolleesInEnrollments(IEnumerable<Guid> enrollmentIds);
         Task<Enrolling> CreateAsync(Guid enrollmentId, string employeeNo, string emailAddress, string name, string phoneNumber, IDictionary<string, string> fieldInputs, Guid userId, string createdBy);
+        Task CancelAsync(Guid enrollingId);
     }
 }

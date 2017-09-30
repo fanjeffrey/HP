@@ -218,5 +218,25 @@ namespace HPCN.UnionOnline.Site.Controllers
 
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancel(Guid id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndFieldInputsAsync(id);
+            if (enrolling == null)
+            {
+                return NotFound();
+            }
+
+            await _enrollingService.CancelAsync(id);
+
+            return RedirectToAction("Enrollments");
+        }
     }
 }
