@@ -376,7 +376,7 @@ namespace HPCN.UnionOnline.Services
             fieldInDb.DisplayName = field.DisplayName.Trim();
             fieldInDb.Description = field.Description.Trim();
             fieldInDb.IsRequired = field.IsRequired;
-            fieldInDb.RequiredMessage = field.RequiredMessage.Trim();
+            fieldInDb.RequiredMessage = field.RequiredMessage?.Trim();
             fieldInDb.DisplayOrder = field.DisplayOrder;
             fieldInDb.TypeOfValue = field.TypeOfValue;
             fieldInDb.ChoiceMode = field.ChoiceMode;
