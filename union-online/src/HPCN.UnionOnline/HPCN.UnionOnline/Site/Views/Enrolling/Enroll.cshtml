@@ -126,7 +126,7 @@
         var employeeNo = $(sender).prev().val().trim();
         if (employeeNo) {
             $.ajax({
-                url: "/Enroll/QueryEmployee",
+                url: "/Enrolling/QueryEmployee",
                 data: { no: employeeNo }
             }).done(function (employee) {
                 $(sender).parent().parent().next().find("input:text").val(employee.emailAddress);
