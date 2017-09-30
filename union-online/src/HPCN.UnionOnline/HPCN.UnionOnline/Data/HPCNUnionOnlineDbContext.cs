@@ -29,7 +29,6 @@ namespace HPCN.UnionOnline.Data
         public DbSet<FieldEntry> FieldEntries { get; set; }
         public DbSet<FieldValueChoice> FieldValueChoices { get; set; }
         public DbSet<Enrolling> Enrollings { get; set; }
-        public DbSet<Enrollee> Enrollees { get; set; }
         public DbSet<FieldInput> FieldInputs { get; set; }
     }
 }

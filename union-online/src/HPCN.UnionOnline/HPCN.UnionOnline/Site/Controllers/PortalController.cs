@@ -30,7 +30,7 @@ namespace HPCN.UnionOnline.Site.Controllers
         {
             var myEnrollings = await _enrollingService.GetEnrollingsAsync(Guid.Parse(User.GetUserId()));
             var enrollmentsInMyEnrollings = myEnrollings.Select(e => e.Enrollment.Id);
-            var enrolleesInEnrollments = await _enrollingService.GetEnrolleesInEnrollments(enrollmentsInMyEnrollings);
+            var enrolleesInEnrollments = await _enrollingService.GetCountOfEnrollingsInEnrollments(enrollmentsInMyEnrollings);
 
             ViewBag.MyEnrollings = myEnrollings;
             ViewBag.EnrolleesInEnrollments = enrolleesInEnrollments;

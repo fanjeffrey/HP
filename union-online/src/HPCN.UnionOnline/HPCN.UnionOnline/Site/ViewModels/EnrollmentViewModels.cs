@@ -140,5 +140,6 @@ namespace HPCN.UnionOnline.Site.ViewModels
     {
         public Enrollment Enrollment { get; set; }
         public List<Enrolling> Enrollings { get; set; }
+        public List<Employee> Employees { get; set; }
     }
 }

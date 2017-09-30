@@ -39,32 +39,12 @@ namespace HPCN.UnionOnline.Models
         public Enrollment Enrollment { get; set; }
 
         [Required]
-        public Enrollee Enrollee { get; set; }
+        public string EmployeeNo { get; set; }
 
         [Required]
         public User User { get; set; }
 
         public List<FieldInput> FieldInputs { get; set; }
-    }
-
-    public class Enrollee : AbstractEntity
-    {
-        [Required]
-        [StringLength(50)]
-        public string EmployeeNo { get; set; }
-
-        [Required]
-        [StringLength(200)]
-        public string EmailAddress { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Name { get; set; }
-
-        [StringLength(50)]
-        public string PhoneNumber { get; set; }
-
-        public List<Enrolling> Enrollings { get; set; }
     }
 
     public class FieldInput : AbstractEntity

@@ -43,7 +43,7 @@
                                     @(enrolleesInEnrollments[item.Enrollment.Id]) / @item.Enrollment.MaxCountOfEnrolles
                                 </td>
                                 <td>
-                                    @if (item.Enrollee.EmployeeNo != item.User.Employee.No)
+                                    @if (item.EmployeeNo != item.User.Employee.No)
                                     {
                                         <a href='mailto:@item.User.Employee.EmailAddress'>@item.User.Employee.ChineseName (#@item.User.Employee.No)</a>
                                     }
@@ -60,7 +60,7 @@
             }
             else
             {
-                <p>你尚未报名参加任何活动。<a asp-controller="Home" asp-action="Enrollments">现在报名</a></p>
+                <p>你尚未报名参加任何活动。<a asp-controller="Enrolling" asp-action="Enrollments">现在报名</a></p>
             }
         </div>
     </fieldset>

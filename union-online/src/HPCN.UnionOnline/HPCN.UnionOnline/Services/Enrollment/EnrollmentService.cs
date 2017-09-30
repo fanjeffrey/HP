@@ -433,16 +433,23 @@ namespace HPCN.UnionOnline.Services
 
         #endregion
 
-        #region enrollees
+        #region enrollings / enrollees
 
-        public async Task<List<Enrolling>> GetEnrollingsIncludingEnrolleeAndFieldInputsAsync(Guid enrollmentId)
+        public async Task<List<Enrolling>> GetEnrollingsIncludingFieldInputsAsync(Guid enrollmentId)
         {
             return await (from e in _db.Enrollings
                           where e.Enrollment.Id == enrollmentId
                           select e)
-                          .Include(e => e.Enrollee)
                           .Include(e => e.FieldInputs)
                           .ToListAsync();
+        }
+
+        public async Task<List<Employee>> GetEnrolleesAsync(Guid enrollmentId)
+        {
+            return await (from e1 in _db.Enrollings
+                          join e2 in _db.Employees on e1.EmployeeNo equals e2.No
+                          where e1.Enrollment.Id == enrollmentId
+                          select e2).ToListAsync();
         }
 
         #endregion

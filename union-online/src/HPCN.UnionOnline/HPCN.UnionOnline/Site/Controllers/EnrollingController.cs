@@ -36,7 +36,7 @@ namespace HPCN.UnionOnline.Site.Controllers
         public async Task<IActionResult> Enrollments()
         {
             var activeEnrollments = await _enrollmentService.GetActiveEnrollmentsAsync();
-            ViewBag.EnrolleesInEnrollments = await _enrollingService.GetEnrolleesInEnrollments(activeEnrollments.Select(e => e.Id));
+            ViewBag.EnrolleesInEnrollments = await _enrollingService.GetCountOfEnrollingsInEnrollments(activeEnrollments.Select(e => e.Id));
 
             return View(activeEnrollments);
         }
@@ -79,7 +79,6 @@ namespace HPCN.UnionOnline.Site.Controllers
                 model.EmployeeNo = user.Employee.No;
                 model.EmailAddress = user.Employee.EmailAddress;
                 model.Name = user.Employee.ChineseName;
-                model.PhoneNumber = user.Employee.PhoneNumber;
             }
             else
             {
@@ -133,8 +132,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                                    select item).ToDictionary(item => item.Key, item => item.Value.ToString());
 
                 await _enrollingService.CreateAsync(enrollment.Id,
-                    model.EmployeeNo, model.EmailAddress, model.Name, model.PhoneNumber, fieldInputs,
-                    Guid.Parse(User.GetUserId()), User.GetUsername());
+                    model.EmployeeNo, fieldInputs, Guid.Parse(User.GetUserId()), User.GetUsername());
 
                 return RedirectToAction("Enrollments");
             }
@@ -149,20 +147,20 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(id.Value);
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndFieldInputsAsync(id.Value);
             if (enrolling == null)
             {
                 return NotFound();
             }
 
+            var employee = await _employeeService.GetAsync(enrolling.EmployeeNo);
             var model = new EnrollingUpdateViewModel
             {
                 Enrolling = enrolling,
                 Enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(enrolling.Enrollment.Id),
-                EmployeeNo = enrolling.Enrollee.EmployeeNo,
-                EmailAddress = enrolling.Enrollee.EmailAddress,
-                Name = enrolling.Enrollee.Name,
-                PhoneNumber = enrolling.Enrollee.PhoneNumber,
+                EmployeeNo = enrolling.EmployeeNo,
+                EmailAddress = employee.EmailAddress,
+                Name = employee.ChineseName
             };
 
             return View(model);
@@ -172,7 +170,7 @@ namespace HPCN.UnionOnline.Site.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(Guid id, EnrollingUpdateViewModel model)
         {
-            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(id);
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndFieldInputsAsync(id);
             if (enrolling == null)
             {
                 return NotFound();
@@ -194,8 +192,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                                    select item).ToDictionary(item => item.Key, item => item.Value.ToString());
 
                 await _enrollingService.UpdateAsync(enrolling.Id,
-                    model.EmployeeNo, model.EmailAddress, model.Name, model.PhoneNumber, fieldInputs,
-                    Guid.Parse(User.GetUserId()), User.GetUsername());
+                    model.EmployeeNo, fieldInputs, Guid.Parse(User.GetUserId()), User.GetUsername());
 
                 return RedirectToAction("Details", new { Id = enrolling.Id });
             }
@@ -210,7 +207,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(id.Value);
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndFieldInputsAsync(id.Value);
             if (enrolling == null)
             {
                 return NotFound();
@@ -220,7 +217,7 @@ namespace HPCN.UnionOnline.Site.Controllers
             {
                 Enrolling = enrolling,
                 Enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(enrolling.Enrollment.Id),
-                Enrollees = await _enrollingService.GetEnrolleesAsync(enrolling.Enrollment.Id)
+                Enrollees = await _enrollmentService.GetEnrolleesAsync(enrolling.Enrollment.Id)
             };
 
             return View(model);
@@ -264,7 +261,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(id.Value);
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndFieldInputsAsync(id.Value);
             if (enrolling == null)
             {
                 return NotFound();
@@ -274,7 +271,7 @@ namespace HPCN.UnionOnline.Site.Controllers
             {
                 Enrolling = enrolling,
                 Enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(enrolling.Enrollment.Id),
-                Enrollees = await _enrollingService.GetEnrolleesAsync(enrolling.Enrollment.Id)
+                Enrollees = await _enrollmentService.GetEnrolleesAsync(enrolling.Enrollment.Id)
             };
 
             return View(model);
@@ -289,7 +286,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(id);
+            var enrolling = await _enrollingService.GetEnrollingIncludingEnrollmentAndFieldInputsAsync(id);
             if (enrolling == null)
             {
                 return NotFound();

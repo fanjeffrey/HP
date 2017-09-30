@@ -60,17 +60,16 @@ namespace HPCN.UnionOnline.Services
 
             return await (from e in _db.Enrollings
                           where e.Enrollment.Id == enrollment.Id
-                                && e.Enrollee.EmployeeNo.ToLower() == employeeNo.ToLower()
+                                && e.EmployeeNo.ToLower() == employeeNo.ToLower()
                           select 1).AnyAsync();
         }
 
-        public async Task<Enrolling> GetEnrollingIncludingEnrollmentAndEnrolleeAndFieldInputsAsync(Guid enrollingId)
+        public async Task<Enrolling> GetEnrollingIncludingEnrollmentAndFieldInputsAsync(Guid enrollingId)
         {
             return await (from e in _db.Enrollings
                           where e.Id == enrollingId
                           select e)
                           .Include(e => e.Enrollment)
-                          .Include(e => e.Enrollee)
                           .Include(e => e.FieldInputs)
                           .SingleOrDefaultAsync();
         }
@@ -81,23 +80,15 @@ namespace HPCN.UnionOnline.Services
             if (employee == null) return new List<Enrolling>();
 
             return await (from e in _db.Enrollings
-                          where e.Enrollee.EmployeeNo.ToLower() == employee.No
+                          where e.EmployeeNo.ToLower() == employee.No
                           orderby e.CreatedTime descending
                           select e)
                           .Include(e => e.Enrollment)
-                          .Include(e => e.Enrollee)
                           .Include(e => e.User).ThenInclude(u => u.Employee)
                           .ToListAsync();
         }
 
-        public async Task<List<Enrollee>> GetEnrolleesAsync(Guid enrollmentId)
-        {
-            return await (from e in _db.Enrollings
-                          where e.Enrollment.Id == enrollmentId
-                          select e.Enrollee).ToListAsync();
-        }
-
-        public async Task<Dictionary<Guid, int>> GetEnrolleesInEnrollments(IEnumerable<Guid> enrollmentIds)
+        public async Task<Dictionary<Guid, int>> GetCountOfEnrollingsInEnrollments(IEnumerable<Guid> enrollmentIds)
         {
             var enrollings = await (from e in _db.Enrollments
                                     where enrollmentIds.Contains(e.Id)
@@ -109,9 +100,7 @@ namespace HPCN.UnionOnline.Services
         }
 
         public async Task<Enrolling> CreateAsync(Guid enrollmentId,
-            string employeeNo, string emailAddress, string name, string phoneNumber,
-            IDictionary<string, string> fieldInputs,
-            Guid userId, string createdBy)
+            string employeeNo, IDictionary<string, string> fieldInputs, Guid userId, string createdBy)
         {
             var enrollment = await _db.Enrollments.SingleOrDefaultAsync(e => e.Id == enrollmentId);
             if (enrollment == null)
@@ -129,32 +118,17 @@ namespace HPCN.UnionOnline.Services
             }
 
             var now = DateTime.Now;
-            var enrollee = await _db.Enrollees.SingleOrDefaultAsync(e => e.EmployeeNo.ToLower() == employeeNo.ToLower());
-            if (enrollee == null)
+            if (await _db.Enrollings.AnyAsync(e => e.Enrollment.Id == enrollment.Id && e.EmployeeNo == employeeNo))
             {
-                enrollee = new Enrollee
-                {
-                    Id = Guid.NewGuid(),
-                    EmployeeNo = employeeNo,
-                    EmailAddress = emailAddress,
-                    Name = name,
-                    PhoneNumber = phoneNumber
-                };
-                enrollee.UpdatedBy = enrollee.CreatedBy = createdBy;
-                enrollee.UpdatedTime = enrollee.CreatedTime = now;
-            }
-
-            if (await _db.Enrollings.AnyAsync(e => e.Enrollment.Id == enrollment.Id && e.Enrollee.Id == enrollee.Id))
-            {
-                throw new Exception($"The enrollee ({enrollee.Name}, {enrollee.EmployeeNo}) already enrolled the enrollment: {enrollment.Name}.");
+                throw new Exception($"The employee (#{employeeNo}) already enrolled the enrollment: {enrollment.Name}.");
             }
 
             var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId);
             var enrolling = new Enrolling
             {
                 Id = Guid.NewGuid(),
+                EmployeeNo = employeeNo,
                 Enrollment = enrollment,
-                Enrollee = enrollee,
                 User = user
             };
             enrolling.UpdatedBy = enrolling.CreatedBy = createdBy;
@@ -189,13 +163,10 @@ namespace HPCN.UnionOnline.Services
         }
 
         public async Task<Enrolling> UpdateAsync(Guid enrollingId,
-            string employeeNo, string emailAddress, string name, string phoneNumber,
-            Dictionary<string, string> fieldInputs,
-            Guid userId, string updatedBy)
+            string employeeNo, Dictionary<string, string> fieldInputs, Guid userId, string updatedBy)
         {
             var enrolling = await _db.Enrollings
                 .Include(e => e.Enrollment)
-                .Include(e => e.Enrollee)
                 .Include(e => e.FieldInputs)
                 .SingleOrDefaultAsync(e => e.Id == enrollingId);
 
@@ -235,7 +206,7 @@ namespace HPCN.UnionOnline.Services
                     });
                 }
             }
-            
+
             // update the enrolling
             enrolling.UpdatedBy = updatedBy;
             enrolling.UpdatedTime = now;

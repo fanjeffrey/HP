@@ -47,7 +47,7 @@
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    <a asp-action="Fields" asp-route-id="@item.Id">Manage Fields</a> |
+                    <a asp-action="Fields" asp-route-id="@item.Id">Fields</a> |
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     @if (item.Status != ActivityState.Active)
                     {

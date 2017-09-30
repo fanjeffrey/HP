@@ -51,9 +51,9 @@
         <legend>人员名单</legend>
         <div>
             <ul class="enrollees">
-                @foreach (var e in Model.Enrollees.OrderBy(e => e.Name))
+                @foreach (var e in Model.Enrollees.OrderBy(e => e.ChineseName))
                 {
-                    <li>@e.Name</li>
+                    <li>@e.ChineseName</li>
                 }
             </ul>
         </div>

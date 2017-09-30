@@ -439,7 +439,8 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(new EnrollmentEnrollingsViewModel
             {
                 Enrollment = enrollment,
-                Enrollings = await _enrollmentService.GetEnrollingsIncludingEnrolleeAndFieldInputsAsync(enrollment.Id),
+                Enrollings = await _enrollmentService.GetEnrollingsIncludingFieldInputsAsync(enrollment.Id),
+                Employees = await _enrollmentService.GetEnrolleesAsync(enrollment.Id)
             });
         }
 

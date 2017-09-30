@@ -22,10 +22,6 @@ namespace HPCN.UnionOnline.Site.ViewModels
         [StringLength(50)]
         [Display(Name = "姓名")]
         public string Name { get; set; }
-
-        [StringLength(50)]
-        [Display(Name = "手机")]
-        public string PhoneNumber { get; set; }
     }
 
     public class EnrollingUpdateViewModel
@@ -47,16 +43,12 @@ namespace HPCN.UnionOnline.Site.ViewModels
         [StringLength(50)]
         [Display(Name = "姓名")]
         public string Name { get; set; }
-
-        [StringLength(50)]
-        [Display(Name = "手机")]
-        public string PhoneNumber { get; set; }
     }
 
     public class EnrollingDetailsViewModel
     {
         public Enrolling Enrolling { get; set; }
         public Enrollment Enrollment { get; set; }
-        public List<Enrollee> Enrollees { get; set; }
+        public List<Employee> Enrollees { get; set; }
     }
 }

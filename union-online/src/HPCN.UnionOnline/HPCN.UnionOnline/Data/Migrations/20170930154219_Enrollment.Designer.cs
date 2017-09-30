@@ -9,8 +9,8 @@ using HPCN.UnionOnline.Models;
 namespace HPCN.UnionOnline.Data.Migrations
 {
     [DbContext(typeof(HPCNUnionOnlineDbContext))]
-    [Migration("20170929151818_Enrollment17")]
-    partial class Enrollment17
+    [Migration("20170930154219_Enrollment")]
+    partial class Enrollment
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -179,41 +179,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("HPCN.UnionOnline.Models.Enrollee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("CreatedTime");
-
-                    b.Property<string>("EmailAddress")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.Property<string>("EmployeeNo")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("PhoneNumber")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime?>("UpdatedTime");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Enrollees");
-                });
-
             modelBuilder.Entity("HPCN.UnionOnline.Models.Enrolling", b =>
                 {
                     b.Property<Guid>("Id")
@@ -224,7 +189,8 @@ namespace HPCN.UnionOnline.Data.Migrations
 
                     b.Property<DateTime?>("CreatedTime");
 
-                    b.Property<Guid>("EnrolleeId");
+                    b.Property<string>("EmployeeNo")
+                        .IsRequired();
 
                     b.Property<Guid>("EnrollmentId");
 
@@ -236,8 +202,6 @@ namespace HPCN.UnionOnline.Data.Migrations
                     b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EnrolleeId");
 
                     b.HasIndex("EnrollmentId");
 
@@ -574,11 +538,6 @@ namespace HPCN.UnionOnline.Data.Migrations
 
             modelBuilder.Entity("HPCN.UnionOnline.Models.Enrolling", b =>
                 {
-                    b.HasOne("HPCN.UnionOnline.Models.Enrollee", "Enrollee")
-                        .WithMany("Enrollings")
-                        .HasForeignKey("EnrolleeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("HPCN.UnionOnline.Models.Enrollment", "Enrollment")
                         .WithMany("Enrollings")
                         .HasForeignKey("EnrollmentId")
