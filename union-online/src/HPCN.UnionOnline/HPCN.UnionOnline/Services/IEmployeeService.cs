@@ -34,6 +34,7 @@ namespace HPCN.UnionOnline.Services
         Task<bool> ExistsByEmailAddressAsync(Guid id, string emailAddress);
         Task<bool> ExistsByIdCardNoAsync(Guid id, string idCardNo);
         Task<Employee> GetAsync(Guid id);
+        Task<Employee> GetAsync(string no);
         Task<int> CountAsync(string keyword);
         Task<IList<Employee>> SearchAsync(string keyword, int pageIndex, int pageSize);
     }
