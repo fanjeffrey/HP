@@ -1,0 +1,58 @@
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollmentEnrollingsViewModel
+
+@{
+    ViewData["Title"] = $"活动报名名单 - {Model.Enrollment.Name}";
+    var extraFields = Model.Enrollment.ExtraFormFields.OrderBy(f => f.DisplayOrder).ToList();
+}
+
+<h2>活动报名人员名单</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                员工号
+            </th>
+            <th>
+                姓名
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                电话
+            </th>
+            @foreach (var f in extraFields)
+            {
+                <th>
+                    @f.DisplayName
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model.Enrollings.OrderByDescending(e => e.CreatedTime))
+        {
+            <tr>
+                <td>
+                    @e.Enrollee.EmployeeNo
+                </td>
+                <td>
+                    @e.Enrollee.Name
+                </td>
+                <td>
+                    @e.Enrollee.EmailAddress
+                </td>
+                <td>
+                    @e.Enrollee.PhoneNumber
+                </td>
+                @foreach (var f in extraFields)
+                {
+                    <td>
+                        @e.FieldInputs.SingleOrDefault(fi => fi.FieldEntryId == f.Id)?.Input
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

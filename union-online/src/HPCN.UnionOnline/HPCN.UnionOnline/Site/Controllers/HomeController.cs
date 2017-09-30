@@ -101,8 +101,7 @@ namespace HPCN.UnionOnline.Site.Controllers
             {
                 return View("ExceedMaxCountOfEnrollees", model);
             }
-
-            // self-enroll only and already enrolled
+            
             var user = await _userSerivce.GetUserWithEmployeeInfoAsync(Guid.Parse(User.GetUserId()));
             if (user?.Employee != null)
             {
@@ -114,12 +113,6 @@ namespace HPCN.UnionOnline.Site.Controllers
             else
             {
                 model.EmailAddress = user.Username;
-            }
-
-            if (enrollment.SelfEnrollmentOnly
-                && await _enrollingService.IsAlreadyEnrolled(user.Employee.No, enrollment))
-            {
-                return View("AlreadyEnrolled", model);
             }
 
             return View(model);

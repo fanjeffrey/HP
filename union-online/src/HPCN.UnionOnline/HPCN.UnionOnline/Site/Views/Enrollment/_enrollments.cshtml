@@ -58,7 +58,8 @@
                         <a asp-action="Close" asp-route-id="@item.Id">Close</a> @("|")
                     }
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                    <a asp-action="Clone" asp-route-id="@item.Id">Clone</a>
+                    <a asp-action="Clone" asp-route-id="@item.Id">Clone</a> |
+                    <a asp-action="Enrollings" asp-route-id="@item.Id">Enrollees</a>
                 </td>
             </tr>
         }

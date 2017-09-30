@@ -420,5 +420,29 @@ namespace HPCN.UnionOnline.Site.Controllers
         }
 
         #endregion
+
+        #region enrollees
+
+        public async Task<IActionResult> Enrollings(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(id.Value);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            return View(new EnrollmentEnrollingsViewModel
+            {
+                Enrollment = enrollment,
+                Enrollings = await _enrollmentService.GetEnrollingsIncludingEnrolleeAndFieldInputsAsync(enrollment.Id),
+            });
+        }
+
+        #endregion
     }
 }

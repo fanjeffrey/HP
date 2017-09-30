@@ -29,5 +29,7 @@ namespace HPCN.UnionOnline.Services
         Task<FieldEntry> AddFieldAsync(FieldEntry field, string creator);
         Task<FieldEntry> UpdateFieldAsync(FieldEntry field, string updatedBy);
         Task RemoveFieldsAsync(Guid[] fieldIds);
+
+        Task<List<Enrolling>> GetEnrollingsIncludingEnrolleeAndFieldInputsAsync(Guid enrollmentId);
     }
 }
