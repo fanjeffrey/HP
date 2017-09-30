@@ -1,9 +1,7 @@
 using HPCN.UnionOnline.Services;
-using HPCN.UnionOnline.Site.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Site.Controllers
@@ -26,13 +24,23 @@ namespace HPCN.UnionOnline.Site.Controllers
         {
             if (string.IsNullOrWhiteSpace(no))
             {
-                return NotFound();
+                return Json(new
+                {
+                    emailAddress = string.Empty,
+                    name = string.Empty,
+                    phoneNumber = string.Empty
+                });
             }
 
             var employee = await _employeeService.GetAsync(no);
             if (employee == null)
             {
-                return NotFound();
+                return Json(new
+                {
+                    emailAddress = string.Empty,
+                    name = string.Empty,
+                    phoneNumber = string.Empty
+                });
             }
 
             return Json(new
