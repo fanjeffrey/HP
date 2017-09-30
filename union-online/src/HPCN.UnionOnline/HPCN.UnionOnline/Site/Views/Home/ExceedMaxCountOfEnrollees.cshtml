@@ -1,12 +1,12 @@
-﻿@model HPCN.UnionOnline.Models.Enrollment
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollingViewModel
 
 @{
-    ViewData["Title"] = $"已达最大人数限制 - {Model.Name}";
+    ViewData["Title"] = $"已达最大人数限制 - {Model.Enrollment.Name}";
 }
 
 <header>
-    <h2 class="text-danger">已达最大人数限制 - @Model.Name</h2>
+    <h2 class="text-danger">已达最大人数限制 - @Model.Enrollment.Name</h2>
     <p class="text-danger">
-        此活动报名已达最大人数( @Model.MaxCountOfEnrolles 人)限制。请关注下一场活动报名。
+        此活动报名已达最大人数( @Model.Enrollment.MaxCountOfEnrolles 人)限制。请关注下一场活动报名。
     </p>
 </header>

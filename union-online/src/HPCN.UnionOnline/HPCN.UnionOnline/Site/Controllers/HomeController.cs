@@ -85,25 +85,25 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            // enrollment not ready
-            if (!_enrollingService.IsReadyForEnrolling(enrollment))
-            {
-                return View("EnrollmentNotReady", enrollment);
-            }
-
-            // exceed max count of enrollees
-            if (await _enrollingService.ExceedsMaxCountOfEnrollees(enrollment))
-            {
-                return View("ExceedMaxCountOfEnrollees", enrollment);
-            }
-
             var model = new EnrollingViewModel
             {
                 Enrollment = enrollment,
             };
 
-            var userId = Guid.Parse(User.GetUserId());
-            var user = (await _userSerivce.GetUserWithEmployeeInfoAsync(userId));
+            // enrollment not ready
+            if (!_enrollingService.IsReadyForEnrolling(enrollment))
+            {
+                return View("EnrollmentNotReady", model);
+            }
+
+            // exceed max count of enrollees
+            if (await _enrollingService.ExceedsMaxCountOfEnrollees(enrollment))
+            {
+                return View("ExceedMaxCountOfEnrollees", model);
+            }
+
+            // self-enroll only and already enrolled
+            var user = await _userSerivce.GetUserWithEmployeeInfoAsync(Guid.Parse(User.GetUserId()));
             if (user?.Employee != null)
             {
                 model.EmployeeNo = user.Employee.No;
@@ -114,6 +114,12 @@ namespace HPCN.UnionOnline.Site.Controllers
             else
             {
                 model.EmailAddress = user.Username;
+            }
+
+            if (enrollment.SelfEnrollmentOnly
+                && await _enrollingService.IsAlreadyEnrolled(user.Employee.No, enrollment))
+            {
+                return View("AlreadyEnrolled", model);
             }
 
             return View(model);
@@ -130,20 +136,27 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            if (!_enrollingService.IsReadyForEnrolling(enrollment))
-            {
-                return View("EnrollmentNotReady", enrollment);
-            }
-
             model.Enrollment = enrollment;
 
+            // enrollment not ready
+            if (!_enrollingService.IsReadyForEnrolling(enrollment))
+            {
+                return View("EnrollmentNotReady", model);
+            }
+
+            // exceed max count of enrollees
+            if (await _enrollingService.ExceedsMaxCountOfEnrollees(enrollment))
+            {
+                return View("ExceedMaxCountOfEnrollees", model);
+            }
+
             // already enrolled
-            if (await _enrollingService.IsAlreadyEnrolled(model.EmployeeNo, model.Enrollment))
+            if (await _enrollingService.IsAlreadyEnrolled(model.EmployeeNo, enrollment))
             {
                 return View("AlreadyEnrolled", model);
             }
 
-            // check if self-enroll
+            // check if self-enroll only
             var user = await _userSerivce.GetUserWithEmployeeInfoAsync(Guid.Parse(User.GetUserId()));
             if (enrollment.SelfEnrollmentOnly && user.Employee.No != model.EmployeeNo)
             {
@@ -156,7 +169,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                                    where item.Key.StartsWith("FieldInputs.")
                                    select item).ToDictionary(item => item.Key, item => item.Value.ToString());
 
-                await _enrollingService.CreateAsync(model.Enrollment.Id,
+                await _enrollingService.CreateAsync(enrollment.Id,
                     model.EmployeeNo, model.EmailAddress, model.Name, model.PhoneNumber, fieldInputs,
                     Guid.Parse(User.GetUserId()), User.GetUsername());
 
