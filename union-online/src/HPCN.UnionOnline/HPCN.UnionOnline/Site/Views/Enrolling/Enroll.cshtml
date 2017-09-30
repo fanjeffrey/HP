@@ -1,0 +1,125 @@
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollingEnrollViewModel
+
+@{
+    ViewData["Title"] = Model.Enrollment.Name;
+}
+
+<h2>@Model.Enrollment.Name</h2>
+
+<hr />
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            报名起止
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Enrollment.BeginTime)
+            ~
+            @Html.DisplayFor(model => model.Enrollment.EndTime)
+        </dd>
+        <dt>
+            状态
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Enrollment.Status)
+        </dd>
+        <dt>
+            活动详情
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Enrollment.Description)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <form asp-action="Enroll">
+        <div class="form-horizontal">
+            <h4>参加者信息：</h4>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="EmployeeNo" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="EmployeeNo" class="form-control" style="float:left;" />
+                    <button class="btn btn-default" onclick="queryEmployee(this); return false;">查询</button>
+                    <span asp-validation-for="EmployeeNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmailAddress" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="EmailAddress" class="form-control" readonly />
+                    <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Name" class="form-control" readonly />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <h4>其他信息：</h4>
+            <hr />
+            @foreach (var f in Model.Enrollment.ExtraFormFields.OrderBy(p => p.DisplayOrder))
+            {
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                        @f.DisplayName
+
+                        @if (f.IsRequired)
+                        {
+                            <span class="text-danger" title="@f.RequiredMessage">*</span>
+                        }
+                    </label>
+                    <div class="col-md-10">
+                        @if (f.ChoiceMode == FieldValueChoiceMode.None)
+                        {
+                            <input name="FieldInputs.@(f.Id)" title="@f.Name" class="form-control" />
+                        }
+                        else
+                        {
+                            <select name="FieldInputs.@(f.Id)" title="@f.Name" class="form-control" @(f.ChoiceMode == FieldValueChoiceMode.Single ? string.Empty : "multiple")>
+                                @foreach (var choice in f.ValueChoices.OrderBy(c => c.DisplayOrder))
+                                {
+                                    <option value="@choice.Value">@choice.DisplayText</option>
+                                }
+                            </select>
+                        }
+                    </div>
+                </div>
+            }
+
+            <hr />
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="hidden" asp-for="Enrollment.Id" />
+                    <input type="hidden" asp-for="Enrollment.Name" />
+                    <input type="submit" value="报名" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type="text/javascript">
+    function queryEmployee(sender) {
+        var employeeNo = $(sender).prev().val().trim();
+        if (employeeNo) {
+            $.ajax({
+                url: "/Enrolling/QueryEmployee",
+                data: { no: employeeNo }
+            }).done(function (employee) {
+                $(sender).parent().parent().next().find("input:text").val(employee.emailAddress);
+                $(sender).parent().parent().next().next().find("input:text").val(employee.name);
+                $(sender).parent().parent().next().next().next().find("input:text").val(employee.phoneNumber);
+            });
+        }
+    }
+</script>

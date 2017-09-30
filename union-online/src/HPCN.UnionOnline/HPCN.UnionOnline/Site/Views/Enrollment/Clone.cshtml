@@ -1,0 +1,38 @@
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollmentCloneViewModel
+
+@{
+    ViewData["Title"] = $"克隆活动报名";
+}
+
+<h2>克隆活动报名</h2>
+
+<div class="form-horizontal">
+    <form asp-action="Clone">
+        <h4>你确定要克隆下面的活动报名吗？</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="NewName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="NewName" class="form-control" />
+                <span asp-validation-for="NewName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="hidden" asp-for="Enrollment.Id" />
+                <input type="submit" value="克隆" class="btn btn-default" /> |
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div>
+    <hr />
+    @Html.Partial("_enrollment", Model.Enrollment)
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

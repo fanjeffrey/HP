@@ -1,0 +1,12 @@
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollingEnrollViewModel
+
+@{
+    ViewData["Title"] = $"不允许代报名 - {Model.Enrollment.Name}";
+}
+
+<header>
+    <h2 class="text-danger">不允许代报名</h2>
+    <p class="text-danger">
+        [@Model.Enrollment.Name] 已设置不允许代报名。
+    </p>
+</header>

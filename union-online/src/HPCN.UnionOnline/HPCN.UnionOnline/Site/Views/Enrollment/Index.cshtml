@@ -1,0 +1,13 @@
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollmentSearchViewModel
+
+@{
+    ViewData["Title"] = "活动报名";
+}
+
+<h2>活动报名</h2>
+
+<p>
+    <a asp-action="Create">新建活动报名</a>
+</p>
+
+@Html.Partial("_enrollments", Model.Enrollments)

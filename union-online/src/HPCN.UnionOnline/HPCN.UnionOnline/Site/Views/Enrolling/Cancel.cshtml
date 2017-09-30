@@ -1,0 +1,22 @@
+﻿@model HPCN.UnionOnline.Site.ViewModels.EnrollingDetailsViewModel
+
+@{
+    ViewData["Title"] = $"取消活动报名 - {Model.Enrolling.Enrollment.Name}";
+}
+
+<h2>@($"取消活动报名 - {Model.Enrolling.Enrollment.Name}")</h2>
+
+<div class="section">
+    <h4>你确定要取消此次活动报名吗？</h4>
+    <hr />
+    @Html.Partial("_Enrolling", Model)
+</div>
+
+<div class="section">
+    <form asp-action="Cancel">
+        <div class="form-actions no-color">
+            <input type="submit" value="确定" class="btn btn-default" /> |
+            <a asp-controller="Portal" asp-action="Index">Back to My Portal</a>
+        </div>
+    </form>
+</div>

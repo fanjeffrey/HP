@@ -1,7 +1,6 @@
 ﻿using HPCN.UnionOnline.Services;
 using HPCN.UnionOnline.Site.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -73,7 +72,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 await HttpContext.Authentication.SignInAsync(_cookieScheme, principal);
 
                 _logger.LogInformation(1, "User logged in.");
-                return RedirectToLocal(returnUrl);
+                return RedirectToLocal(returnUrl, isAdmin: user.IsAdmin);
             }
 
             // If we got this far, something failed, redisplay form
@@ -159,25 +158,21 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View();
         }
 
-        #region Helpers
+        #region helper methods
 
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
-
-        private IActionResult RedirectToLocal(string returnUrl)
+        private IActionResult RedirectToLocal(string returnUrl, bool isAdmin)
         {
             if (Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
             }
+            else if (isAdmin)
+            {
+                return RedirectToAction(nameof(ActivityController.Index), "Activity");
+            }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(PortalController.Index), "portal");
             }
         }
 

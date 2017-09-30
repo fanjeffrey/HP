@@ -1,0 +1,85 @@
+﻿@model HPCN.UnionOnline.Models.Enrollment
+
+@{
+    ViewData["Title"] = $"管理表单字段 - {Model.Name}";
+
+    var index1 = 0;
+}
+
+<h2>管理表单字段 - @Model.Name</h2>
+
+<p>
+    此报名表单共有 <strong>@Model.ExtraFormFields.Count</strong> 个字段。
+    <a asp-action="AddField" asp-route-id="@Model.Id">添加新字段</a>
+</p>
+<div class="container-products">
+    <form asp-action="RemoveFields" method="post">
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>
+                            Field Name
+                        </th>
+                        <th>
+                            Display Name
+                        </th>
+                        <th>
+                            Display Order
+                        </th>
+                        <th>
+                            Required?
+                        </th>
+                        <th>
+                            Type of Value
+                        </th>
+                        <th>
+                            Choice Mode
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ExtraFormFields.OrderBy(f => f.DisplayOrder))
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="fieldIds" value="@item.Id" />
+                            </td>
+                            <td>
+                                <a asp-action="FieldDetails" asp-route-id="@item.Id">@item.Name</a>
+                            </td>
+                            <td>
+                                @item.DisplayName
+                            </td>
+                            <td>
+                                @item.DisplayOrder
+                            </td>
+                            <td>
+                                @item.IsRequired
+                            </td>
+                            <td>
+                                @item.TypeOfValue
+                            </td>
+                            <td>
+                                @item.ChoiceMode
+                            </td>
+                            <td>
+                                <span title="@item.RequiredMessage">Required Message</span> |
+                                <span title="@item.Description">Description</span> |
+                                <a asp-action="EditField" asp-route-id="@item.Id">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Remove" class="btn btn-default" />
+            <a asp-action="Index">Back to list</a>
+        </div>
+    </form>
+</div>

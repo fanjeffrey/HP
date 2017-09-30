@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewData["Title"] = $"My Portal";
+    var myEnrollings = ViewBag.MyEnrollings as List<Enrolling>;
+    var enrolleesInEnrollments = ViewBag.EnrolleesInEnrollments as Dictionary<Guid, int>;
+}
+
+<h2>My Portal</h2>
+
+<div class="section">
+    <fieldset>
+        <legend>我已报名的活动</legend>
+        <div>
+            @if (myEnrollings.Any())
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                活动名称
+                            </th>
+                            <th>报名开始</th>
+                            <th>报名截止</th>
+                            <th>报名人数</th>
+                            <th>代我报名</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in myEnrollings)
+                        {
+                            <tr>
+                                <td title="@item.Enrollment.Description">
+                                    <span>@item.Enrollment.Name</span>
+                                </td>
+                                <td>
+                                    @item.Enrollment.BeginTime
+                                </td>
+                                <td>
+                                    @item.Enrollment.EndTime
+                                </td>
+                                <td>
+                                    @(enrolleesInEnrollments[item.Enrollment.Id]) / @item.Enrollment.MaxCountOfEnrolles
+                                </td>
+                                <td>
+                                    @if (item.EmployeeNo != item.User.Employee.No)
+                                    {
+                                        <a href='mailto:@item.User.Employee.EmailAddress'>@item.User.Employee.ChineseName (#@item.User.Employee.No)</a>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-controller="Enrolling" asp-action="Details" asp-route-id="@item.Id" title="查看填写的信息">查看</a> |
+                                    <a asp-controller="Enrolling" asp-action="Update" asp-route-id="@item.Id" title="更新填写的信息">更新</a> |
+                                    <a asp-controller="Enrolling" asp-action="Cancel" asp-route-id="@item.Id" title="取消此次报名">取消</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>你尚未报名参加任何活动。<a asp-controller="Enrolling" asp-action="Enrollments">现在报名</a></p>
+            }
+        </div>
+    </fieldset>
+</div>

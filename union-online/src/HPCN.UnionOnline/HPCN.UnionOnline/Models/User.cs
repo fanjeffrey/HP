@@ -23,5 +23,6 @@ namespace HPCN.UnionOnline.Models
 
         public ICollection<CartProduct> CartPoducts { get; set; }
         public ICollection<Order> Orders { get; set; }
+        public ICollection<Enrolling> Enrollings { get; set; }
     }
 }

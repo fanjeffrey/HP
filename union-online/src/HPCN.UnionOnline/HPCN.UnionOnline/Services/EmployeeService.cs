@@ -184,6 +184,11 @@ namespace HPCN.UnionOnline.Services
                 .SingleOrDefaultAsync(e => e.UserId == userId);
         }
 
+        public async Task<Employee> GetAsync(string no)
+        {
+            return await _db.Employees.SingleOrDefaultAsync(e => e.No == no);
+        }
+
         public async Task<int> CountAsync(string keyword)
         {
             if (string.IsNullOrWhiteSpace(keyword))

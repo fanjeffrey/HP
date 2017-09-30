@@ -1,6 +1,7 @@
 using HPCN.UnionOnline.Models;
 using HPCN.UnionOnline.Services;
 using HPCN.UnionOnline.Site.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Site.Controllers
 {
+    [Authorize(Policy = "EmployeeOnly")]
     public class OrderController : Controller
     {
         private readonly ICartService _cartService;

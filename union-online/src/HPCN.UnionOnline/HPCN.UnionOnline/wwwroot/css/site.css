@@ -12,8 +12,7 @@
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input,
-select,
-textarea {
+select {
     max-width: 280px;
 }
 
@@ -49,6 +48,33 @@ textarea {
     }
 }
 
+/*--common--*/
+fieldset {
+    border: 1px solid rgb(0, 150, 214);
+    padding: 15px;
+}
+
+legend {
+    color: rgb(0, 150, 214);
+    width: auto;
+    border: 0;
+}
+
+div.section {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+textarea.description {
+    width: 400px;
+    height: 200px;
+}
+
+textarea.brief-description {
+    width: 400px;
+    height: 100px;
+}
+
 /*--product--*/
 .container-search-summary {
     margin: 10px 0px;
@@ -57,10 +83,6 @@ textarea {
     .container-search-summary span {
         background-color: yellow;
     }
-
-textarea {
-    max-height: 150px;
-}
 
 img.product-picture-list {
     width: 100px;
@@ -166,4 +188,46 @@ img.product-picture-edit {
 
     .order-table tr:first-child {
         background-color: #c0c0c0;
+    }
+
+/* enrollment */
+.field-choice-panel table {
+}
+
+    .field-choice-panel table td,
+    .field-choice-panel table th {
+        padding: 3px;
+    }
+
+    .field-choice-panel table tr {
+        height: 35px;
+    }
+
+    .field-choice-panel table button,
+    .field-choice-panel table input {
+        height: 28px;
+    }
+
+        .field-choice-panel table input.choice-display-text {
+            width: 200px;
+        }
+
+        .field-choice-panel table input.choice-display-order {
+            width: 120px;
+        }
+
+        .field-choice-panel table input.choice-description {
+            max-width: 350px !important;
+            width: 350px;
+        }
+
+ul.enrollees {
+    padding: 0px;
+}
+
+    ul.enrollees li {
+        width: 20%;
+        margin-left: 1%;
+        display: inline-block;
+        list-style-type: decimal;
     }

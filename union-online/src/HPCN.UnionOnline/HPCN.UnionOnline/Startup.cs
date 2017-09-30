@@ -52,6 +52,7 @@ namespace HPCN.UnionOnline
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminOnly", policy => policy.RequireClaim("IsAdmin", true.ToString()));
+                options.AddPolicy("EmployeeOnly", policy => policy.RequireClaim("IsAdmin", false.ToString()));
             });
 
             services.Configure<ProductPictureOptions>(Configuration.GetSection("ProductPicture"));
@@ -69,6 +70,10 @@ namespace HPCN.UnionOnline
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IProductPictureService, ProductPictureService>();
             services.AddTransient<IUserService, UserService>();
+
+            // enrollment
+            services.AddTransient<IEnrollmentService, EnrollmentService>();
+            services.AddTransient<IEnrollingService, EnrollingService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

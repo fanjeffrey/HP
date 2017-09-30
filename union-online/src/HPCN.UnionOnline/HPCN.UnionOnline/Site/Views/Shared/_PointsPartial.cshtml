@@ -1,3 +1,2 @@
 ﻿@inject IPointsService _pointsService
-余额: @await _pointsService.CalculatePointsBalance(Guid.Parse(User.GetUserId())) /
-总额: @await _pointsService.CalculatePointsTotal(Guid.Parse(User.GetUserId()))
+余额: @await _pointsService.CalculatePointsBalance(Guid.Parse(User.GetUserId())) / 总额: @await _pointsService.CalculatePointsTotal(Guid.Parse(User.GetUserId()))

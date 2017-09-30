@@ -1,0 +1,67 @@
+﻿@model IEnumerable<HPCN.UnionOnline.Models.Enrollment>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BeginTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxCountOfEnrolles)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SelfEnrollmentOnly)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BeginTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxCountOfEnrolles)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SelfEnrollmentOnly)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    <a asp-action="Fields" asp-route-id="@item.Id">Fields</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    @if (item.Status != ActivityState.Active)
+                    {
+                        <a asp-action="Open" asp-route-id="@item.Id">Open</a> @("|")
+                    }
+                    @if (item.Status != ActivityState.Closed)
+                    {
+                        <a asp-action="Close" asp-route-id="@item.Id">Close</a> @("|")
+                    }
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                    <a asp-action="Clone" asp-route-id="@item.Id">Clone</a> |
+                    <a asp-action="Enrollings" asp-route-id="@item.Id">Enrollees</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
