@@ -1,26 +1,15 @@
 ﻿@if (User.Identity.IsAuthenticated)
 {
-    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                @if (User.IsAdmin())
-                {
-                    <a>@User.GetUsername()</a>
-                }
-                else
-                {
-                    <a asp-controller="portal" asp-action="index">@User.GetUsername()</a>
-                }
-            </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">退出</button>
-            </li>
-        </ul>
-    </form>
+    <li>
+        <a>@User.GetUsername()</a>
+    </li>
+    <li>
+        <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+            <button type="submit" class="btn btn-link navbar-btn btn-logout">退出</button>
+        </form>
+    </li>
 }
-else
+else if (!Context.Request.Path.StartsWithSegments("/Account/Login"))
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Account" asp-action="Login">登录</a></li>
-    </ul>
+    <li><a asp-area="" asp-controller="Account" asp-action="Login">登录</a></li>
 }

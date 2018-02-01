@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCN.UnionOnline.Site.Controllers
@@ -331,22 +332,42 @@ namespace HPCN.UnionOnline.Site.Controllers
             return View(new EnrollmentAddFieldViewModel
             {
                 Enrollment = enrollment,
-                DisplayOrder = 0
+                DisplayOrder = 0,
+                ValueChoices = new List<FieldValueChoice>()
             });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddField(FieldEntry field)
+        public async Task<IActionResult> AddField(EnrollmentAddFieldViewModel model, FieldEntry field)
         {
             if (!await _enrollmentService.ExistsEnrollmentAsync(field.Enrollment.Id))
             {
                 return NotFound();
             }
 
-            await _enrollmentService.AddFieldAsync(field, User.GetUsername());
+            if (field.ChoiceMode != FieldValueChoiceMode.None)
+            {
+                if (field.ValueChoices == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Value choices are required when choice mode is Single or Multi.");
+                }
+            }
 
-            return RedirectToAction(nameof(EnrollmentController.Fields), new { Id = field.Enrollment.Id });
+            foreach (var key in ModelState.Keys)
+            {
+                if (key.StartsWith("ValueChoices[") && key.EndsWith("].Field"))
+                    ModelState.Remove(key);
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _enrollmentService.AddFieldAsync(field, User.GetUsername());
+                return RedirectToAction(nameof(EnrollmentController.Fields), new { Id = field.Enrollment.Id });
+            }
+
+            if (model.ValueChoices == null) model.ValueChoices = new List<FieldValueChoice>(); // prevent rendering from crash
+            return View(model);
         }
 
         public async Task<IActionResult> FieldDetails(Guid? id)
@@ -395,9 +416,28 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
-            await _enrollmentService.UpdateFieldAsync(field, User.GetUsername());
+            if (field.ChoiceMode != FieldValueChoiceMode.None)
+            {
+                if (field.ValueChoices == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Value choices are required when choice mode is Single or Multi.");
+                }
+            }
 
-            return RedirectToAction(nameof(EnrollmentController.Fields), new { Id = field.Enrollment.Id });
+            foreach (var key in ModelState.Keys)
+            {
+                if (key.StartsWith("ValueChoices[") && key.EndsWith("].Field"))
+                    ModelState.Remove(key);
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _enrollmentService.UpdateFieldAsync(field, User.GetUsername());
+                return RedirectToAction(nameof(EnrollmentController.Fields), new { Id = field.Enrollment.Id });
+            }
+
+            if (field.ValueChoices == null) field.ValueChoices = new List<FieldValueChoice>(); // prevent rendering from crash
+            return View(field);
         }
 
         [HttpPost]

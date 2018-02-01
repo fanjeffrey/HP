@@ -4,15 +4,15 @@ namespace HPCN.UnionOnline.Site.ViewModels
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "*")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "*")]
         [Display(Name = "员工号")]
         public string EmployeeNo { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "*")]
         [Display(Name = "密码")]
         [DataType(DataType.Password)]
         public string Password { get; set; }

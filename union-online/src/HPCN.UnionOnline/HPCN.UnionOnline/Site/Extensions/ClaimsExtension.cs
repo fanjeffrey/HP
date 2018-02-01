@@ -13,7 +13,7 @@ namespace HPCN.UnionOnline.Site.Extensions
 
         public static string GetUserId(this ClaimsIdentity identity)
         {
-            return identity.Claims.FirstOrDefault(c => "userid".Equals(c.Type)).Value;
+            return identity.Claims.FirstOrDefault(c => "userid".Equals(c.Type))?.Value;
         }
 
         public static string GetUsername(this ClaimsPrincipal user)

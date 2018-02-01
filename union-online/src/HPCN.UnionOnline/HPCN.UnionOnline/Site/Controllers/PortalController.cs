@@ -28,7 +28,7 @@ namespace HPCN.UnionOnline.Site.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var myEnrollings = await _enrollingService.GetEnrollingsAsync(Guid.Parse(User.GetUserId()));
+            var myEnrollings = await _enrollingService.GetLatestEnrollingsAsync(Guid.Parse(User.GetUserId()));
             var enrollmentsInMyEnrollings = myEnrollings.Select(e => e.Enrollment.Id);
             var enrolleesInEnrollments = await _enrollingService.GetCountOfEnrollingsInEnrollments(enrollmentsInMyEnrollings);
 

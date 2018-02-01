@@ -9,7 +9,16 @@
 
 <div class="section">
     <fieldset>
-        <legend>我已报名的活动</legend>
+        <legend>我的积分</legend>
+        <div>
+            @await Html.PartialAsync("_PointsPartial")
+        </div>
+    </fieldset>
+</div>
+
+<div class="section">
+    <fieldset>
+        <legend>我最近报名的活动</legend>
         <div>
             @if (myEnrollings.Any())
             {
@@ -51,7 +60,7 @@
                                 <td>
                                     <a asp-controller="Enrolling" asp-action="Details" asp-route-id="@item.Id" title="查看填写的信息">查看</a> |
                                     <a asp-controller="Enrolling" asp-action="Update" asp-route-id="@item.Id" title="更新填写的信息">更新</a> |
-                                    <a asp-controller="Enrolling" asp-action="Cancel" asp-route-id="@item.Id" title="取消此次报名">取消</a>
+                                    <a asp-controller="Enrolling" asp-action="Cancel" asp-route-id="@item.Id" title="撤回此次报名">撤回</a>
                                 </td>
                             </tr>
                         }

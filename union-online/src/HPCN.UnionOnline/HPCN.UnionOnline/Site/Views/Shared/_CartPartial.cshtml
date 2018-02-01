@@ -1,2 +1,6 @@
 ﻿@inject ICartService _cartService
-@await _cartService.Count(Guid.Parse(User.GetUserId()))
+@{
+    var userIdString = User.GetUserId();
+    var userId = string.IsNullOrWhiteSpace(userIdString) ? Guid.Empty : Guid.Parse(userIdString);
+}
+@await _cartService.Count(userId)

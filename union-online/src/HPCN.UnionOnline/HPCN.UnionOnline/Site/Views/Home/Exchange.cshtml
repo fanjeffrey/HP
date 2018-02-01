@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = $"{Model.Name}";
 }
-<h2>当前活动: @Model.Name</h2>
+<h2>当前积分兑换活动: @Model.Name</h2>
 <p>
     从 <strong>@Model.BeginTime</strong> 开始至 <strong> @Model.EndTime </strong>.
 </p>
@@ -29,9 +29,12 @@
                 <th>
                     自费
                 </th>
-                <th>
-                    数量
-                </th>
+                @if (Model.BeginTime <= DateTime.Now && DateTime.Now <= Model.EndTime)
+                {
+                    <th>
+                        数量
+                    </th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -50,11 +53,11 @@
                     <td>
                         @item.SelfPayment
                     </td>
-                    <td>
+                    @if (Model.BeginTime <= DateTime.Now && DateTime.Now <= Model.EndTime)
+                    {
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @if (Model.BeginTime <= DateTime.Now && DateTime.Now <= Model.EndTime)
-                            {
+                            <td>
                                 <form asp-action="Add" asp-controller="Cart" method="post">
                                     <input type="button" class="btn btn-default" value="-" onclick="subtract(this)" />
                                     <input type="number" name="Quantity" class="quantity" value="1" readonly />
@@ -62,13 +65,13 @@
                                     <button class="btn btn-default">加入购物车</button>
                                     <input type="hidden" name="ActivityProductId" value="@item.Id" />
                                 </form>
-                            }
+                            </td>
                         }
                         else
                         {
-                            <a href="/Account/Login">马上兑换</a>
+                            <td><a href="/Account/Login">马上兑换</a></td>
                         }
-                    </td>
+                    }
                 </tr>
             }
         </tbody>

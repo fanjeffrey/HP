@@ -9,7 +9,7 @@
 @Html.Partial("_Enrolling", Model)
 
 <div class="section">
-    <a asp-controller="Portal" asp-action="Index">Back to My Portal</a> |
+    <a asp-controller="Enrolling" asp-action="Index" title="回到我的报名">返回</a> |
     <a asp-controller="Enrolling" asp-action="Update" asp-route-id="@Model.Enrolling.Id" title="更新填写的信息">更新</a> |
-    <a asp-controller="Enrolling" asp-action="Cancel" asp-route-id="@Model.Enrolling.Id" title="取消此次报名">取消</a>
+    <a asp-controller="Enrolling" asp-action="Cancel" asp-route-id="@Model.Enrolling.Id" title="撤回此次报名">撤回</a>
 </div>
