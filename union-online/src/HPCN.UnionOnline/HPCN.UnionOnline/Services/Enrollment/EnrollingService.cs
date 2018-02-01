@@ -43,7 +43,7 @@ namespace HPCN.UnionOnline.Services
 
             var countOfEnrollees = await _db.Enrollings.CountAsync(e => e.Enrollment.Id == enrollment.Id);
 
-            return countOfEnrollees > enrollment.MaxCountOfEnrolles;
+            return countOfEnrollees >= enrollment.MaxCountOfEnrolles;
         }
 
         public async Task<bool> IsAlreadyEnrolled(string employeeNo, Enrollment enrollment)
@@ -72,6 +72,21 @@ namespace HPCN.UnionOnline.Services
                           .Include(e => e.Enrollment)
                           .Include(e => e.FieldInputs)
                           .SingleOrDefaultAsync();
+        }
+
+        public async Task<List<Enrolling>> GetLatestEnrollingsAsync(Guid userId)
+        {
+            var employee = await _db.Employees.SingleOrDefaultAsync(e => e.UserId == userId);
+            if (employee == null) return new List<Enrolling>();
+
+            return await (from e in _db.Enrollings
+                          where e.EmployeeNo.ToLower() == employee.No
+                          orderby e.CreatedTime descending
+                          select e)
+                          .Include(e => e.Enrollment)
+                          .Include(e => e.User).ThenInclude(u => u.Employee)
+                          .Take(3)
+                          .ToListAsync();
         }
 
         public async Task<List<Enrolling>> GetEnrollingsAsync(Guid userId)
@@ -186,7 +201,7 @@ namespace HPCN.UnionOnline.Services
 
             // update field inputs by removing and adding
             var now = DateTime.Now;
-            enrolling.FieldInputs?.Clear();
+            enrolling.FieldInputs.Clear();
             if (fieldInputs != null)
             {
                 foreach (var item in fieldInputs)

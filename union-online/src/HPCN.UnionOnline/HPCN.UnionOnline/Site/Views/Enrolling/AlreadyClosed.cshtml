@@ -1,0 +1,12 @@
+﻿@model HPCN.UnionOnline.Models.Enrollment
+
+@{
+    ViewData["Title"] = $"报名已结束或已关闭 - {Model.Name}";
+}
+
+<header>
+    <h2 class="text-danger">报名已结束或已关闭</h2>
+    <p class="text-danger">
+        @Model.Name: 已结束或已关闭。
+    </p>
+</header>

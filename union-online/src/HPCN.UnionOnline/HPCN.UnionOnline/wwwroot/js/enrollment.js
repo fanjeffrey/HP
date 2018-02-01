@@ -15,11 +15,11 @@ function appendRow(sender) {
     var countOfRows = tbody.find("tr").length;
     tbody.append('<tr>'
         + '<td>' + (countOfRows + 1) + '</td>'
-        + '<td><input name="ValueChoices[' + countOfRows + '].Value" /></td>'
-        + '<td><input name="ValueChoices[' + countOfRows + '].DisplayText" class="choice-display-text" /></td>'
-        + '<td><input name="ValueChoices[' + countOfRows + '].DisplayOrder" class="choice-display-order" /></td>'
+        + '<td><input name="ValueChoices[' + countOfRows + '].Value" required /></td>'
+        + '<td><input name="ValueChoices[' + countOfRows + '].DisplayText" class="choice-display-text" required /></td>'
+        + '<td><input name="ValueChoices[' + countOfRows + '].DisplayOrder" class="choice-display-order" required /></td>'
         + '<td><input name="ValueChoices[' + countOfRows + '].Description" class="choice-description" /></td>'
-        + '<td>' + (countOfRows >= 2 ? '<button onclick="removeRow(this);return false;">Remove</button>' : '') + '</td>'
+        + '<td><button onclick="removeRow(this);return false;">Remove</button></td>'
         + '</tr>');
 }
 

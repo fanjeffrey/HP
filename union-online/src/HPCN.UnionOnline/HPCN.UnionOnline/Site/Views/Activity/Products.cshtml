@@ -1,4 +1,4 @@
-@model HPCN.UnionOnline.Site.ViewModels.ActivityProductsViewModel
+﻿@model HPCN.UnionOnline.Site.ViewModels.ActivityProductsViewModel
 
 @{
     ViewData["Title"] = "Products in activity";
@@ -7,105 +7,109 @@
     var index2 = 0;
 }
 
-<h2>Manage products in activity - @Model.Activity.Name</h2>
+<h2>可兑换商品 - @Model.Activity.Name</h2>
 
 <p>
     There are currently <strong>@Model.Activity.ActivityProducts.Count</strong> products in this activity.
 </p>
-<div class="container-products">
-    <h4>Products added in this activity:</h4>
-    <hr />
-    <form asp-action="RemoveProducts" method="post">
-        <div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>
-                            Product Name
-                        </th>
-                        <th>
-                            Points Payment
-                        </th>
-                        <th>
-                            Self Payment
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Activity.ActivityProducts)
-                    {
+<div class="section">
+    <fieldset>
+        <legend>参加此次兑换活动的商品</legend>
+        <form asp-action="RemoveProducts" method="post">
+            <div>
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>
-                                <input type="hidden" value="@(index1)" name="activityProducts.Index">
-                                <input type="checkbox" name="activityProducts[@(index1++)].Id" value="@item.Id" />
-                            </td>
-                            <td>
-                                <a asp-controller="product" asp-action="details" asp-route-id="@item.Product.Id">@item.Product.Name</a>
-                            </td>
-                            <td>
-                                @item.PointsPayment
-                            </td>
-                            <td>
-                                @item.SelfPayment
-                            </td>
+                            <th></th>
+                            <th>
+                                Product Name
+                            </th>
+                            <th>
+                                Points Payment
+                            </th>
+                            <th>
+                                Self Payment
+                            </th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div>
-            <input type="hidden" asp-for="Activity.Id" />
-            <input type="submit" value="Remove from this activity" class="btn btn-default" />
-        </div>
-    </form>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Activity.ActivityProducts)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="hidden" value="@(index1)" name="activityProducts.Index">
+                                    <input type="checkbox" name="activityProducts[@(index1++)].Id" value="@item.Id" />
+                                </td>
+                                <td>
+                                    <a asp-controller="product" asp-action="details" asp-route-id="@item.Product.Id">@item.Product.Name</a>
+                                </td>
+                                <td>
+                                    @item.PointsPayment
+                                </td>
+                                <td>
+                                    @item.SelfPayment
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <input type="hidden" asp-for="Activity.Id" />
+                <input type="submit" value="Remove from this activity" class="btn btn-default" />
+            </div>
+        </form>
+    </fieldset>
 </div>
 
-<div class="container-products">
-    <h4>Choose products from below and add them in:</h4>
-    <hr />
-    <form asp-action="AddProducts" method="post">
-        <div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>
-                            Product Name
-                        </th>
-                        <th>
-                            Points Payment
-                        </th>
-                        <th>
-                            Self Payment
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.ProdcutCatalog)
-                    {
+<div class="section">
+    <fieldset>
+        <legend>可添加到此次兑换活动的商品</legend>
+        <form asp-action="AddProducts" method="post">
+            <div>
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>
-                                <input type="hidden" value="@(index2)" name="products.Index">
-                                <input type="checkbox" name="products[@(index2++)].Id" value="@item.Id" />
-                            </td>
-                            <td>
-                                <a asp-controller="product" asp-action="details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PointsPayment)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SelfPayment)
-                            </td>
+                            <th></th>
+                            <th>
+                                Product Name
+                            </th>
+                            <th>
+                                Points Payment
+                            </th>
+                            <th>
+                                Self Payment
+                            </th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div>
-            <input type="hidden" asp-for="Activity.Id" />
-            <input type="submit" value="Add to this activity" class="btn btn-default" />
-        </div>
-    </form>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ProdcutCatalog)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="hidden" value="@(index2)" name="products.Index">
+                                    <input type="checkbox" name="products[@(index2++)].Id" value="@item.Id" />
+                                </td>
+                                <td>
+                                    <a asp-controller="product" asp-action="details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PointsPayment)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SelfPayment)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <input type="hidden" asp-for="Activity.Id" />
+                <input type="submit" value="Add to this activity" class="btn btn-default" />
+            </div>
+        </form>
+    </fieldset>
 </div>
+
+<a asp-action="Index">Back to List</a>

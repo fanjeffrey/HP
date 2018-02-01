@@ -1,3 +1,4 @@
+using HPCN.UnionOnline.Models;
 using HPCN.UnionOnline.Services;
 using HPCN.UnionOnline.Site.Extensions;
 using HPCN.UnionOnline.Site.ViewModels;
@@ -31,6 +32,17 @@ namespace HPCN.UnionOnline.Site.Controllers
             _userSerivce = userService;
             _employeeService = employeeService;
             _logger = loggerFactory.CreateLogger<EnrollingController>();
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var myEnrollings = await _enrollingService.GetEnrollingsAsync(Guid.Parse(User.GetUserId()));
+            var enrollmentsInMyEnrollings = myEnrollings.Select(e => e.Enrollment.Id);
+            var enrolleesInEnrollments = await _enrollingService.GetCountOfEnrollingsInEnrollments(enrollmentsInMyEnrollings);
+
+            ViewBag.MyEnrollings = myEnrollings;
+            ViewBag.EnrolleesInEnrollments = enrolleesInEnrollments;
+            return View();
         }
 
         public async Task<IActionResult> Enrollments()
@@ -125,6 +137,21 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return View("SelfEnrollmentOnly", model);
             }
 
+            // check required fields
+            var requiredFields = enrollment.ExtraFormFields.Where(f => f.IsRequired);
+            if (requiredFields.Any())
+            {
+                foreach (var field in requiredFields)
+                {
+                    var key = $"FieldInputs.{field.Id}";
+                    var formField = (from item in Request.Form where item.Key == key select item).FirstOrDefault();
+                    if (string.IsNullOrWhiteSpace(formField.Value))
+                    {
+                        ModelState.AddModelError(string.Empty, $"{field.Name} is required.");
+                    }
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 var fieldInputs = (from item in Request.Form
@@ -153,11 +180,19 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
+            var enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(enrolling.Enrollment.Id);
+
+            if (enrollment.EndTime < DateTime.Now
+                || enrollment.Status != Models.ActivityState.Active)
+            {
+                return View("AlreadyClosed", enrollment);
+            }
+
             var employee = await _employeeService.GetAsync(enrolling.EmployeeNo);
             var model = new EnrollingUpdateViewModel
             {
                 Enrolling = enrolling,
-                Enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(enrolling.Enrollment.Id),
+                Enrollment = enrollment,
                 EmployeeNo = enrolling.EmployeeNo,
                 EmailAddress = employee.EmailAddress,
                 Name = employee.ChineseName
@@ -176,6 +211,7 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return NotFound();
             }
 
+            model.Enrolling = enrolling;
             model.Enrollment = await _enrollmentService.GetEnrollmentIncludingFieldsAndChoicesAsync(enrolling.Enrollment.Id);
 
             // check if self-enroll only
@@ -185,16 +221,49 @@ namespace HPCN.UnionOnline.Site.Controllers
                 return View("SelfEnrollmentOnly", model);
             }
 
+            // check required fields
+            var requiredFields = model.Enrollment.ExtraFormFields.Where(f => f.IsRequired);
+            if (requiredFields.Any())
+            {
+                foreach (var field in requiredFields)
+                {
+                    var key = $"FieldInputs.{field.Id}";
+                    var formField = (from item in Request.Form where item.Key == key select item).FirstOrDefault();
+                    if (string.IsNullOrWhiteSpace(formField.Value))
+                    {
+                        ModelState.AddModelError(string.Empty, $"{field.Name} is required.");
+                    }
+                }
+            }
+
+            var fieldInputs = (from item in Request.Form
+                               where item.Key.StartsWith("FieldInputs.")
+                               select item).ToDictionary(item => item.Key, item => item.Value.ToString());
+
             if (ModelState.IsValid)
             {
-                var fieldInputs = (from item in Request.Form
-                                   where item.Key.StartsWith("FieldInputs.")
-                                   select item).ToDictionary(item => item.Key, item => item.Value.ToString());
-
                 await _enrollingService.UpdateAsync(enrolling.Id,
                     model.EmployeeNo, fieldInputs, Guid.Parse(User.GetUserId()), User.GetUsername());
 
                 return RedirectToAction("Details", new { Id = enrolling.Id });
+            }
+
+            // bind field inputs back to the view model
+            if (fieldInputs != null)
+            {
+                enrolling.FieldInputs.Clear();
+                foreach (var item in fieldInputs)
+                {
+                    var fieldId = Guid.Parse(item.Key.Replace("FieldInputs.", string.Empty));
+                    var fieldValue = item.Value ?? string.Empty; // not null
+
+                    enrolling.FieldInputs.Add(new FieldInput
+                    {
+                        Id = Guid.NewGuid(),
+                        FieldEntryId = fieldId,
+                        Input = fieldValue
+                    });
+                }
             }
 
             return View(model);

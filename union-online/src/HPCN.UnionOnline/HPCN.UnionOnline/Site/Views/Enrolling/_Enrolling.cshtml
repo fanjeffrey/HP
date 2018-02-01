@@ -2,7 +2,7 @@
 
 <div class="section">
     <fieldset>
-        <legend>活动</legend>
+        <legend>报名信息</legend>
         <dl>
             <dt>详情</dt>
             <dd>
@@ -32,11 +32,11 @@
                 var inputString = string.Empty;
                 @if (f.ChoiceMode == FieldValueChoiceMode.None)
                 {
-                    inputString = fieldInput.Input;
+                    inputString = fieldInput?.Input;
                 }
                 else
                 {
-                    var selectedChoices = f.ValueChoices.Where(c => fieldInput.Input.Split(',').Contains(c.Value)).OrderBy(c => c.DisplayOrder);
+                    var selectedChoices = f.ValueChoices.Where(c => fieldInput?.Input != null && fieldInput.Input.Split(',').Contains(c.Value)).OrderBy(c => c.DisplayOrder);
                     inputString = string.Join(";", selectedChoices.Select(c => c.DisplayText));
                 }
 

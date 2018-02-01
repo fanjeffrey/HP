@@ -11,7 +11,6 @@
     <div class="form-horizontal">
         <h4>字段信息</h4>
         <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="Name" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -71,36 +70,33 @@
 
     <div class="form-horizontal field-choice-panel">
         <h4>字段值选项</h4>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <hr />
         <div>
             <table id="choices-table" cellpadding="0" cellspacing="0" border="0">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Value</th>
-                        <th>Display Text</th>
+                        <th>Value <span class="text-danger">*</span></th>
+                        <th>Display Text <span class="text-danger">*</span></th>
                         <th>Display Order</th>
                         <th>Description</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td><input name="ValueChoices[0].Value" /></td>
-                        <td><input name="ValueChoices[0].DisplayText" class="choice-display-text" /></td>
-                        <td><input name="ValueChoices[0].DisplayOrder" class="choice-display-order" /></td>
-                        <td><input name="ValueChoices[0].Description" class="choice-description" /></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td><input name="ValueChoices[1].Value" /></td>
-                        <td><input name="ValueChoices[1].DisplayText" class="choice-display-text" /></td>
-                        <td><input name="ValueChoices[1].DisplayOrder" class="choice-display-order" /></td>
-                        <td><input name="ValueChoices[1].Description" class="choice-description" /></td>
-                        <td></td>
-                    </tr>
+                    @{var index = 0; }
+                    @foreach (var item in Model.ValueChoices.OrderBy(f => f.DisplayOrder))
+                    {
+                        <tr>
+                            <td>@(index + 1)<input type="hidden" name="ValueChoices[@(index)].Id" value="@item.Id" /></td>
+                            <td><input name="ValueChoices[@(index)].Value" value="@item.Value" required /></td>
+                            <td><input name="ValueChoices[@(index)].DisplayText" value="@item.DisplayText" class="choice-display-text" required /></td>
+                            <td><input name="ValueChoices[@(index)].DisplayOrder" value="@item.DisplayOrder" class="choice-display-order" required /></td>
+                            <td><input name="ValueChoices[@(index++)].Description" value="@item.Description" class="choice-description" /></td>
+                            <td><button onclick="removeRow(this);return false;">Remove</button></td>
+                        </tr>
+                    }
                 </tbody>
                 <tfoot>
                     <tr><td><button onclick="appendRow(this);return false;">+</button></td></tr>
@@ -112,6 +108,7 @@
     <hr />
     <div class="form-group">
         <input type="hidden" asp-for="Enrollment.Id" />
+        <input type="hidden" asp-for="Enrollment.Name" />
         <input type="submit" value="Create" class="btn btn-default" />
         <a asp-action="Fields" asp-route-id="@Model.Enrollment.Id">Back to List</a>
     </div>

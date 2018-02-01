@@ -1,13 +1,33 @@
-﻿body {
-    padding-top: 50px;
+﻿@font-face {
+    font-family: 'HPSimplified';
+    src: url(hps-euro-w01-regular-eot.eot);
+    src: url(hps-euro-w01-regular-eot.eot?#iefix) format('embedded-opentype'), url('hps-euro-w01-regular-woff.woff') format('woff'), url('hps-euro-w01-regular-ttf.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal
+}
+
+@font-face {
+    font-family: 'HPSimplified';
+    src: url(hps-euro-w01-bold-eot.eot);
+    src: url(hps-euro-w01-bold-eot.eot?#iefix) format('embedded-opentype'), url('hps-euro-w01-bold-woff.woff') format('woff'), url('hps-euro-w01-bold-ttf.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal
+}
+
+body, p, a, input {
+    font-family: 'HPSimplified', 'Microsoft YaHei', Arial;
+}
+
+body {
+    padding-top: 180px;
     padding-bottom: 20px;
 }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
@@ -74,6 +94,78 @@ textarea.brief-description {
     width: 400px;
     height: 100px;
 }
+
+/*--banner--*/
+.banner {
+    height: 128px;
+    background-color: white;
+}
+
+    .banner a {
+        display: inline-block;
+        margin: 33px 20px 20px 50px;
+        height: 75px;
+        width: 75px;
+        background: url(../images/hp_logo.png);
+        background-repeat: no-repeat;
+        background-size: 75px;
+    }
+
+    .banner h1 {
+        display: inline-block;
+        margin-top: 50px;
+        vertical-align: top;
+    }
+
+/*--nav--*/
+.navbar-right-zero-margin {
+    float: right;
+}
+
+.btn-logout {
+    padding: 15px;
+    border: 0px;
+    margin: 0px;
+    text-decoration: none;
+}
+
+    .btn-logout:hover {
+        text-decoration: none;
+    }
+
+/*--login page--*/
+.login-panel {
+    background-image: url(../images/login_bg_2.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-width: 1140px;
+    min-height: 500px;
+}
+
+    .login-panel > div {
+        float: right;
+        margin-top: 50px;
+        margin-right: 50px;
+        padding: 30px;
+        border-top: 3px solid rgb(0,150,214);
+        border-radius: 0px 0px 7px 7px;
+        background-color: white;
+        opacity: 0.82;
+        box-shadow: rgba(0,0,0,0.6) 7px 7px;
+    }
+
+    .login-panel h2 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .login-panel input {
+        width: 225px;
+    }
+
+    .login-panel a {
+        margin-left: 1em;
+    }
 
 /*--product--*/
 .container-search-summary {
@@ -191,35 +283,36 @@ img.product-picture-edit {
     }
 
 /* enrollment */
-.field-choice-panel table {
+.field-choice-panel table td,
+.field-choice-panel table th {
+    padding: 3px;
 }
 
-    .field-choice-panel table td,
-    .field-choice-panel table th {
-        padding: 3px;
+.field-choice-panel table tr {
+    height: 35px;
+}
+
+.field-choice-panel table button,
+.field-choice-panel table input {
+    height: 28px;
+}
+
+    .field-choice-panel table input:invalid {
+        border: 2px solid red;
     }
 
-    .field-choice-panel table tr {
-        height: 35px;
+    .field-choice-panel table input.choice-display-text {
+        width: 200px;
     }
 
-    .field-choice-panel table button,
-    .field-choice-panel table input {
-        height: 28px;
+    .field-choice-panel table input.choice-display-order {
+        width: 120px;
     }
 
-        .field-choice-panel table input.choice-display-text {
-            width: 200px;
-        }
-
-        .field-choice-panel table input.choice-display-order {
-            width: 120px;
-        }
-
-        .field-choice-panel table input.choice-description {
-            max-width: 350px !important;
-            width: 350px;
-        }
+    .field-choice-panel table input.choice-description {
+        max-width: 350px !important;
+        width: 350px;
+    }
 
 ul.enrollees {
     padding: 0px;

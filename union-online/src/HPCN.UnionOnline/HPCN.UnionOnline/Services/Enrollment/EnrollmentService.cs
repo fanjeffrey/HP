@@ -318,32 +318,34 @@ namespace HPCN.UnionOnline.Services
                 throw new Exception($"Failed to find enrollment: {field.Enrollment.Id}");
             }
 
-            if (field.ChoiceMode == FieldValueChoiceMode.None)
-            {
-                field.ValueChoices.Clear();
-            }
-            else
-            {
-                field.ValueChoices = field.ValueChoices
-                    .Where(c => !string.IsNullOrWhiteSpace(c?.Value) && !string.IsNullOrWhiteSpace(c.DisplayText))
-                    .ToList();
-            }
-
             var now = DateTime.Now;
 
             field.Id = Guid.NewGuid();
             field.Name = field.Name.Trim();
             field.DisplayName = field.DisplayName.Trim();
-            field.Description = field.Description.Trim();
+            field.Description = field.Description?.Trim();
             field.RequiredMessage = field.RequiredMessage?.Trim();
             field.UpdatedBy = field.CreatedBy = creator;
             field.UpdatedTime = field.CreatedTime = now;
 
             if (field.ValueChoices != null)
             {
+                if (field.ChoiceMode == FieldValueChoiceMode.None)
+                {
+                    field.ValueChoices.Clear();
+                }
+                else
+                {
+                    field.ValueChoices = field.ValueChoices
+                        .Where(c => !string.IsNullOrWhiteSpace(c?.Value) && !string.IsNullOrWhiteSpace(c.DisplayText))
+                        .ToList();
+                }
+
                 foreach (var valueChoice in field.ValueChoices)
                 {
                     valueChoice.Id = Guid.NewGuid();
+                    valueChoice.Value = valueChoice.Value ?? string.Empty;
+                    valueChoice.DisplayText = valueChoice.DisplayText ?? valueChoice.Value;
                     valueChoice.UpdatedBy = valueChoice.CreatedBy = creator;
                     valueChoice.UpdatedTime = valueChoice.CreatedTime = now;
                 }
@@ -374,7 +376,7 @@ namespace HPCN.UnionOnline.Services
             // ------------
             fieldInDb.Name = field.Name.Trim();
             fieldInDb.DisplayName = field.DisplayName.Trim();
-            fieldInDb.Description = field.Description.Trim();
+            fieldInDb.Description = field.Description?.Trim();
             fieldInDb.IsRequired = field.IsRequired;
             fieldInDb.RequiredMessage = field.RequiredMessage?.Trim();
             fieldInDb.DisplayOrder = field.DisplayOrder;
@@ -386,34 +388,39 @@ namespace HPCN.UnionOnline.Services
 
             // update value choices
             // --------------------
-            if (field.ChoiceMode == FieldValueChoiceMode.None)
+            if (field.ValueChoices != null)
             {
-                fieldInDb.ValueChoices.Clear();
-            }
-            else
-            {
-                // remove choices which are not in user inputs.
-                fieldInDb.ValueChoices.RemoveAll(c => field.ValueChoices.All(v => c.Id != v.Id));
-
-                foreach (var choice in field.ValueChoices)
+                if (field.ChoiceMode == FieldValueChoiceMode.None)
                 {
-                    var choiceInDb = fieldInDb.ValueChoices.SingleOrDefault(c => c.Id == choice.Id);
+                    fieldInDb.ValueChoices.Clear();
+                }
+                else
+                {
+                    // remove choices which are not in user inputs.
+                    fieldInDb.ValueChoices.RemoveAll(c => field.ValueChoices.All(v => c.Id != v.Id));
 
-                    if (choiceInDb != null)// existing choice to update
+                    foreach (var choice in field.ValueChoices)
                     {
-                        choiceInDb.Value = choice.Value;
-                        choiceInDb.DisplayText = choice.DisplayText;
-                        choiceInDb.DisplayOrder = choice.DisplayOrder;
-                        choiceInDb.Description = choice.Description;
-                        choiceInDb.UpdatedBy = fieldInDb.UpdatedBy;
-                        choiceInDb.UpdatedTime = fieldInDb.UpdatedTime;
-                    }
-                    else // new choice to add
-                    {
-                        choice.Id = Guid.NewGuid();
-                        choice.UpdatedBy = choice.CreatedBy = fieldInDb.UpdatedBy;
-                        choice.UpdatedTime = choice.CreatedTime = fieldInDb.UpdatedTime;
-                        fieldInDb.ValueChoices.Add(choice);
+                        var choiceInDb = fieldInDb.ValueChoices.SingleOrDefault(c => c.Id == choice.Id);
+
+                        if (choiceInDb != null)// update existing choice
+                        {
+                            choiceInDb.Value = choice.Value ?? string.Empty;
+                            choiceInDb.DisplayText = choice.DisplayText ?? choiceInDb.Value;
+                            choiceInDb.DisplayOrder = choice.DisplayOrder;
+                            choiceInDb.Description = choice.Description;
+                            choiceInDb.UpdatedBy = fieldInDb.UpdatedBy;
+                            choiceInDb.UpdatedTime = fieldInDb.UpdatedTime;
+                        }
+                        else // new choice to add
+                        {
+                            choice.Id = Guid.NewGuid();
+                            choice.Value = choice.Value ?? string.Empty;
+                            choice.DisplayText = choice.DisplayText ?? choice.Value;
+                            choice.UpdatedBy = choice.CreatedBy = fieldInDb.UpdatedBy;
+                            choice.UpdatedTime = choice.CreatedTime = fieldInDb.UpdatedTime;
+                            fieldInDb.ValueChoices.Add(choice);
+                        }
                     }
                 }
             }

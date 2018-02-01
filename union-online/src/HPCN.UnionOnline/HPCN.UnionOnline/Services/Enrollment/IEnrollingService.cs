@@ -11,6 +11,7 @@ namespace HPCN.UnionOnline.Services
         Task<bool> ExceedsMaxCountOfEnrollees(Enrollment enrollment);
         Task<bool> IsAlreadyEnrolled(string employeeNo, Enrollment enrollment);
         Task<Enrolling> GetEnrollingIncludingEnrollmentAndFieldInputsAsync(Guid enrollingId);
+        Task<List<Enrolling>> GetLatestEnrollingsAsync(Guid userId);
         Task<List<Enrolling>> GetEnrollingsAsync(Guid userId);
         Task<Dictionary<Guid, int>> GetCountOfEnrollingsInEnrollments(IEnumerable<Guid> enrollmentIds);
         Task<Enrolling> CreateAsync(Guid enrollmentId, string employeeNo, IDictionary<string, string> fieldInputs, Guid userId, string createdBy);
